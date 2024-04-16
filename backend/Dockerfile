@@ -25,17 +25,6 @@ RUN docker-php-ext-enable pdo pdo_mysql
 
 WORKDIR /var/www
 
-# Copy application source
-COPY . /var/www
-
-# Allow Composer to run as superuser in this context
-ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV DATABASE_URL='mysql://root:root@database:3306/hackmapa'
-ENV APP_ENV='prod'
-
-# Install Composer dependencies
-RUN composer install --optimize-autoloader
-
 # use different user to avoid permission problems and allow composer commands
 RUN useradd -G www-data,root $user
 RUN mkdir -p /home/$user/.composer

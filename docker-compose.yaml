@@ -32,6 +32,9 @@ services:
     working_dir: /var/www/
     volumes:
       - ./backend:/var/www
+    environment:
+      APP_ENV: prod
+      DATABASE_URL: mysql://root:root@database:3306/hackmapa
 
   nodejs:
     build:
