@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./playground-frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:80
+      REACT_APP_SOCKET_URL: http://localhost:8080
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./playground-backend:/var/www
+      - ./nginx/backend.conf:/etc/nginx/nginx.conf
+
+  backend:
+    build:
+      args:
+        user: docker-user
+      context: ./playground-backend
+      dockerfile: Dockerfile
+    container_name: backend
+    working_dir: /var/www/
+    volumes:
+      - ./playground-backend:/var/www
+    environment:
+      APP_ENV: dev
+      DATABASE_URL: mysql://root:root@database:3306/hackmapa
+
+  nodejs:
+    build:
+      context: ./playground-server
+      dockerfile: Dockerfile
+    container_name: nodejs-socket
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+
+  database:
+    image: mysql:5.7
+    container_name: database
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hackmapa
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: phpmyadmin
+  #   ports:
+  #     - "8081:80"
+  #   environment:
+  #     PMA_HOST: database
+  #     PMA_USER: root
+  #     PMA_PASSWORD: root
+  #   depends_on:
+  #     - database
+
+volumes:
+  db-data:
+
+networks:
+  default:
+    driver: bridge
