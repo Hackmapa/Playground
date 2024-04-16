@@ -3,7 +3,7 @@ version: "3.8"
 services:
   frontend:
     build:
-      context: ./playground-frontend
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend
     ports:
@@ -19,26 +19,26 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./playground-backend:/var/www
+      - ./backend:/var/www
       - ./nginx/backend.conf:/etc/nginx/nginx.conf
 
   backend:
     build:
       args:
         user: docker-user
-      context: ./playground-backend
+      context: ./backend
       dockerfile: Dockerfile
     container_name: backend
     working_dir: /var/www/
     volumes:
-      - ./playground-backend:/var/www
+      - ./backend:/var/www
     environment:
       APP_ENV: dev
       DATABASE_URL: mysql://root:root@database:3306/hackmapa
 
   nodejs:
     build:
-      context: ./playground-server
+      context: ./server
       dockerfile: Dockerfile
     container_name: nodejs-socket
     ports:
@@ -59,17 +59,17 @@ services:
     ports:
       - "3307:3306"
 
-  # phpmyadmin:
-  #   image: phpmyadmin/phpmyadmin
-  #   container_name: phpmyadmin
-  #   ports:
-  #     - "8081:80"
-  #   environment:
-  #     PMA_HOST: database
-  #     PMA_USER: root
-  #     PMA_PASSWORD: root
-  #   depends_on:
-  #     - database
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: database
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - database
 
 volumes:
   db-data:
