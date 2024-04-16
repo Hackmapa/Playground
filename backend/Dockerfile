@@ -30,8 +30,8 @@ COPY . /var/www
 
 # Allow Composer to run as superuser in this context
 ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV DATABASE_URL: mysql://root:root@database:3306/hackmapa
-ENV APP_ENV: prod
+ENV DATABASE_URL='mysql://root:root@database:3306/hackmapa'
+ENV APP_ENV='prod'
 
 # Install Composer dependencies
 RUN composer install --optimize-autoloader
