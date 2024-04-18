@@ -5,7 +5,7 @@ DB_USER="root"
 DB_PASS="root"
 DB_NAME="hackmapa"
 DB_PORT="3306"
-DB_SERVICE="db"
+DB_SERVICE="database"
 MIGRATION_SERVICE="backend"
 PERMISSIONS_PATH="/config/jwt"
 
