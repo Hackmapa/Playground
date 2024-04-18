@@ -17,7 +17,7 @@ if [ "$DB_EXISTS" ]; then
     echo "Database already exists."
 else
     echo "Database does not exist. Creating database..."
-    docker-compose exec -T $DB_SERVICE mysql -u$DB_USER -p$DB_PASS -e "CREATE DATABASE $DB_NAME;"
+    docker-compose exec $MIGRATION_SERVICE php bin/console doctrine:database:create --no-interaction
     echo "Database created."
 fi
 

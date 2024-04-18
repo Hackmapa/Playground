@@ -49,35 +49,33 @@ services:
       dockerfile: Dockerfile
     container_name: nodejs-socket
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
-      PORT: 8080
+      PORT: 8081
 
   db:
-    image: mysql:5.7
+    image: mariadb
     container_name: db
+    restart: always
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_USER: hackmapa
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db
-      MYSQL_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: root
     ports:
-      - "3307:3306"
+      - "3306:3306"
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin
+    restart: always
     container_name: phpmyadmin
     ports:
-      - "8081:80"
-    links:
-      - db
+      - "8080:80"
     environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: root
-      PMA_ARBITRARY: 1
+      - PMA_ARBITRARY=1
+      - MEMORY_LIMIT=512M
+      - UPLOAD_LIMIT=512M
+      - PHP_MAX_EXECUTION_TIME=3600
+      - PMA_HOST=db
     depends_on:
       - db
 
