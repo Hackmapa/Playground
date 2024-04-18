@@ -17,12 +17,12 @@ if [ "$DB_EXISTS" ]; then
     echo "Database already exists."
 else
     echo "Database does not exist. Creating database..."
-    docker-compose exec $MIGRATION_SERVICE php bin/console doctrine:database:create --no-interaction
+    docker exec $MIGRATION_SERVICE php bin/console doctrine:database:create --no-interaction
     echo "Database created."
 fi
 
 # Run Symfony migrations
 echo "Running Symfony migrations..."
-docker-compose exec $MIGRATION_SERVICE php bin/console doctrine:migrations:migrate --no-interaction
+docker exec $MIGRATION_SERVICE php bin/console doctrine:migrations:migrate --no-interaction
 
 echo "Setup completed."
