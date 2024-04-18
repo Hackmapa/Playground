@@ -19,5 +19,5 @@ let messages = [];
 loginSocket(io, users);
 chatSocket(io, messages);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
 server.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
