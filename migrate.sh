@@ -25,4 +25,8 @@ fi
 echo "Running Symfony migrations..."
 docker exec $MIGRATION_SERVICE php bin/console doctrine:migrations:migrate --no-interaction
 
+# Generate JWT keys
+echo "Generating JWT keys..."
+docker exec $MIGRATION_SERVICE php bin/console lexik:jwt:generate-keypair --skip-if-exists
+
 echo "Setup completed."
