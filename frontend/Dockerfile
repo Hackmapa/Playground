@@ -13,8 +13,6 @@ RUN npm install
 # Step 5: Copy the rest of your frontend application source code
 COPY . .
 
-COPY .env.production .env
-
 # Step 6: Build your application for production
 RUN npm run build
 
