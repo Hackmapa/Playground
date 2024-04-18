@@ -40,9 +40,9 @@ services:
       - backend_volume:/var/www
     environment:
       APP_ENV: prod
-      DATABASE_URL: mysql://root:root@database:3306/hackmapa
+      DATABASE_URL: mysql://root:root@db:3306/hackmapa
     depends_on:
-      - database
+      - db
 
   nodejs:
     build:
@@ -54,15 +54,15 @@ services:
     environment:
       PORT: 8080
 
-  database:
+  db:
     image: mysql:5.7
-    container_name: database
+    container_name: db
     volumes:
       - db-data:/var/lib/mysql
     environment:
       MYSQL_USER: hackmapa
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: hackmapa
+      MYSQL_DATABASE: db
       MYSQL_PASSWORD: password
     ports:
       - "3307:3306"
@@ -72,10 +72,15 @@ services:
     container_name: phpmyadmin
     ports:
       - "8081:80"
+    links:
+      - db
     environment:
-      PMA_HOST: database
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+      PMA_ARBITRARY: 1
     depends_on:
-      - database
+      - db
 
 volumes:
   frontend_volume:
