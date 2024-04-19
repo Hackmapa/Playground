@@ -6,7 +6,6 @@ import { Home } from "../Pages/Home";
 import { Login } from "../Pages/Login";
 import { Register } from "../Pages/Register";
 import { RPS } from "../Games/RPS/RPS";
-import SnakeGame from "../Games/Snake/SnakeGame";
 import { TicTacToe } from "../Games/TicTacToe/TicTacToe/TicTacToe";
 
 export const RouterContainer = () => {
@@ -20,7 +19,6 @@ export const RouterContainer = () => {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/rock-paper-scissors" element={<RPS />} />
-            <Route path="/snake" element={<SnakeGame />} />
             <Route path="/tic-tac-toe" element={<TicTacToe />} />
           </Routes>
         </Overlay>

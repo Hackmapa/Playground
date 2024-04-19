@@ -26,6 +26,8 @@ services:
       - REACT_APP_SOCKET_URL=":8081"
     depends_on:
       - backend
+    env_file:
+      - ./frontend/.env.prod
 
   backend:
     build:
