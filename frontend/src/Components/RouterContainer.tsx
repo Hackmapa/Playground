@@ -8,17 +8,28 @@ import { Register } from "../Pages/Register";
 import { RPS } from "../Games/RPS/RPS";
 import { TttRooms } from "../Games/TicTacToe/Components/TttRooms";
 import { socket } from "../socket";
+import { TicTacToe } from "../Games/TicTacToe/Components/TicTacToe";
+import { useAppDispatch } from "../hooks/hooks";
+import { addUser } from "../Redux/user/userSlice";
+import { useEffect } from "react";
 
 export const RouterContainer = () => {
+  const dispatch = useAppDispatch();
   const token = useSelector((state: RootState) => state.token);
   const user = useSelector((state: RootState) => state.user);
   const isLogged = token !== "";
 
-  if (isLogged) {
-    socket.connect();
+  useEffect(() => {
+    if (isLogged && !user.id) {
+      socket.connect();
 
-    socket.emit("login", user);
-  }
+      console.log("user", user);
+
+      socket.emit("login", user);
+
+      dispatch(addUser(user));
+    }
+  }, []);
 
   return (
     <BrowserRouter>
@@ -29,6 +40,7 @@ export const RouterContainer = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/rock-paper-scissors" element={<RPS />} />
             <Route path="/tic-tac-toe" element={<TttRooms />} />
+            <Route path="/tic-tac-toe/{id}" element={<TicTacToe />} />
           </Routes>
         </Overlay>
       ) : (

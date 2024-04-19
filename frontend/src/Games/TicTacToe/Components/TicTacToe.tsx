@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import CircleIcon from "../Assets/circle.png";
 import CrossIcon from "../Assets/cross.png";
+import { useParams } from "react-router-dom";
 
 // Define a type for the game cell value
 type CellValue = "" | "X" | "O";
@@ -10,6 +11,7 @@ type CellValue = "" | "X" | "O";
 const initialBoardState: CellValue[] = Array(9).fill("");
 
 export const TicTacToe: React.FC = () => {
+  const id = useParams<{ id: string }>().id;
   const [board, setBoard] = useState<CellValue[]>(initialBoardState);
   const [currentPlayer, setCurrentPlayer] = useState<CellValue>("X");
   const [isGameLocked, setGameLocked] = useState(false);

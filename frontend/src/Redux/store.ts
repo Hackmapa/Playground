@@ -9,7 +9,7 @@ import { combineReducers } from "redux";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["token", "user"],
+  whitelist: ["token"],
 };
 
 const reduceur = combineReducers({
