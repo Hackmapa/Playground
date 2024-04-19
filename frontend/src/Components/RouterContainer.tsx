@@ -6,11 +6,20 @@ import { Home } from "../Pages/Home";
 import { Login } from "../Pages/Login";
 import { Register } from "../Pages/Register";
 import { RPS } from "../Games/RPS/RPS";
-import { TicTacToe } from "../Games/TicTacToe/TicTacToe/TicTacToe";
+import { TttRooms } from "../Games/TicTacToe/Components/TttRooms";
+import { socket } from "../socket";
 
 export const RouterContainer = () => {
   const token = useSelector((state: RootState) => state.token);
+  const user = useSelector((state: RootState) => state.user);
   const isLogged = token !== "";
+
+  if (isLogged) {
+    socket.connect();
+
+    socket.emit("login", user);
+  }
+
   return (
     <BrowserRouter>
       {isLogged ? (
@@ -19,7 +28,7 @@ export const RouterContainer = () => {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/rock-paper-scissors" element={<RPS />} />
-            <Route path="/tic-tac-toe" element={<TicTacToe />} />
+            <Route path="/tic-tac-toe" element={<TttRooms />} />
           </Routes>
         </Overlay>
       ) : (
