@@ -2,6 +2,7 @@ const http = require("http");
 const socketIo = require("socket.io");
 const loginSocket = require("./login/loginSocket");
 const chatSocket = require("./message/chatSocket");
+require("dotenv").config();
 
 const server = http.createServer((req, res) => {
   res.end("Connected");
