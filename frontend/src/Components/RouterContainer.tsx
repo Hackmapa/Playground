@@ -28,7 +28,8 @@ export const RouterContainer = () => {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/rock-paper-scissors" element={<RPS />} />
-            <Route path="/tic-tac-toe" element={<TttRooms />} />
+            <Route path="/tic-tac-toe" element={<TicTacToe />} />
+            <Route path="/memory" element={<Memory />} />
           </Routes>
         </Overlay>
       ) : (
