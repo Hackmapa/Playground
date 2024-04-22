@@ -1,5 +1,5 @@
 export interface TttRoom {
-  id: string;
+  id: number;
   name: string;
   players: [];
 }

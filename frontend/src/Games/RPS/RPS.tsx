@@ -1,7 +1,5 @@
 export const RPS = () => {
-  const sendMove = (move: string) => {
-    console.log(`Sending move: ${move}`);
-  };
+  const sendMove = (move: string) => {};
 
   return (
     <div className="App">

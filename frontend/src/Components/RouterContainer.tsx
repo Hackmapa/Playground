@@ -9,25 +9,18 @@ import { RPS } from "../Games/RPS/RPS";
 import { TttRooms } from "../Games/TicTacToe/Components/TttRooms";
 import { socket } from "../socket";
 import { TicTacToe } from "../Games/TicTacToe/Components/TicTacToe";
-import { useAppDispatch } from "../hooks/hooks";
-import { addUser } from "../Redux/user/userSlice";
 import { useEffect } from "react";
 
 export const RouterContainer = () => {
-  const dispatch = useAppDispatch();
   const token = useSelector((state: RootState) => state.token);
   const user = useSelector((state: RootState) => state.user);
   const isLogged = token !== "";
 
   useEffect(() => {
-    if (isLogged && !user.id) {
+    if (isLogged) {
       socket.connect();
 
-      console.log("user", user);
-
       socket.emit("login", user);
-
-      dispatch(addUser(user));
     }
   }, []);
 
@@ -40,7 +33,7 @@ export const RouterContainer = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/rock-paper-scissors" element={<RPS />} />
             <Route path="/tic-tac-toe" element={<TttRooms />} />
-            <Route path="/tic-tac-toe/{id}" element={<TicTacToe />} />
+            <Route path="/tic-tac-toe/:id" element={<TicTacToe />} />
           </Routes>
         </Overlay>
       ) : (

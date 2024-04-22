@@ -12,8 +12,6 @@ interface ChatMessageProps {
 export const ChatMessage = (props: ChatMessageProps) => {
   const { message } = props;
 
-  console.log(message);
-
   const user = useAppSelector((state) => state.user);
   const users = useAppSelector((state) => state.users);
 

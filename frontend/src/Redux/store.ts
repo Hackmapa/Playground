@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./user/userSlice";
 import tokenSlice from "./token/tokenSlice";
 import usersSlice from "./users/usersSlice";
+import tttRoomSlice from "./rooms/tttRoomSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { combineReducers } from "redux";
@@ -9,13 +10,14 @@ import { combineReducers } from "redux";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["token"],
+  whitelist: ["token", "user"],
 };
 
 const reduceur = combineReducers({
   user: userSlice,
   token: tokenSlice,
   users: usersSlice,
+  tttRoom: tttRoomSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, reduceur);
