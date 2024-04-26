@@ -19,9 +19,9 @@ let users = [];
 let messages = [];
 let ticTacToeGames = [];
 
-loginSocket(io, users);
+loginSocket(io, users, ticTacToeGames);
 chatSocket(io, messages);
-ticTacToeSocket(io, ticTacToeGames);
+ticTacToeSocket(io, ticTacToeGames, users);
 
 const PORT = process.env.PORT;
 server.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
