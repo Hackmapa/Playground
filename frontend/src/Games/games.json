@@ -16,9 +16,9 @@
     },
     {
       "id": 3,
-      "name": "Snake",
-      "description": "A simple game of Connect Four",
-      "link": "/snake",
+      "name": "Memory",
+      "description": "A simple game of memory",
+      "link": "/memory",
       "image": "connect-four.png"
     },
     {
