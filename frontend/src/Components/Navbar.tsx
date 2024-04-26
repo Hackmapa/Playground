@@ -44,6 +44,12 @@ export const Navbar = () => {
     };
 
     getAllNotifications();
+
+    socket.on("friendShipAdded", (data: Notification) => {
+      // setMessages((prevMessages) => [...prevMessages, data]);
+      console.log(data)
+    });
+
   }, [user, token]);
 
   return (

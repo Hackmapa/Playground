@@ -4,6 +4,7 @@ import { Button } from "../Button/Button";
 import { post } from "../../utils/requests/post";
 import { useAppSelector } from "../../hooks/hooks";
 import { toast } from "react-toastify";
+import {socket} from "../../socket";
 
 interface UserProfileProps {
   user: User;
@@ -19,9 +20,9 @@ export const UserProfile = (props: UserProfileProps) => {
 
   const handleAddFriend = async () => {
     const response = await post(
-      `friends/${actualUser.id}/add/${user.id}`,
-      {},
-      token
+        `friends/${actualUser.id}/add/${user.id}`,
+        {},
+        token
     );
 
     if (response.status === 404 || response.status === 409) {
@@ -29,6 +30,11 @@ export const UserProfile = (props: UserProfileProps) => {
     } else {
       toast.success(response.message);
       setHasSentRequest(true);
+      console.log(response)
+      socket.emit("friendShipAdded", {
+        userId : response.userId,
+        friendId : response.friendId,
+      });
     }
   };
 
