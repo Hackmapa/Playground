@@ -6,8 +6,9 @@ import { Home } from "../Pages/Home";
 import { Login } from "../Pages/Login";
 import { Register } from "../Pages/Register";
 import { RPS } from "../Games/RPS/RPS";
-import { TttRooms } from "../Games/TicTacToe/Components/TttRooms";
 import { socket } from "../socket";
+import Memory from "../Games/Memory/Memory";
+import { TicTacToe } from "../Games/TicTacToe/Components/TicTacToe";
 
 export const RouterContainer = () => {
   const token = useSelector((state: RootState) => state.token);
