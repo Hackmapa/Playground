@@ -20,6 +20,8 @@ module.exports = (io, users, ticTacToeGames) => {
 };
 
 const leaveTicTacToeGame = (io, socket, user, ticTacToeGames) => {
+  if (!user) return;
+
   const game = ticTacToeGames.find((game) =>
     game.players.find((player) => player.id === user.id)
   );
