@@ -18,7 +18,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: frontend
+      args:
+        - REACT_APP_API_URL=""
+        - REACT_APP_SOCKET_URL=":8081"
     volumes:
       - frontend_volume:/var/lib/frontend
     environment:
