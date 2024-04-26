@@ -1,7 +1,6 @@
 import React from "react";
 import { Data, CardInterface } from "./Data";
 import Card from "./Card";
-import "./Memory.css";
 
 const Memory = () => {
   const [cardsArray, setCardsArray] = React.useState<CardInterface[]>([]);
@@ -76,11 +75,11 @@ const Memory = () => {
   }, []);
 
   return (
-    <div className="container">
-      <div className="header">
-        <h1>Memory Game</h1>
+    <div className="flex flex-col">
+      <div className="flex flex-row p-2 justify-center items-center">
+        <h1 className="text-white text-4xl">Memory Game</h1>
       </div>
-      <div className="board">
+      <div className="grid grid-cols-[repeat(4,9rem)] place-items-center gap-y-8 mt-12 m-auto">
         {
           // cards component help in coverting the
           // data from array to visible data for screen
@@ -101,13 +100,18 @@ const Memory = () => {
       </div>
 
       {won !== 6 ? (
-        <div className="comments">Moves : {moves}</div>
+        <div className="bg-[black] text-center mt-10 m-auto px-4 py-1 rounded-[2rem]">
+          Moves : {moves}
+        </div>
       ) : (
-        <div className="comments">
+        <div className="bg-[black] text-center mt-10 m-auto px-4 py-1 rounded-[2rem]">
           ???????? You Won in {moves} moves ????????
         </div>
       )}
-      <button className="button" onClick={NewGame}>
+      <button
+        className="flex items-center justify-center w-[200px] text-[1.2rem] font-[bolder] bg-[red] text-[white] ml-[55%] mt-1 px-[0.8rem] py-2 rounded-[0.7rem] border-none hover:cursor-pointer hover:border-2 hover:border-solid hover:border-[black]"
+        onClick={NewGame}
+      >
         New Game
       </button>
     </div>
