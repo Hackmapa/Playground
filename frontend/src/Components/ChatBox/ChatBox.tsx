@@ -9,6 +9,7 @@ export const ChatBox = () => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
+  const users = useAppSelector((state) => state.users);
 
   const sendMessage = (message: string) => {
     socket.emit("sendMessage", {
@@ -30,7 +31,11 @@ export const ChatBox = () => {
   }, []);
 
   return (
-    <div className="fixed flex flex-col bottom-0 right-0 w-1/5 bg-white h-96 justify-between">
+    <div className="fixed flex flex-col bottom-0 right-0 w-1/5 bg-white h-96 justify-between z-50">
+      <div className="absolute top-0 right-3 flex items-center space-x-1">
+        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+        <p className="text-white">{users.length}</p>
+      </div>
       <h2 className="text-center text-2xl font-semibold border-b border-gray-300 p-2 bg-darkBlue text-white">
         Chat
       </h2>

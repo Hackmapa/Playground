@@ -1,38 +1,41 @@
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import { Game } from "../../Interfaces/Game";
-import { Button } from "../Button/Button";
+import "./GameCard.css";
 
 interface GameCardProps {
   game: Game;
+  index: number;
 }
 
-export const GameCard = (props: GameCardProps) => {
-  const { game } = props;
-  const navigate = useNavigate();
+export const GameCard: React.FC<GameCardProps> = ({ game, index }) => {
+  const colors = ["#a65a7f", "#5d7a9c", "#950495"];
+  const color = colors[index % colors.length];
 
   return (
-    <div className="bg-darkBlue p-4 m-4 rounded-lg shadow-lg w-1/5">
-      <div className="flex flex-col">
-        <img
-          src={`${game.image}`}
-          alt={`${game.image}`}
-          className="h-40 object-cover rounded-lg"
-        />
-      </div>
-      <div className="mt-2 flex flex-col justify-between ">
-        <h3>{game.name}</h3>
-        <p>
-          {game.description.length > 100
-            ? `${game.description.slice(0, 100)}...`
-            : game.description}
-        </p>
-        <Button
-          text="Play"
-          onClick={() => {
-            navigate(game.link);
-          }}
-          className="bg-green-500 hover:bg-green-600 w-full mt-2"
-        />
+    <div
+      className="card-container w-[25%] bg-[#271d34] h-[300px] rounded-lg shadow-lg relative overflow-hidden transform transition duration-300 ease-in-out"
+      style={{
+        perspective: "1000px",
+        border: `2px solid ${color}`,
+        boxShadow: `0 0 10px ${color}, 0 0 20px ${color}`,
+      }}
+    >
+      <div className="card w-full h-full absolute">
+        <div className="card-front w-full h-full absolute backface-hidden">
+          <div className="h-[80%]">
+            <img
+              className="w-full h-full object-cover rounded-t-lg"
+              src={game.image}
+              alt={game.name}
+            />
+          </div>
+          <div className="h-[20%] flex justify-center items-center bg-transparent">
+            <p className="text-white text-lg">{game.name}</p>
+          </div>
+        </div>
+        <div className="card-back w-full h-full absolute backface-hidden">
+          <div className="overlay p-4">{game.description}</div>
+        </div>
       </div>
     </div>
   );

@@ -12,7 +12,10 @@ import { RxCross1 } from "react-icons/rx";
 import { post } from "../utils/requests/post";
 import { toast } from "react-toastify";
 
-export const Navbar = () => {
+export const Navbar: React.FC<{
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
+}> = ({ searchTerm, setSearchTerm }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -50,16 +53,27 @@ export const Navbar = () => {
     <div className="sticky top-0 z-30 w-full px-4 py-2 bg-darkBlue text-white">
       <div className="flex items-center justify-between px-2 py-2">
         <img
-          src="logo.svg"
+          src="logo.png"
           alt="logo"
-          className="w-12 cursor-pointer"
+          className="cursor-pointer w-20"
           onClick={() => navigate("/")}
         />
-        <p>
-          {users.length > 0
-            ? `Users Online: ${users.length}`
-            : "No users online"}
-        </p>
+        <div className="flex flex-col items-center">
+          <div className="flex relative mx-5 my-0">
+            <img
+              src="searchIcon.png"
+              className="absolute z-10 -translate-y-2/4 w-5 h-5 right-[5%] top-2/4"
+              alt="Search"
+            />
+            <input
+              type="text"
+              className="w-[400px] bg-[#5a4377] opacity-50 text-white text-[15px] pl-[15px] pr-10 py-[15px] rounded-[50px] border-[none] focus:text-[white] focus:shadow-[0_0_10px_white] focus:border-2 focus:border-solid focus:border-[white] outline-none"
+              placeholder="Search for a game"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            />
+          </div>
+        </div>
         <div className="flex items-center gap-10">
           <div className="flex gap-4">
             <div className="relative">
@@ -73,7 +87,12 @@ export const Navbar = () => {
                 <NotificationContainer notifications={notifications} />
               )}
             </div>
-            <FaRegUser size={24} className="cursor-pointer" color="white" />
+            <img
+              src="logo.jpg"
+              alt="logo profile"
+              className="cursor-pointer w-10 h-10 rounded-full  object-cover"
+              onClick={() => navigate("/profile")}
+            />
             <IoLogOutOutline
               size={28}
               className="cursor-pointer"

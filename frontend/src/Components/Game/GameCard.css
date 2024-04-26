@@ -1,0 +1,39 @@
+.card {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card-front,
+.card-back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+}
+.card-back {
+  background-color: #271d34;
+  color: white;
+  transform: rotateY(-180deg);
+  display: flex; /* Nouveau */
+  justify-content: center; /* Nouveau */
+  align-items: center; /* Nouveau */
+}
+
+.card-back > div {
+  transform: rotateY(-180deg);
+}
+
+.card-container:hover .card {
+  transform: rotateY(-180deg);
+}
+
+.card-container {
+  margin-top: 50px;
+  perspective: 1000px; /* Permet des effets 3D sur les enfants */
+  transition: transform 0.6s; /* Animation douce pour la transformation */
+  transform-style: preserve-3d; /* Nécessaire pour les transformations 3D */
+}
+
+.card-container:hover {
+  transform: rotateY(-180deg); /* Fait tourner tout le conteneur */
+}
