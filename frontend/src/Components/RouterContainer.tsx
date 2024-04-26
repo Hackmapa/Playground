@@ -8,7 +8,7 @@ import { Register } from "../Pages/Register";
 import { RPS } from "../Games/RPS/RPS";
 import { socket } from "../socket";
 import Memory from "../Games/Memory/Memory";
-import { TicTacToe } from "../Games/TicTacToe/Components/TicTacToe";
+import { TttRooms } from "../Games/TicTacToe/Components/TttRooms";
 
 export const RouterContainer = () => {
   const token = useSelector((state: RootState) => state.token);
@@ -29,7 +29,7 @@ export const RouterContainer = () => {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/rock-paper-scissors" element={<RPS />} />
-            <Route path="/tic-tac-toe" element={<TicTacToe />} />
+            <Route path="/tic-tac-toe" element={<TttRooms />} />
             <Route path="/memory" element={<Memory />} />
           </Routes>
         </Overlay>
