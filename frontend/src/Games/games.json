@@ -5,35 +5,14 @@
       "name": "Rock Paper Scissors",
       "description": "A simple game of Rock Paper Scissors",
       "link": "/rock-paper-scissors",
-      "image": "rps.png"
+      "image": "./images/rps.png"
     },
     {
       "id": 2,
       "name": "Tic Tac Toe",
       "description": "A simple game of Tic Tac Toe",
       "link": "/tic-tac-toe",
-      "image": "tic-tac-toe.png"
-    },
-    {
-      "id": 3,
-      "name": "Snake",
-      "description": "A simple game of Connect Four",
-      "link": "/snake",
-      "image": "connect-four.png"
-    },
-    {
-      "id": 4,
-      "name": "Connect Four",
-      "description": "A simple game of Connect Four",
-      "link": "/connect-four",
-      "image": "connect-four.png"
-    },
-    {
-      "id": 5,
-      "name": "Connect Four",
-      "description": "A simple game of Connect Four",
-      "link": "/connect-four",
-      "image": "connect-four.png"
+      "image": "./images/tictactoe.png"
     }
   ]
 }

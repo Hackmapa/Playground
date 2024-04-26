@@ -8,5 +8,4 @@ export interface User {
   phone?: string;
   profile_picture?: string;
   ready?: boolean;
-  owner?: boolean;
 }

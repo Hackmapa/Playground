@@ -9,8 +9,13 @@ export const ChatBox = () => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [className, setClassName] = useState(
+    "fixed flex flex-col bottom-0 right-0 w-1/5 bg-white justify-between"
+  );
 
-  const sendMessage = (message: string) => {
+  const sendMessage = (e: any, message: string) => {
+    e.preventDefault();
     socket.emit("sendMessage", {
       message,
       user: user,
@@ -29,28 +34,39 @@ export const ChatBox = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (isChatOpen) {
+      setClassName(
+        "fixed flex flex-col bottom-0 right-0 w-1/5 bg-white justify-between h-96"
+      );
+    } else {
+      setClassName(
+        "fixed flex flex-col bottom-0 right-0 w-1/5 bg-white justify-between h-0"
+      );
+    }
+  }, [isChatOpen]);
+
   return (
-    <div className="fixed flex flex-col bottom-0 right-0 w-1/5 bg-white h-96 justify-between">
+    <div className={className}>
       <h2 className="text-center text-2xl font-semibold border-b border-gray-300 p-2 bg-darkBlue text-white">
         Chat
       </h2>
 
-      <Chat messages={messages} />
+      <Chat messages={messages} show={isChatOpen} setShow={setIsChatOpen} />
 
       <div className="flex">
-        <input
-          type="text"
-          placeholder="Type a message ..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="w-4/5 border border-gray-300 p-2"
-        />
-        <button
-          onClick={() => sendMessage(message)}
-          className="w-1/5 bg-blue-500 text-white"
-        >
-          Send
-        </button>
+        <form onSubmit={(e) => sendMessage(e, message)} className="flex w-full">
+          <input
+            type="text"
+            placeholder="Type a message ..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="w-4/5 border border-gray-300 p-2"
+          />
+          <button type="submit" className="w-1/5 bg-blue-500 text-white">
+            Send
+          </button>
+        </form>
       </div>
     </div>
   );

@@ -3,16 +3,22 @@ import { ChatMessage } from "./Message";
 
 interface ChatProps {
   messages: Message[];
+  show: boolean;
+  setShow: (show: boolean) => void;
 }
 
 export const Chat = (props: ChatProps) => {
-  const { messages } = props;
+  const { messages, show, setShow } = props;
 
   return (
-    <div className="flex flex-col overflow-y-auto bg-gray-700 h-full">
-      {messages.map((message, index) => (
-        <ChatMessage key={index} message={message} />
-      ))}
-    </div>
+    <>
+      {show && (
+        <div className="flex flex-col overflow-y-auto bg-gray-700 h-full">
+          {messages.map((message, index) => (
+            <ChatMessage key={index} message={message} />
+          ))}
+        </div>
+      )}
+    </>
   );
 };
