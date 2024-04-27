@@ -65,7 +65,6 @@ module.exports = (io, games, users) => {
     // leave tic tac toe game
     socket.on("leaveTicTacToeGame", (gameId, userId) => {
       const game = games.find((game) => game.id === gameId);
-      console.log(game);
       if (!game) return;
       game.players = game.players.filter((player) => player.id != userId);
 

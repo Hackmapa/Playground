@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../Components/Input/Input";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../hooks/hooks";
@@ -64,6 +64,10 @@ export const Login = () => {
   const checkValidForm = () => {
     return email.length > 0 && password.length > 0;
   };
+
+  useEffect(() => {
+    document.title = "Hackmapa - Login";
+  }, []);
 
   return (
     <div className="flex flex-col h-screen sm:flex-row justify-center items-center bg-login bg-no-repeat bg-cover">

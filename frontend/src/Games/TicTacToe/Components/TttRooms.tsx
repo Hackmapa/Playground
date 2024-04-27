@@ -3,7 +3,7 @@ import { socket } from "../../../socket";
 import { TttRoom } from "../../../Interfaces/Rooms";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../Redux/store";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../../Components/Button/Button";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { addTttRoom } from "../../../Redux/rooms/tttRoomSlice";
@@ -26,6 +26,8 @@ export const TttRooms: React.FC = () => {
   };
 
   useEffect(() => {
+    document.title = "Hackmapa - Tic Tac Toe Rooms";
+
     socket.emit("getTicTacToeGames");
 
     socket.on("ticTacToeRooms", (rooms: TttRoom[]) => {
