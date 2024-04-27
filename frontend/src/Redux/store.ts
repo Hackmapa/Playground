@@ -13,14 +13,14 @@ const persistConfig = {
   whitelist: ["token", "user"],
 };
 
-const reduceur = combineReducers({
+const reducers = combineReducers({
   user: userSlice,
   token: tokenSlice,
   users: usersSlice,
   tttRoom: tttRoomSlice,
 });
 
-const persistedReducer = persistReducer(persistConfig, reduceur);
+const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
   reducer: persistedReducer,
