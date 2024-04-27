@@ -21,8 +21,14 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
       - name: connect and pull
-        run:
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.PATH }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && docker compose down && docker volume rm playground_frontend_volume &&
-          docker compose up --build -d && bash migrate.sh && exit"
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "\
+          cd ${{ secrets.PATH }} && \
+          git checkout ${{ secrets.MAIN_BRANCH }} && \
+          git pull && \
+          docker compose down && \
+          docker volume ls | grep playground_frontend_volume && docker volume rm playground_frontend_volume || echo 'No volume to remove' && \
+          docker compose up --build -d && \
+          bash migrate.sh && \
+          exit"
       - name: cleanup
         run: rm -rf ~/.ssh
