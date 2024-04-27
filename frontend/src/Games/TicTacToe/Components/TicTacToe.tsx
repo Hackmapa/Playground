@@ -159,7 +159,7 @@ export const TicTacToe: React.FC = () => {
                 <Button
                   className="w-64 h-24 bg-[#1F3540] text-white text-2xl rounded-full mt-2 mb-12 cursor-pointer"
                   onClick={startGame}
-                  text="Start Game"
+                  text="Start Game !"
                 />
               ) : (
                 <Button
