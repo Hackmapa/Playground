@@ -1,8 +1,13 @@
+import { useEffect } from "react";
 import { GameCard } from "../Components/Game/GameCard";
 import g from "../Games/games.json";
 import { Game } from "../Interfaces/Game";
 
 export const Home = () => {
+  useEffect(() => {
+    document.title = "Hackamapa - Home";
+  }, []);
+
   return (
     <div>
       <h1>Home</h1>

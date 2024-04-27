@@ -9,7 +9,7 @@ export const ChatBox = () => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(true);
   const [className, setClassName] = useState(
     "fixed flex flex-col bottom-0 right-0 w-1/5 bg-white justify-between"
   );
