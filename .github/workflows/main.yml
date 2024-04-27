@@ -23,6 +23,6 @@ jobs:
       - name: connect and pull
         run:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.PATH }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && docker compose down && docker volume rm playground_frontend_volume &&
-          bash migrate.sh && docker compose up --build -d && exit"
+          docker compose up --build -d && bash migrate.sh && exit"
       - name: cleanup
         run: rm -rf ~/.ssh
