@@ -41,10 +41,16 @@ To set up and install the components of this monorepo, follow the instructions o
    composer install
    ```
 
+3. Generate JWT keys:
+   ```
+   php bin/console lexik:jwt:generate-keypair
+   ```
+
 3. After installing dependencies, start the backend server:
    ```
    symfony server:start
    ```
+   
 
 ---
 
