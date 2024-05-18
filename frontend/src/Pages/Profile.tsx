@@ -198,10 +198,10 @@ const Profile = () => {
   const glowAnimation = `
   @keyframes glow {
     from {
-      box-shadow: 0 0 20px #a855f7, 0 0 30px #a855f7, 0 0 40px #d946ef, 0 0 50px #d946ef, 0 0 60px #d946ef, 0 0 70px #d946ef;
+      box-shadow: 0 0 20px #D766FF, 0 0 30px #D766FF, 0 0 40px #E59CFF, 0 0 50px #E59CFF, 0 0 60px #E59CFF, 0 0 70px #E59CFF;
     }
     to {
-      box-shadow: 0 0 30px #a855f7, 0 0 40px #a855f7, 0 0 50px #d946ef, 0 0 60px #d946ef, 0 0 70px #d946ef, 0 0 80px #d946ef;
+      box-shadow: 0 0 30px #D766FF, 0 0 40px #D766FF, 0 0 50px #E59CFF, 0 0 60px #E59CFF, 0 0 70px #E59CFF, 0 0 80px #E59CFF;
     }
   }
 `;
@@ -218,19 +218,19 @@ const Profile = () => {
           />
         </div>
         <div className="w-1/3 p-4 flex flex-col">
-          <div className="bg-gray-800 p-4 rounded-lg mb-4">
+          <div style={{ backgroundColor: '#271D34' }} className=" p-4 rounded-lg mb-4">
             <div className="flex justify-between items-center">
               <h1 className="text-3xl font-bold">Level 29</h1>
               <span className="text-sm">2378 / 4000</span>
             </div>
-            <div className="relative pt-1">
-            <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-purple-200">
+            <div className="relative pt-4">
+            <div className="overflow-hidden h-4 mb-4 text-xs flex rounded-full bg-purple-200">
       <style>{glowAnimation}</style>
       <div
         style={{
           width: '59%',
           animation: 'glow 1s ease-in-out infinite alternate',
-          background: 'linear-gradient(90deg, #a855f7, #d946ef)',
+          background: 'linear-gradient(90deg, #D766FF, #E59CFF)',
           borderRadius: 'inherit',
           boxShadow: '0 0 20px #a855f7, 0 0 30px #a855f7, 0 0 40px #d946ef, 0 0 50px #d946ef', // Add initial glow effect
         }}
@@ -244,7 +244,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="bg-gray-800 p-4 rounded-lg">
+          <div style={{ backgroundColor: '#271D34' }} className=" p-4 rounded-lg">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <img
@@ -359,7 +359,7 @@ const Profile = () => {
         {/* Left Cards */}
         <div className="w-2/3 p-2">
           <div className="flex space-x-4">
-            <div className="relative bg-gray-800 rounded-lg w-1/3 overflow-hidden" style={{ height: '200px' }}>
+            <div className="relative  rounded-lg w-1/3 overflow-hidden" style={{ height: '200px', backgroundColor: '#271D34' }}>
               <img
                 src={defaultBannerImage}
                 alt="Tic Tac Toe"
@@ -368,20 +368,20 @@ const Profile = () => {
               <div className="relative z-10 p-4 h-full flex flex-col justify-between">
                 <div>
                   <p className="text-sm text-white text-left w-3/4 font-semibold">You have played this game 102 times</p>
-                  <div className="absolute top-4 right-4 bg-purple-600 text-white rounded-full h-8 w-8 flex items-center justify-center">27</div>
+                  <div className="absolute top-4 right-4  text-white rounded-full h-8 w-8 flex items-center justify-center" style={{ backgroundColor: '#FD9E96' }}>27</div>
                 </div>
                 <div className="flex justify-end">
-                  <button className="bg-purple-600 px-6 py-1 rounded-full text-white">Play</button>
+                  <button className=" px-6 py-1 rounded-full text-white" style={{ backgroundColor: '#FD9E96' }}>Play</button>
                 </div>
                 <div className="absolute bottom-6 left-4 text-white text-sm">Tic Tac Toe</div>
               </div>
               <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute border-t-2 border-l-2 border-purple-600 top-0 left-0 w-full h-full" style={{ width: 'calc(100% - 200px)', height: '70px' }}></div>
-                <div className="absolute border-b-2 border-r-2 border-purple-600 bottom-0 right-0 w-full h-full" style={{ width: '130px', height: 'calc(100% - 130px)' }}></div>
+                <div className="absolute border-t-4 border-l-4  top-0 left-0 w-full h-full" style={{ width: 'calc(100% - 200px)', height: '70px', borderColor: '#FD9E96' }}></div>
+                <div className="absolute border-b-4 border-r-4  bottom-0 right-0 w-full h-full" style={{ width: '130px', height: 'calc(100% - 130px)', borderColor: '#FD9E96' }}></div>
               </div>
             </div>
 
-            <div className="relative bg-gray-800 rounded-lg w-1/3 overflow-hidden" style={{ height: '200px' }}>
+            <div className="relative  rounded-lg w-1/3 overflow-hidden" style={{ height: '200px', backgroundColor: '#271D34' }}>
               <img
                 src={defaultBannerImage}
                 alt="Neon Snake"
@@ -390,20 +390,20 @@ const Profile = () => {
               <div className="relative z-10 p-4 h-full flex flex-col justify-between">
                 <div>
                   <p className="text-sm text-white text-left w-3/4 font-semibold">You're better than 85% of the players!</p>
-                  <div className="absolute top-4 right-4 bg-blue-600 text-white rounded-full h-8 w-8 flex items-center justify-center">38</div>
+                  <div className="absolute top-4 right-4  text-white rounded-full h-8 w-8 flex items-center justify-center" style={{ backgroundColor: '#91C1F9' }}>38</div>
                 </div>
                 <div className="flex justify-end">
-                  <button className="bg-blue-600 px-6 py-1 rounded-full text-white">Play</button>
+                  <button className=" px-6 py-1 rounded-full text-white" style={{ backgroundColor: '#91C1F9' }}>Play</button>
                 </div>
                 <div className="absolute bottom-6 left-4 text-white text-sm">Neon Snake</div>
               </div>
               <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute border-t-2 border-l-2 border-blue-600 top-0 left-0 w-full h-full" style={{ width: 'calc(100% - 200px)', height: '70px' }}></div>
-                <div className="absolute border-b-2 border-r-2 border-blue-600 bottom-0 right-0 w-full h-full" style={{ width: '130px', height: 'calc(100% - 130px)' }}></div>
+                <div className="absolute border-t-4 border-l-4  top-0 left-0 w-full h-full" style={{ width: 'calc(100% - 200px)', height: '70px', borderColor: '#91C1F9' }}></div>
+                <div className="absolute border-b-4 border-r-4  bottom-0 right-0 w-full h-full" style={{ width: '130px', height: 'calc(100% - 130px)', borderColor: '#91C1F9'}}></div>
               </div>
             </div>
 
-            <div className="relative bg-gray-800 rounded-lg w-1/3 overflow-hidden" style={{ height: '200px' }}>
+            <div className="relative  rounded-lg w-1/3 overflow-hidden" style={{ height: '200px', backgroundColor: '#271D34' }}>
               <img
                 src={defaultBannerImage}
                 alt="Rock Paper Scissors"
@@ -412,23 +412,23 @@ const Profile = () => {
               <div className="relative z-10 p-4 h-full flex flex-col justify-between">
                 <div>
                   <p className="text-sm text-white text-left w-3/4 font-semibold">You have 23/27 successes on this game</p>
-                  <div className="absolute top-4 right-4 bg-pink-600 text-white rounded-full h-8 w-8 flex items-center justify-center">23</div>
+                  <div className="absolute top-4 right-4 text-white rounded-full h-8 w-8 flex items-center justify-center" style={{ backgroundColor: '#FF8BC3' }}>23</div>
                 </div>
                 <div className="flex justify-end">
-                  <button className="bg-pink-600 px-6 py-1 rounded-full text-white">Play</button>
+                  <button className=" px-6 py-1 rounded-full text-white" style={{ backgroundColor: '#FF8BC3' }}>Play</button>
                 </div>
                 <div className="absolute bottom-6 left-4 text-white text-sm">Rock Paper Scissors</div>
               </div>
               <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute border-t-2 border-l-2 border-pink-600 top-0 left-0 w-full h-full" style={{ width: 'calc(100% - 200px)', height: '70px' }}></div>
-                <div className="absolute border-b-2 border-r-2 border-pink-600 bottom-0 right-0 w-full h-full" style={{ width: '130px', height: 'calc(100% - 130px)' }}></div>
+                <div className="absolute border-t-4 border-l-4  top-0 left-0 w-full h-full" style={{ width: 'calc(100% - 200px)', height: '70px', borderColor: '#FF8BC3' }}></div>
+                <div className="absolute border-b-4 border-r-4  bottom-0 right-0 w-full h-full" style={{ width: '130px', height: 'calc(100% - 130px)', borderColor: '#FF8BC3' }}></div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Right Circular Progress Bars */}
-        <div className="w-1/3 p-4 m-4 bg-gray-800 rounded-lg">
+        <div style={{ backgroundColor: '#271D34' }} className="w-1/3 p-4 m-4  rounded-lg">
           <div className="flex justify-between">
             {data.map((item, index) => (
               <CircularProgressBar
@@ -445,11 +445,11 @@ const Profile = () => {
       <div className="mt-4 flex">
         {/* Game History */}
 <div className="w-1/2 p-2">
-  <div className="bg-gray-800 p-4 rounded-lg">
+  <div style={{ backgroundColor: '#271D34' }} className=" p-4 rounded-lg">
     <h2 className="text-xl font-semibold mb-4">GAME HISTORY</h2>
     <table className="min-w-full mt-2">
       <thead>
-        <tr className="bg-gray-700">
+        <tr style={{ backgroundColor: '#1A1423' }}>
           <th className="text-left p-2 rounded-l-lg">Game</th>
           <th className="text-left p-2">Rating</th>
           <th className="text-left p-2">Points</th>
@@ -457,7 +457,7 @@ const Profile = () => {
         </tr>
       </thead>
       <tbody>
-        <tr className="bg-gray-900">
+        <tr style={{ backgroundColor: '#2F223F' }}>
           <td className="p-2 rounded-l-lg">
             <div className="flex items-center">
               <img src={defaultBannerImage} alt="Tic Tac Toe" className="h-6 w-6 mr-2"/>
@@ -480,7 +480,7 @@ const Profile = () => {
           </td>
           <td className="p-2 text-left rounded-r-lg">3:30</td>
         </tr>
-        <tr className="bg-gray-800">
+        <tr style={{ backgroundColor: '#271D34' }} className="">
           <td className="p-2 rounded-l-lg">
             <div className="flex items-center">
               <img src={defaultBannerImage} alt="Neon Snake" className="h-6 w-6 mr-2"/>
@@ -502,7 +502,7 @@ const Profile = () => {
           </td>
           <td className="p-2 text-left rounded-r-lg">13:45</td>
         </tr>
-        <tr className="bg-gray-900">
+        <tr style={{ backgroundColor: '#2F223F' }}>
           <td className="p-2 rounded-l-lg">
             <div className="flex items-center">
               <img src={defaultBannerImage} alt="Tic Tac Toe" className="h-6 w-6 mr-2"/>
@@ -525,7 +525,7 @@ const Profile = () => {
           </td>
           <td className="p-2 text-left rounded-r-lg">3:30</td>
         </tr>
-        <tr className="bg-gray-800">
+        <tr style={{ backgroundColor: '#271D34' }} className="">
           <td className="p-2 rounded-l-lg">
             <div className="flex items-center">
               <img src={defaultBannerImage} alt="Neon Snake" className="h-6 w-6 mr-2"/>
@@ -547,7 +547,7 @@ const Profile = () => {
           </td>
           <td className="p-2 text-left rounded-r-lg">13:45</td>
         </tr>
-        <tr className="bg-gray-900">
+        <tr style={{ backgroundColor: '#2F223F' }}>
           <td className="p-2 rounded-l-lg">
             <div className="flex items-center">
               <img src={defaultBannerImage} alt="Tic Tac Toe" className="h-6 w-6 mr-2"/>
@@ -570,7 +570,7 @@ const Profile = () => {
           </td>
           <td className="p-2 text-left rounded-r-lg">3:30</td>
         </tr>
-        <tr className="bg-gray-800">
+        <tr style={{ backgroundColor: '#271D34' }} className="">
           <td className="p-2 rounded-l-lg">
             <div className="flex items-center">
               <img src={defaultBannerImage} alt="Neon Snake" className="h-6 w-6 mr-2"/>
@@ -599,7 +599,7 @@ const Profile = () => {
 
 
 <div className="w-1/2 p-2">
-      <div className="bg-gray-800 p-4 rounded-lg">
+      <div style={{ backgroundColor: '#271D34' }} className=" p-4 rounded-lg">
         <h2 className="text-xl font-semibold text-white mb-2">FRIENDS</h2>
         <ul className="mt-4">
           {friends.map((friend, index) => (
@@ -641,7 +641,7 @@ const Profile = () => {
       </div>
 
       {/* Graph Section */}
-      <div className="bg-gray-800 p-4 rounded-lg">
+      <div style={{ backgroundColor: '#271D34' }} className=" p-4 rounded-lg">
       <h2 className="text-xl font-semibold text-white">GAMES OVER THE PAST 10 MONTHS</h2>
       <div className="mt-2">
         <Chart options={options} series={series} type="area" height={350} />
