@@ -9,4 +9,5 @@ export interface User {
   profile_picture?: string;
   ready?: boolean;
   owner?: boolean;
+  description?: string;
 }

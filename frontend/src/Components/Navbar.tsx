@@ -11,6 +11,8 @@ import { FaCheck } from "react-icons/fa6";
 import { RxCross1 } from "react-icons/rx";
 import { post } from "../utils/requests/post";
 import { toast } from "react-toastify";
+import { Link } from 'react-router-dom';
+
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -73,7 +75,9 @@ export const Navbar = () => {
                 <NotificationContainer notifications={notifications} />
               )}
             </div>
+            <Link to="/profile">
             <FaRegUser size={24} className="cursor-pointer" color="white" />
+            </Link>
             <IoLogOutOutline
               size={28}
               className="cursor-pointer"

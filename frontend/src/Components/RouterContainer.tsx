@@ -5,6 +5,7 @@ import { Overlay } from "./Overlay";
 import { Home } from "../Pages/Home";
 import { Login } from "../Pages/Login";
 import { Register } from "../Pages/Register";
+import Profile from "../Pages/Profile";
 import { RPS } from "../Games/RPS/RPS";
 import { TttRooms } from "../Games/TicTacToe/Components/TttRooms";
 import { socket } from "../socket";
@@ -34,6 +35,7 @@ export const RouterContainer = () => {
             <Route path="/rock-paper-scissors" element={<RPS />} />
             <Route path="/tic-tac-toe" element={<TttRooms />} />
             <Route path="/tic-tac-toe/:id" element={<TicTacToe />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </Overlay>
       ) : (
