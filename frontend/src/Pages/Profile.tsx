@@ -195,17 +195,6 @@ const Profile = () => {
     { percentage: 78, label: 'PILOT' },
   ];
 
-  const glowAnimation = `
-  @keyframes glow {
-    from {
-      box-shadow: 0 0 20px #D766FF, 0 0 30px #D766FF, 0 0 40px #E59CFF, 0 0 50px #E59CFF, 0 0 60px #E59CFF, 0 0 70px #E59CFF;
-    }
-    to {
-      box-shadow: 0 0 30px #D766FF, 0 0 40px #D766FF, 0 0 50px #E59CFF, 0 0 60px #E59CFF, 0 0 70px #E59CFF, 0 0 80px #E59CFF;
-    }
-  }
-`;
-
   return (
     <div className="bg-gray-900 text-white min-h-screen p-4">
       {/* Top Section */}
@@ -225,16 +214,16 @@ const Profile = () => {
             </div>
             <div className="relative pt-4">
             <div className="overflow-hidden h-4 mb-4 text-xs flex rounded-full bg-purple-200">
-      <style>{glowAnimation}</style>
+
       <div
         style={{
           width: '59%',
           animation: 'glow 1s ease-in-out infinite alternate',
           background: 'linear-gradient(90deg, #D766FF, #E59CFF)',
           borderRadius: 'inherit',
-          boxShadow: '0 0 20px #a855f7, 0 0 30px #a855f7, 0 0 40px #d946ef, 0 0 50px #d946ef', // Add initial glow effect
+          border: '1px solid #D766FF',
         }}
-        className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center"
+        className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center border-2 border-purple-500"
       ></div>
     </div>
               <div className="flex justify-between items-center">
