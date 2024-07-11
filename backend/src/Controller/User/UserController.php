@@ -47,7 +47,9 @@ class UserController extends BaseController
             return $this->json(['message' => 'User not found'], 404);
         }
 
-        return $this->json($user);
+        return $this->json($user, 200, [], ['circular_reference_handler' => function ($object) {
+            return $object->getId();
+        }]);
     }
 
     #[Route('', name: 'get_users', methods: ['GET'])]

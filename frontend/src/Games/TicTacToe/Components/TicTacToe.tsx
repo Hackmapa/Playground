@@ -11,10 +11,13 @@ import { User } from "../../../Interfaces/User";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { updateTttRoom } from "../../../Redux/rooms/tttRoomSlice";
 import { Button } from "../../../Components/Button/Button";
+import { post } from "../../../utils/requests/post";
+import { toast } from "react-toastify";
 
 type CellValue = "" | "X" | "O";
 
 export const TicTacToe: React.FC = () => {
+  const token = useSelector((state: RootState) => state.token);
   const room = useSelector((state: RootState) => state.tttRoom);
   const user = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
@@ -25,11 +28,18 @@ export const TicTacToe: React.FC = () => {
   const [canStart, setCanStart] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOwner, setGameOwner] = useState(false);
+  const [gameId, setGameId] = useState<Number>();
 
   const handleClick = (index: number) => {
-    console.log("clicked", room.currentPlayer.user?.id, user.id);
     room.currentPlayer.user?.id === user.id &&
-      socket.emit("makeMove", room.id, room.currentPlayer.user?.id, index);
+      socket.emit(
+        "makeMove",
+        room.id,
+        room.currentPlayer.user?.id,
+        index,
+        token,
+        gameId
+      );
   };
 
   const resetGame = () => {
@@ -76,7 +86,7 @@ export const TicTacToe: React.FC = () => {
   };
 
   const startGame = () => {
-    socket.emit("startTicTacToeGame", room.id);
+    socket.emit("startTicTacToeGame", room.id, token);
   };
 
   const getReadyPlayers = () => {
@@ -84,7 +94,6 @@ export const TicTacToe: React.FC = () => {
   };
 
   const checkOwner = () => {
-    // check if the user is the owner of the room with a loop
     room.players.forEach((player: User) => {
       if (player.id === user.id && player.owner) {
         setGameOwner(true);
@@ -99,7 +108,6 @@ export const TicTacToe: React.FC = () => {
     setTitle(`Room ${room.id}: ${room.name}`);
     checkOwner();
 
-    // check if there are maxplayers in the room, and if all players are ready
     if (room && room.players.length === room.maxPlayers) {
       if (getReadyPlayers() === room.maxPlayers) {
         setCanStart(true);
@@ -124,8 +132,12 @@ export const TicTacToe: React.FC = () => {
   useEffect(() => {
     getActualRoom();
 
-    socket.on("ticTacToeRoom", (r: TttRoom) => {
+    socket.on("ticTacToeRoom", (r: TttRoom, id: number) => {
       dispatch(updateTttRoom(r));
+
+      if (id) {
+        setGameId(id);
+      }
     });
 
     return () => {

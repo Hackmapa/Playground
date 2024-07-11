@@ -6,6 +6,6 @@ export interface User {
   password: string;
   email: string;
   phone?: string;
-  profile_picture?: string;
+  profilePicture?: string;
   ready?: boolean;
 }

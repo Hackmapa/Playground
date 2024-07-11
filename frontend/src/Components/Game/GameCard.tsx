@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { Game } from "../../Interfaces/Game";
+import { GameInfos } from "../../Interfaces/Game";
 import { Button } from "../Button/Button";
 
 interface GameCardProps {
-  game: Game;
+  game: GameInfos;
 }
 
 export const GameCard = (props: GameCardProps) => {
