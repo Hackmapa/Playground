@@ -70,7 +70,7 @@ To set up and install the components of this monorepo, follow the instructions o
 
 3. Once dependencies are installed, launch the server:
    ```
-   npm start
+   nodemon
    ```
 
 ---
