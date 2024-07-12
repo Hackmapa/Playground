@@ -100,9 +100,13 @@ class FriendController extends BaseController
         $entityManager->persist($notificationUser);
         $entityManager->flush();
 
+
         return $this->json([
-            'message' => 'Friend request sent.', 
-            'status' => Response::HTTP_OK
+            'message' => 'Friend request sent.',
+            'status' => Response::HTTP_OK,
+            'notification' => $notification
+//            'userId' => $notificationUser->getUser()->getId(),
+//            'friendId' => $notificationUser->getFriend()->getId()
         ]);
     }
 

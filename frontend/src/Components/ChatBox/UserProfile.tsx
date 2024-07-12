@@ -4,6 +4,7 @@ import { Button } from "../Button/Button";
 import { post } from "../../utils/requests/post";
 import { useAppSelector } from "../../hooks/hooks";
 import { toast } from "react-toastify";
+import { socket } from "../../socket";
 
 interface UserProfileProps {
   user: User;
@@ -29,6 +30,10 @@ export const UserProfile = (props: UserProfileProps) => {
     } else {
       toast.success(response.message);
       setHasSentRequest(true);
+      socket.emit("friendShipAdded", {
+        userId: response.userId,
+        friendId: response.friendId,
+      });
     }
   };
 

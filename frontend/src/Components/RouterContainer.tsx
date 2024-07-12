@@ -22,6 +22,8 @@ export const RouterContainer = () => {
     if (isLogged) {
       socket.connect();
 
+      console.log("login", user);
+
       socket.emit("login", user);
     }
   }, []);

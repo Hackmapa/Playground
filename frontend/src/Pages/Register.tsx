@@ -5,7 +5,7 @@ import { Button } from "../Components/Button/Button";
 import { User } from "../Interfaces/User";
 import { login } from "../Redux/token/tokenSlice";
 import { addUser } from "../Redux/user/userSlice";
-import { useAppDispatch } from "../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { get } from "../utils/requests/get";
 import { post } from "../utils/requests/post";
 import { ToastContainer, toast } from "react-toastify";
@@ -14,6 +14,8 @@ import { socket } from "../socket";
 export const Register = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const actualUser = useAppSelector((state) => state.user);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -70,9 +72,9 @@ export const Register = () => {
       const user: User = await get("users/me", token);
       dispatch(addUser(user));
 
-      if (user.email.length > 0) {
+      if (actualUser.email.length > 0) {
         socket.connect();
-        socket.emit("login", user);
+        socket.emit("login", actualUser);
 
         navigate("/");
       } else {
