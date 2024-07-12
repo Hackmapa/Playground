@@ -74,11 +74,11 @@ export const Navbar = () => {
                 <NotificationContainer notifications={notifications} />
               )}
             </div>
-            <FaRegUser
-              size={24}
-              className="cursor-pointer"
-              color="white"
-              onClick={() => navigate("profile")}
+            <img
+              src={user?.profilePicture}
+              alt="profile"
+              className="w-8 h-8 rounded-full hover:cursor-pointer"
+              onClick={() => navigate(`/profile`)}
             />
             <IoLogOutOutline
               size={28}

@@ -1,3 +1,4 @@
+import { Turn } from "./Turn";
 import { User } from "./User";
 
 export interface GameInfos {
@@ -15,4 +16,5 @@ export interface Game {
   gameId: number;
   finished: boolean;
   draw: boolean;
+  turns: Turn[];
 }

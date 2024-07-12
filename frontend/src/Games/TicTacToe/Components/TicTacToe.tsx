@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import CircleIcon from "../Assets/circle.png";
-import CrossIcon from "../Assets/cross.png";
 import { useNavigate, useParams } from "react-router-dom";
 import { socket } from "../../../socket";
 import { useSelector } from "react-redux";
@@ -11,10 +9,7 @@ import { User } from "../../../Interfaces/User";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { updateTttRoom } from "../../../Redux/rooms/tttRoomSlice";
 import { Button } from "../../../Components/Button/Button";
-import { post } from "../../../utils/requests/post";
-import { toast } from "react-toastify";
-
-type CellValue = "" | "X" | "O";
+import { TicTacToeBoard } from "./TicTacToeBoard";
 
 export const TicTacToe: React.FC = () => {
   const token = useSelector((state: RootState) => state.token);
@@ -28,46 +23,12 @@ export const TicTacToe: React.FC = () => {
   const [canStart, setCanStart] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOwner, setGameOwner] = useState(false);
-  const [gameId, setGameId] = useState<Number>();
-
-  const handleClick = (index: number) => {
-    room.currentPlayer.user?.id === user.id &&
-      socket.emit(
-        "makeMove",
-        room.id,
-        room.currentPlayer.user?.id,
-        index,
-        token,
-        gameId
-      );
-  };
+  const [gameId, setGameId] = useState<number>();
 
   const resetGame = () => {
     socket.emit("resetTicTacToeGame", room.id);
     room && setTitle(`Room ${room.id}: ${room.name}`);
   };
-
-  const canClick = (index: number) => {
-    return (
-      room.currentPlayer.user?.id === user.id && room.currentBoard[index] === ""
-    );
-  };
-
-  const renderRow = (startIndex: number) =>
-    room && (
-      <div className="flex justify-between">
-        {room.currentBoard
-          .slice(startIndex, startIndex + 3)
-          .map((cell, index) => (
-            <Cell
-              key={startIndex + index}
-              value={cell}
-              canClick={canClick(startIndex + index)}
-              onClick={() => handleClick(startIndex + index)}
-            />
-          ))}
-      </div>
-    );
 
   const getActualRoom = () => {
     socket.emit("getTicTacToeGame", id);
@@ -154,11 +115,7 @@ export const TicTacToe: React.FC = () => {
               {title}
             </h1>
 
-            <div className="flex flex-col items-center justify-center py-10 m-auto">
-              {renderRow(0)}
-              {renderRow(3)}
-              {renderRow(6)}
-            </div>
+            <TicTacToeBoard gameId={gameId} room={room} />
 
             {room && !gameStarted ? (
               !canStart ? (
@@ -248,33 +205,5 @@ export const TicTacToe: React.FC = () => {
         </div>
       )}
     </>
-  );
-};
-
-interface CellProps {
-  value: CellValue;
-  canClick: boolean;
-  onClick: () => void;
-}
-
-const Cell = (props: CellProps) => {
-  const { value, canClick, onClick } = props;
-
-  return (
-    <div
-      className={
-        (canClick ? "cursor-pointer " : "cursor-not-allowed") +
-        " w-32 h-32 bg-[#1F3540] border-4 border-[#0F1B21] rounded-lg flex justify-center items-center"
-      }
-      onClick={canClick ? onClick : undefined}
-    >
-      {value && (
-        <img
-          src={value === "X" ? CrossIcon : CircleIcon}
-          className="w-24 h-24"
-          alt={`${value} icon`}
-        />
-      )}
-    </div>
   );
 };
