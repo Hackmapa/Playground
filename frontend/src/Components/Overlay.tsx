@@ -21,7 +21,7 @@ export const Overlay = (props: OverlayProps) => {
     return () => {
       socket.disconnect();
     };
-  }, [dispatch]);
+  }, []);
 
   const { children } = props;
   return (

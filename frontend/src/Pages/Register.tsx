@@ -1,5 +1,5 @@
 import { Input } from "../Components/Input/Input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "../Components/Button/Button";
 import { User } from "../Interfaces/User";
@@ -95,6 +95,10 @@ export const Register = () => {
       password === confirmPassword
     );
   };
+
+  useEffect(() => {
+    document.title = "Hackmapa - Register";
+  }, []);
 
   return (
     <div className="flex flex-col h-screen sm:flex-row justify-center items-center bg-login bg-no-repeat bg-cover">

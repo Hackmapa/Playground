@@ -41,7 +41,13 @@ To set up and install the components of this monorepo, follow the instructions o
    composer install
    ```
 
-3. After installing dependencies, start the backend server:
+3. Generate JWT keys:
+
+   ```
+   php bin/console lexik:jwt:generate-keypair
+   ```
+
+4. After installing dependencies, start the backend server:
    ```
    symfony server:start
    ```
@@ -64,7 +70,7 @@ To set up and install the components of this monorepo, follow the instructions o
 
 3. Once dependencies are installed, launch the server:
    ```
-   npm start
+   nodemon
    ```
 
 ---

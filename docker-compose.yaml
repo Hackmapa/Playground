@@ -18,7 +18,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: frontend
+      args:
+        - REACT_APP_API_URL=""
+        - REACT_APP_SOCKET_URL=":8081"
     volumes:
       - frontend_volume:/var/lib/frontend
     environment:
@@ -27,7 +29,7 @@ services:
     depends_on:
       - backend
     env_file:
-      - ./frontend/.env.prod
+      - ./frontend/.env.production
 
   backend:
     build:
@@ -55,6 +57,8 @@ services:
       - "8081:8081"
     environment:
       PORT: 8081
+    env_file:
+      - ./server/.env.production
 
   db:
     image: mariadb
