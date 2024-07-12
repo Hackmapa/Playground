@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input } from "../Components/Input/Input";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { login } from "../Redux/token/tokenSlice";
 import { post } from "../utils/requests/post";
 import { get } from "../utils/requests/get";
@@ -13,6 +13,8 @@ import { socket } from "../socket";
 export const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const actualUser = useAppSelector((state) => state.user);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,11 +49,11 @@ export const Login = () => {
 
       dispatch(addUser(user));
 
-      if (user.email.length > 0) {
+      if (actualUser.email.length > 0) {
         toast.success("Login successful!");
 
         socket.connect();
-        socket.emit("login", user);
+        socket.emit("login", actualUser);
 
         navigate("/");
       }
