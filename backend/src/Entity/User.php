@@ -60,11 +60,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: NotificationUser::class, mappedBy: 'friend')]
     private Collection $notificationFriends;
 
+    #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'winner')]
+    private Collection $winnedGames;
+
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'players')]
+    private Collection $games;
+
+
     public function __construct()
     {
         $this->badges = new ArrayCollection();
         $this->notificationUsers = new ArrayCollection();
         $this->notificationFriends = new ArrayCollection();
+        $this->winnedGames = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -289,6 +297,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($notificationFriend->getFriend() === $this) {
                 $notificationFriend->setFriend(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getWinnedGames(): Collection
+    {
+        return $this->winnedGames;
+    }
+
+    public function addWinnedGame(Game $winnedGame): static
+    {
+        if (!$this->winnedGames->contains($winnedGame)) {
+            $this->winnedGames->add($winnedGame);
+            $winnedGame->setWinner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWinnedGame(Game $winnedGame): static
+    {
+        if ($this->winnedGames->removeElement($winnedGame)) {
+            // set the owning side to null (unless already changed)
+            if ($winnedGame->getWinner() === $this) {
+                $winnedGame->setWinner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): static
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->addPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): static
+    {
+        if ($this->games->removeElement($game)) {
+            $game->removePlayer($this);
         }
 
         return $this;

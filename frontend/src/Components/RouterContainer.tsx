@@ -10,6 +10,8 @@ import { TttRooms } from "../Games/TicTacToe/Components/TttRooms";
 import { socket } from "../socket";
 import { TicTacToe } from "../Games/TicTacToe/Components/TicTacToe";
 import { useEffect } from "react";
+import { Profile } from "../Pages/Profile";
+import { TicTacToeReplay } from "../Games/TicTacToe/Components/TicTacToeReplay";
 
 export const RouterContainer = () => {
   const token = useSelector((state: RootState) => state.token);
@@ -34,6 +36,11 @@ export const RouterContainer = () => {
             <Route path="/rock-paper-scissors" element={<RPS />} />
             <Route path="/tic-tac-toe" element={<TttRooms />} />
             <Route path="/tic-tac-toe/:id" element={<TicTacToe />} />
+            <Route
+              path="/tic-tac-toe/replay/:gameId"
+              element={<TicTacToeReplay />}
+            />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </Overlay>
       ) : (

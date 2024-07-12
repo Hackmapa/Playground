@@ -1,4 +1,4 @@
-module.exports = (io, games, users) => {
+module.exports = (io, games) => {
   io.on("connection", (socket) => {
     // create tic tac toe game
     socket.on("createTicTacToeGame", (name, user) => {
@@ -90,7 +90,7 @@ module.exports = (io, games, users) => {
       io.to(game.id).emit("ticTacToeRoom", game);
     });
 
-    socket.on("startTicTacToeGame", (gameId) => {
+    socket.on("startTicTacToeGame", async (gameId, token) => {
       const game = games.find((game) => game.id == gameId);
       game.started = true;
       const currentPlayer = Math.floor(Math.random() * game.players.length);
@@ -103,10 +103,17 @@ module.exports = (io, games, users) => {
 
       console.log("Game started: ", game.id);
 
-      io.to(game.id).emit("ticTacToeRoom", game);
+      const body = {
+        gameId: 2,
+        players: game.players,
+      };
+
+      const response = await post("games", JSON.stringify(body), token);
+      const id = response.id;
+      io.to(game.id).emit("ticTacToeRoom", game, id);
     });
 
-    socket.on("makeMove", (gameId, userId, index) => {
+    socket.on("makeMove", async (gameId, userId, index, token, dbGameId) => {
       const game = games.find((game) => game.id == gameId);
       const user = game.players.find((user) => user.id === userId);
       const player = game.currentPlayer;
@@ -126,6 +133,15 @@ module.exports = (io, games, users) => {
           user: null,
         };
         game.finished = true;
+
+        const body = {
+          finished: true,
+          draw: false,
+          winner: player.user.id,
+        };
+
+        const url = `games/${dbGameId}`;
+        await put(url, JSON.stringify(body), token);
       } else if (draw) {
         game.draw = true;
         game.currentPlayer = {
@@ -133,6 +149,14 @@ module.exports = (io, games, users) => {
           user: null,
         };
         game.finished = true;
+
+        const body = {
+          finished: true,
+          draw: true,
+        };
+
+        const url = `games/${dbGameId}`;
+        await put(url, JSON.stringify(body), token);
       } else {
         game.currentPlayer = {
           symbol: player.symbol === "X" ? "O" : "X",
@@ -140,7 +164,9 @@ module.exports = (io, games, users) => {
         };
       }
 
-      console.log("Move made: ", game.id);
+      const url = `turns/${parseInt(dbGameId)}`;
+      const body = JSON.stringify(game);
+      await post(url, body, token);
 
       io.to(game.id).emit("ticTacToeRoom", game);
     });
@@ -192,4 +218,28 @@ const checkWin = (updatedBoard) => {
 
 const checkDraw = (updatedBoard) => {
   return updatedBoard.every((cell) => cell !== "");
+};
+
+const post = async (url, body, token = "") => {
+  const response = await fetch(`${process.env.API_URL}/api/${url}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body,
+  });
+  return await response.json();
+};
+
+const put = async (url, body, token = "") => {
+  const response = await fetch(`${process.env.API_URL}/api/${url}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body,
+  });
+  return await response.json();
 };

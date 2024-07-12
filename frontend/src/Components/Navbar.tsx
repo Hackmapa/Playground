@@ -44,6 +44,7 @@ export const Navbar = () => {
     };
 
     getAllNotifications();
+    console.log("getting notifications");
   }, [user, token]);
 
   return (
@@ -73,7 +74,12 @@ export const Navbar = () => {
                 <NotificationContainer notifications={notifications} />
               )}
             </div>
-            <FaRegUser size={24} className="cursor-pointer" color="white" />
+            <img
+              src={user?.profilePicture}
+              alt="profile"
+              className="w-8 h-8 rounded-full hover:cursor-pointer"
+              onClick={() => navigate(`/profile`)}
+            />
             <IoLogOutOutline
               size={28}
               className="cursor-pointer"

@@ -9,6 +9,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Psr\Log\LoggerInterface;
 
 #[Route('/api/users', name: 'user_')]
 class UserController extends BaseController
@@ -47,7 +49,9 @@ class UserController extends BaseController
             return $this->json(['message' => 'User not found'], 404);
         }
 
-        return $this->json($user);
+        return $this->json($user, 200, [], ['circular_reference_handler' => function ($object) {
+            return $object->getId();
+        }]);
     }
 
     #[Route('', name: 'get_users', methods: ['GET'])]
@@ -95,5 +99,40 @@ class UserController extends BaseController
         $this->entityManager->flush();
 
         return $this->json($user);
+    }
+
+    #[Route('/{id}/profile-picture', name: 'update_profile_picture', methods: ['POST'])]
+    public function updateProfilePicture(int $id, Request $request, EntityManagerInterface $em, LoggerInterface $logger)
+    {
+        $user = $this->userRepository->find($id);
+
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not authenticated'], 401);
+        }
+
+        $file = $request->files->get('profile_picture');
+
+        if (!$file) {
+            return new JsonResponse(['error' => 'No file uploaded'], 400);
+        }
+
+        $uploadsDirectory = $this->getParameter('uploads_directory');
+
+        $filename = md5(uniqid()) . '.' . $file->guessExtension();
+        
+
+        try {
+            $file->move($uploadsDirectory, $filename);
+        } catch (FileException $e) {
+            return new JsonResponse(['error' => 'Failed to upload file'], 500);
+        }
+
+        $profilePictureUrl = $this->generateUrl('uploaded_file', ['filename' => $filename], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $user->setProfilePicture($profilePictureUrl);
+        $em->persist($user);
+        $em->flush();
+
+        return new JsonResponse(['success' => true, 'profile_picture_url' => $profilePictureUrl]);
     }
 }

@@ -48,6 +48,7 @@ class RegistrationController extends AbstractController
         $user->setUsername($data['username']);
         $user->setFirstname($data['firstname']);
         $user->setLastname($data['lastname']);
+        $user->setProfilePicture('/images/default.png');
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

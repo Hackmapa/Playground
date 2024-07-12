@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { GameCard } from "../Components/Game/GameCard";
 import g from "../Games/games.json";
-import { Game } from "../Interfaces/Game";
+import { GameInfos } from "../Interfaces/Game";
 
 export const Home = () => {
   useEffect(() => {
@@ -12,7 +12,7 @@ export const Home = () => {
     <div>
       <h1>Home</h1>
       <div className="flex flex-wrap gap-2 px-10 justify-center">
-        {g.games.map((game: Game) => (
+        {g.games.map((game: GameInfos) => (
           <GameCard key={game.id} game={game} />
         ))}
       </div>
