@@ -105,13 +105,15 @@ export const Home = () => {
         <Loader />
       ) : (
         <>
-          <h2 className="text-left text-2xl font-bold">Vos jeux préférés</h2>
+          <h2 className="text-left text-2xl font-bold">Vos jeux préférés :</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-5 mt-5">
             {preferedGames.map((game: GameInfos) => (
               <GameCard key={game.id} game={game} />
             ))}
           </div>
-          <h2 className="text-left text-2xl font-bold mt-6">Notre sélection</h2>
+          <h2 className="text-left text-2xl font-bold mt-6">
+            Notre sélection :
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-5 mt-5">
             {gamesCards.map((game: GameInfos) => (
               <GameCard key={game.id} game={game} />
