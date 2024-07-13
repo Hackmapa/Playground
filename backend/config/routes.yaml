@@ -18,3 +18,9 @@ uploaded_file:
   controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
   defaults:
     url: "%kernel.project_dir%/public/uploads/{filename}"
+
+default_file:
+  path: /images/{filename}
+  controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
+  defaults:
+    url: "%kernel.project_dir%/public/images/{filename}"

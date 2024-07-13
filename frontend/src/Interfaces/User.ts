@@ -11,11 +11,13 @@ export interface User {
   firstname: string;
   lastname: string;
   badges: string[];
-  profilePicture: string;
+  profile_picture: string;
   notificationUsers?: User[];
   notificationFriends?: User[];
   winnedGames?: Game[];
   games?: Game[];
   ready?: boolean;
   owner?: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

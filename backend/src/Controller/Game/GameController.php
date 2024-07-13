@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Game;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 #[Route('/api/games', name: 'games_')]
@@ -18,16 +19,19 @@ class GameController extends AbstractController
     private $gameRepository;
     private $entityManager;
     private $userRepository;
+    private $serializer;
 
     public function __construct(
         GameRepository $gameRepository,
         EntityManagerInterface $entityManager,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        SerializerInterface $serializer
         )
     {
         $this->gameRepository = $gameRepository;
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
+        $this->serializer = $serializer;
     }
 
     #[Route('', name: 'index', methods: ['GET'])]
@@ -35,9 +39,9 @@ class GameController extends AbstractController
     {
         $games = $this->gameRepository->findAll();
 
-        return $this->json($games, 200, [], ['circular_reference_handler' => function ($object) {
-            return $object->getId();
-        }]);
+        $data = $this->serializer->serialize($games, 'json', ['groups' => 'game_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
@@ -54,13 +58,14 @@ class GameController extends AbstractController
             $user = $this->userRepository->find($player['id']);
             $game->addPlayer($user);
         }
+        $game->setCreatedAt(new \DateTimeImmutable());
 
         $this->entityManager->persist($game);
         $this->entityManager->flush();
 
-        return $this->json($game, 200, [], ['circular_reference_handler' => function ($object) {
-            return $object->getId();
-        }]);
+        $data = $this->serializer->serialize($game, 'json', ['groups' => 'game_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
@@ -72,9 +77,9 @@ class GameController extends AbstractController
             return $this->json(['message' => 'Game not found'], 404);
         }
 
-        return $this->json($game, 200, [], ['circular_reference_handler' => function ($object) {
-            return $object->getId();
-        }]);
+        $data = $this->serializer->serialize($game, 'json', ['groups' => 'game_list']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
@@ -99,9 +104,9 @@ class GameController extends AbstractController
         $this->entityManager->persist($game);
         $this->entityManager->flush();
 
-        return $this->json($game, 200, [], ['circular_reference_handler' => function ($object) {
-            return $object->getId();
-        }]);
+        $data = $this->serializer->serialize($game, 'json', ['groups' => 'game_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/user/{id}', name: 'user_games', methods: ['GET'])]
@@ -115,8 +120,8 @@ class GameController extends AbstractController
 
         $games = $user->getGames();
 
-        return $this->json($games, 200, [], ['circular_reference_handler' => function ($object) {
-            return $object->getId();
-        }]);
+        $data = $this->serializer->serialize($games, 'json', ['groups' => 'game_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 }

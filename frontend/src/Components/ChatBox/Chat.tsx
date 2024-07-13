@@ -4,11 +4,10 @@ import { ChatMessage } from "./Message";
 interface ChatProps {
   messages: Message[];
   show: boolean;
-  setShow: (show: boolean) => void;
 }
 
 export const Chat = (props: ChatProps) => {
-  const { messages, show, setShow } = props;
+  const { messages, show } = props;
 
   return (
     <>

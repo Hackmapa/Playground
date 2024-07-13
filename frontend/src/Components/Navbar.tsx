@@ -1,5 +1,4 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { FaRegUser } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
@@ -11,6 +10,8 @@ import { FaCheck } from "react-icons/fa6";
 import { RxCross1 } from "react-icons/rx";
 import { post } from "../utils/requests/post";
 import { toast } from "react-toastify";
+import { GoPeople } from "react-icons/go";
+import { FaSearch } from "react-icons/fa";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -52,22 +53,28 @@ export const Navbar = () => {
   }, [user, token]);
 
   return (
-    <div className="sticky top-0 z-30 w-full px-4 py-2 bg-darkBlue text-white">
-      <div className="flex items-center justify-between px-2 py-2">
+    <div className="sticky top-0 z-30 w-full px-4 py-2 bg-darkBlue-gray text-white">
+      <div className="flex items-center justify-between px-2">
         <img
           src="logo.svg"
           alt="logo"
           className="w-12 cursor-pointer"
           onClick={() => navigate("/")}
         />
-        <p>
-          {users.length > 0
-            ? `Users Online: ${users.length}`
-            : "No users online"}
-        </p>
+        <div className="flex items-center w-1/4 bg-darkBlue rounded-3xl">
+          <input
+            type="text"
+            placeholder="Recherchez un jeu ..."
+            className="flex-grow bg-darkBlue font-bold px-5 py-2 text-gray-400 focus:outline-none focus:ring-0 rounded-3xl"
+          />
+          <FaSearch className="text-gray-400 mr-4" />
+        </div>
         <div className="flex items-center gap-10">
-          <div className="flex gap-4">
-            <div className="relative">
+          <div className="flex gap-2">
+            <div className="relative w-10 h-10 bg-darkBlue flex items-center justify-center rounded-full p-2">
+              <GoPeople size={28} className="cursor-pointer" color="white" />
+            </div>
+            <div className="relative w-10 h-10 bg-darkBlue flex items-center justify-center rounded-full p-2">
               <IoMdNotificationsOutline
                 size={28}
                 className="cursor-pointer"
@@ -79,17 +86,19 @@ export const Navbar = () => {
               )}
             </div>
             <img
-              src={user?.profilePicture}
+              src={user?.profile_picture}
               alt="profile"
-              className="w-8 h-8 rounded-full hover:cursor-pointer"
+              className="w-10 h-10 rounded-full hover:cursor-pointer"
               onClick={() => navigate(`/profile`)}
             />
-            <IoLogOutOutline
-              size={28}
-              className="cursor-pointer"
-              color="white"
-              onClick={handleLogout}
-            />
+            <div className="w-10 h-10 bg-darkBlue flex items-center justify-center rounded-full p-2">
+              <IoLogOutOutline
+                size={28}
+                className="cursor-pointer"
+                color="white"
+                onClick={handleLogout}
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ export interface Game {
   id: number;
   winner: User;
   players: User[];
-  gameId: number;
+  game_id: number;
   finished: boolean;
   draw: boolean;
   turns: Turn[];

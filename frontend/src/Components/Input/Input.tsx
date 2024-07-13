@@ -29,12 +29,12 @@ export const Input: React.FC<InputProps> = ({
 
   const labelClass = `absolute text-white left-4 transition-all duration-200 ${
     value || isFocused
-      ? "top-0 text-xs transform -translate-y-1/2 bg-darkBlue-light p-2 rounded-md"
+      ? "top-0 text-xs transform -translate-y-1/2 bg-darkBlue-gray p-2 rounded-md"
       : "top-1/2 transform -translate-y-1/2"
   }`;
 
   return (
-    <div className="flex items-center rounded-md w-full mt-6 bg-darkBlue-light relative">
+    <div className="flex items-center rounded-md w-full mt-6 bg-darkBlue-gray relative">
       <label htmlFor={inputId} className={labelClass}>
         {placeholder}
       </label>

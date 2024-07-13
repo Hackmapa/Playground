@@ -37,30 +37,32 @@ export const ChatMessage = (props: ChatMessageProps) => {
   return (
     <div
       className={
-        (message.user.id === user.id
-          ? "self-end bg-green-400"
-          : "bg-blue-400") + " m-2 rounded-md w-2/5"
+        (message.user.id === user.id ? "self-end bg-blue-600" : "bg-gray-500") +
+        " m-2 rounded-md w-2/5 text-white p-1 text-xs"
       }
     >
-      <div className="flex justify-between gap-2 border-b-[1px] p-1">
-        <div className="flex items-center gap-1">
-          <FaCircle
-            className={
-              isUserOnline(message.user.id) ? "text-green-800" : "text-red-700"
-            }
-            size={8}
+      <div className="flex justify-between gap-2 p-1">
+        <div className="flex items-center gap-2 w-full">
+          <img
+            src={message.user.profile_picture}
+            alt="profile"
+            className="w-8 h-8 rounded-full"
           />
-          <p
-            className="text-sm font-semibold text-start cursor-pointer"
-            onClick={() => setOpen(true)}
-          >
-            {message.user.username}
-          </p>
-        </div>
+          <div className="flex justify-between w-full">
+            <div className="flex flex-col justify-between text-left">
+              <p>{message.user.username}</p>
+              <p className="text-start">{getMessageDate(message.date)}</p>
+            </div>
 
-        <p className="text-sm text-start">{getMessageDate(message.date)}</p>
+            {isUserOnline(message.user.id) ? (
+              <FaCircle color="green" size={15} />
+            ) : (
+              <FaCircle color="red" size={15} />
+            )}
+          </div>
+        </div>
       </div>
-      <div className="flex justify-between">
+      <div className="flex justify-between overflow-x-auto">
         <p className="text-sm text-start px-1 p-2">{message.message}</p>
       </div>
       <ModalBox

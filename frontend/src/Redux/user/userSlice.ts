@@ -12,13 +12,15 @@ const initialState: User = {
   firstname: "",
   lastname: "",
   badges: [],
-  profilePicture: "",
+  profile_picture: "",
   notificationUsers: [],
   notificationFriends: [],
   winnedGames: [],
   games: [],
   ready: false, // Assuming default value
   owner: false, // Assuming default value
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
 
 export const userSlice = createSlice({
@@ -26,38 +28,9 @@ export const userSlice = createSlice({
   initialState: initialState,
   reducers: {
     addUser: (state, action) => {
-      const {
-        id,
-        email,
-        userIdentifier,
-        roles,
-        password,
-        currency,
-        username,
-        firstname,
-        lastname,
-        badges,
-        profilePicture,
-        ready,
-        owner,
-      } = action.payload;
+      state = action.payload;
 
-      return {
-        ...state,
-        id,
-        email,
-        userIdentifier,
-        roles,
-        password,
-        currency,
-        username,
-        firstname,
-        lastname,
-        badges,
-        profilePicture,
-        ready,
-        owner,
-      };
+      return state;
     },
     removeUser: (state) => {
       state = initialState;
@@ -65,7 +38,7 @@ export const userSlice = createSlice({
       return state;
     },
     updateProfilePicture: (state, action) => {
-      state.profilePicture = action.payload;
+      state.profile_picture = action.payload;
 
       return state;
     },

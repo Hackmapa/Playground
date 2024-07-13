@@ -10,7 +10,7 @@ import { TttRooms } from "../Games/TicTacToe/Components/TttRooms";
 import { socket } from "../socket";
 import { TicTacToe } from "../Games/TicTacToe/Components/TicTacToe";
 import { useEffect } from "react";
-import { Profile } from "../Pages/Profile";
+import { Profile } from "../Pages/Profile/Profile";
 import { TicTacToeReplay } from "../Games/TicTacToe/Components/TicTacToeReplay";
 
 export const RouterContainer = () => {
@@ -21,8 +21,6 @@ export const RouterContainer = () => {
   useEffect(() => {
     if (isLogged) {
       socket.connect();
-
-      console.log("login", user);
 
       socket.emit("login", user);
     }
