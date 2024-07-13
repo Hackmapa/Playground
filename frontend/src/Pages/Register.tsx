@@ -72,9 +72,9 @@ export const Register = () => {
       const user: User = await get("users/me", token);
       dispatch(addUser(user));
 
-      if (actualUser.email.length > 0) {
+      if (user.email.length > 0) {
         socket.connect();
-        socket.emit("login", actualUser);
+        socket.emit("login", user);
 
         navigate("/");
       } else {
@@ -104,7 +104,7 @@ export const Register = () => {
 
   return (
     <div className="flex flex-col h-screen sm:flex-row justify-center items-center bg-login bg-no-repeat bg-cover">
-      <div className="flex flex-col w-2/5 h-4/5 bg-darkBlue">
+      <div className="flex flex-col w-2/5 h-4/5 bg-darkBlue-dark">
         <div className="flex flex-col flex-grow py-10 m-3 overflow-auto rounded-3xl">
           <div className="flex-grow">
             <div className="flex justify-center">

@@ -10,6 +10,7 @@ use App\Repository\TurnRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Turn;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/turns', name: 'turns_')]
 class TurnController extends AbstractController
@@ -17,12 +18,15 @@ class TurnController extends AbstractController
     private $gameRepository;
     private $turnRepository;
     private $entityManager;
+    private $serializer;
 
-    public function __construct(GameRepository $gameRepository, TurnRepository $turnRepository, EntityManagerInterface $entityManager)
+
+    public function __construct(GameRepository $gameRepository, TurnRepository $turnRepository, EntityManagerInterface $entityManager, SerializerInterface $serializerInterface)
     {
         $this->gameRepository = $gameRepository;
         $this->turnRepository = $turnRepository;
         $this->entityManager = $entityManager;
+        $this->serializer = $serializerInterface;
     }
 
     #[Route('/{game_id}', name: 'get_turns', methods: ['GET'])]
@@ -40,7 +44,9 @@ class TurnController extends AbstractController
             return $this->json(['message' => 'Turns not found'], 404);
         }
 
-        return $this->json($turns);
+        $data = $this->serializer->serialize($turns, 'json', ['groups' => 'turn_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/{game_id}', name: 'create_turn', methods: ['POST'])]
@@ -62,8 +68,8 @@ class TurnController extends AbstractController
         $this->entityManager->persist($turn);
         $this->entityManager->flush();
 
-        return $this->json($turn, 200, [], ['circular_reference_handler' => function ($object) {
-            return $object->getId();
-        }]);
+        $data = $this->serializer->serialize($turn, 'json', ['groups' => 'turn_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 }

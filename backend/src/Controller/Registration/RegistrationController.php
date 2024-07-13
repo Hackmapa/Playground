@@ -42,13 +42,25 @@ class RegistrationController extends AbstractController
             return $this->json(['message' => 'Email already in use'], Response::HTTP_CONFLICT);
         }
 
+        // get storage path
+        $storagePath = $this->getParameter('kernel.project_dir') . '/public/images/';
+
         $user->setEmail($data['email']);
         $user->setPassword($this->userPasswordHasher->hashPassword($user, $data['password']));
         $user->setCurrency(0);
         $user->setUsername($data['username']);
         $user->setFirstname($data['firstname']);
         $user->setLastname($data['lastname']);
-        $user->setProfilePicture('/images/default.png');
+        $user->setRoles(['ROLE_USER']);
+        $user->setRoles(['ROLE_USER']);
+        $user->setCreatedAt(new \DateTimeImmutable());
+        $user->setUpdatedAt(new \DateTimeImmutable());
+
+        $profilePictureUrl = $this->generateUrl('default_file', ['filename' => 'default_profile.png'], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
+        $bannerUrl = $this->generateUrl('default_file', ['filename' => 'default_banner.png'], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $user->setProfilePicture($profilePictureUrl);
+        $user->setBanner($bannerUrl);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

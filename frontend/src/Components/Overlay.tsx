@@ -26,10 +26,11 @@ export const Overlay = (props: OverlayProps) => {
   const { children } = props;
   return (
     <div>
-      <Navbar />
       <ChatBox />
       <ToastContainer />
-      <div className="bg-darkBlue-light min-h-screen text-white">
+      <div className="bg-darkBlue-dark min-h-screen text-white">
+        <Navbar />
+
         {children}
       </div>
     </div>

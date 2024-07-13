@@ -6,6 +6,7 @@ use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 class Game
@@ -13,25 +14,35 @@ class Game
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['game_detail', 'game_list', 'user_detail'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['game_detail', 'game_list'])]
     private ?int $game_id = null;
 
     #[ORM\Column]
+    #[Groups(['game_detail', 'game_list'])]
     private ?bool $finished = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'games')]
+    #[Groups(['game_detail', 'game_list'])]
     private Collection $players;
 
     #[ORM\OneToMany(targetEntity: Turn::class, mappedBy: 'game')]
+    #[Groups(['game_detail', 'game_list'])]
     private Collection $turns;
 
     #[ORM\Column]
+    #[Groups(['game_detail', 'game_list'])]
     private ?bool $draw = null;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
+    #[Groups(['game_detail', 'game_list'])]
     private ?User $winner = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct()
     {
@@ -142,6 +153,18 @@ class Game
     public function setWinner(?User $winner): static
     {
         $this->winner = $winner;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

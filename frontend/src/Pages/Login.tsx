@@ -49,11 +49,11 @@ export const Login = () => {
 
       dispatch(addUser(user));
 
-      if (actualUser.email.length > 0) {
+      if (user.email.length > 0) {
         toast.success("Login successful!");
 
         socket.connect();
-        socket.emit("login", actualUser);
+        socket.emit("login", user);
 
         navigate("/");
       }
@@ -73,7 +73,7 @@ export const Login = () => {
 
   return (
     <div className="flex flex-col h-screen sm:flex-row justify-center items-center bg-login bg-no-repeat bg-cover">
-      <div className="flex flex-col w-1/5 h-4/5 bg-darkBlue">
+      <div className="flex flex-col w-1/5 h-4/5 bg-darkBlue-dark">
         <div className="flex flex-col flex-grow py-10 m-3 overflow-auto rounded-3xl">
           <div className="flex-grow">
             <div className="flex justify-center">
