@@ -127,7 +127,7 @@ export const Profile = () => {
     };
 
     const fetchFriends = async () => {
-      const friends = await get(`friends/${user?.id}`, token);
+      const friends = await get(`friends/${actualUser?.id}`, token);
       setFriends(friends);
     };
 

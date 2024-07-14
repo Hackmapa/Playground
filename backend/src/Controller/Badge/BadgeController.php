@@ -35,7 +35,7 @@ class BadgeController extends BaseController
         $badges = $this->badgeRepository->findAll();
 
         if (!$badges) {
-            return $this->json(['message' => 'Badges not found'], 404);
+            return $this->json([], 200);
         }
 
         $data = $this->serializer->serialize($badges, 'json', ['groups' => 'badges_detail']);
