@@ -6,6 +6,7 @@ use App\Repository\NotificationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 class Notification
@@ -38,6 +39,7 @@ class Notification
 
 
     #[ORM\OneToMany(targetEntity: NotificationUser::class, mappedBy: 'notification')]
+    #[Groups(['user_detail'])]
     private Collection $notificationUsers;
 
     public function __construct()

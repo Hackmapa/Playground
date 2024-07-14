@@ -4,6 +4,8 @@ import { useAppSelector } from "../../hooks/hooks";
 import { ModalBox } from "../ModalBox/ModalBox";
 import { Message } from "../../Interfaces/Message";
 import { UserProfile } from "./UserProfile";
+import { useNavigate } from "react-router-dom";
+import { isUserOnline } from "../../utils/online";
 
 interface ChatMessageProps {
   message: Message;
@@ -12,14 +14,12 @@ interface ChatMessageProps {
 export const ChatMessage = (props: ChatMessageProps) => {
   const { message } = props;
 
+  const navigate = useNavigate();
+
   const user = useAppSelector((state) => state.user);
   const users = useAppSelector((state) => state.users);
 
   const [open, setOpen] = useState(false);
-
-  const isUserOnline = (id: number) => {
-    return users.some((u) => u.user.id === id);
-  };
 
   const getMessageDate = (datetime: string) => {
     const date = new Date(datetime);
@@ -46,7 +46,8 @@ export const ChatMessage = (props: ChatMessageProps) => {
           <img
             src={message.user.profile_picture}
             alt="profile"
-            className="w-8 h-8 rounded-full"
+            className="w-8 h-8 rounded-full cursor-pointer"
+            onClick={() => navigate(`/profile/${message.user.id}`)}
           />
           <div className="flex justify-between w-full">
             <div className="flex flex-col justify-between text-left">
@@ -54,7 +55,7 @@ export const ChatMessage = (props: ChatMessageProps) => {
               <p className="text-start">{getMessageDate(message.date)}</p>
             </div>
 
-            {isUserOnline(message.user.id) ? (
+            {isUserOnline(users, message.user.id) ? (
               <FaCircle color="green" size={15} />
             ) : (
               <FaCircle color="red" size={15} />

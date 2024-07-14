@@ -102,7 +102,9 @@ export const Home = () => {
   return (
     <div className="container m-auto py-5">
       {loading ? (
-        <Loader />
+        <div className="h-screen flex justify-center items-center">
+          <Loader />
+        </div>
       ) : (
         <>
           <h2 className="text-left text-2xl font-bold">Vos jeux préférés : </h2>

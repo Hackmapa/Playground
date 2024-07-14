@@ -18,7 +18,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user_detail', 'game_detail'])]
+    #[Groups(['user_detail', 'game_detail', 'badges_detail', 'friendship_detail'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
@@ -47,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $currency = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user_detail', 'game_detail'])]
+    #[Groups(['user_detail', 'game_detail', 'friendship_detail'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
@@ -63,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $badges;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user_detail', 'game_detail'])]
+    #[Groups(['user_detail', 'game_detail', 'friendship_detail'])]
     private ?string $profile_picture = null;
 
     #[ORM\OneToMany(targetEntity: NotificationUser::class, mappedBy: 'user')]
@@ -82,7 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_detail'])]
     private Collection $games;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['user_detail'])]
     private ?string $banner = null;
 

@@ -40,7 +40,7 @@ export const RouterContainer = () => {
               path="/tic-tac-toe/replay/:gameId"
               element={<TicTacToeReplay />}
             />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:id" element={<Profile />} />
           </Routes>
         </Overlay>
       ) : (

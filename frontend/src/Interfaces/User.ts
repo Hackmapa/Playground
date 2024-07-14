@@ -1,3 +1,4 @@
+import { Badge } from "./Badges";
 import { Game } from "./Game";
 
 export interface User {
@@ -10,7 +11,7 @@ export interface User {
   username: string;
   firstname: string;
   lastname: string;
-  badges: string[];
+  badges: Badge[];
   profile_picture: string;
   notificationUsers?: User[];
   notificationFriends?: User[];

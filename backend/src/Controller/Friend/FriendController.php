@@ -12,19 +12,29 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Notification;
 use App\Entity\NotificationUser;
+use Symfony\Component\Serializer\SerializerInterface;
+use App\Repository\UserFriendshipRepository;
 
 #[Route('/api/friends', name: 'friends_')]
 class FriendController extends BaseController
 {
     private $userRepository;
+    private $userFriendshipRepository;
+    private $serializer;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(
+        UserRepository $userRepository,
+        UserFriendshipRepository $userFriendshipRepository,
+        SerializerInterface $serializer
+    )
     {
         $this->userRepository = $userRepository;
+        $this->userFriendshipRepository = $userFriendshipRepository;
+        $this->serializer = $serializer;
     }
 
     #[Route('/{id}', name: 'get_friends', methods: ['GET'])]
-    public function getFriends(int $id, EntityManagerInterface $entityManager): JsonResponse
+    public function getFriends(int $id): Response
     {
         $user = $this->userRepository->find($id);
 
@@ -35,11 +45,11 @@ class FriendController extends BaseController
             ]);
         }
 
-        $friends = $entityManager->getRepository(UserFriendship::class)->findBy([
-            'user' => $user,
-        ]);
+        $friends = $this->userFriendshipRepository->findAllFriendshipsByUser($id);
+        
+        $data = $this->serializer->serialize($friends, 'json', ['groups' => 'friendship_detail']);
 
-        return $this->json($friends);
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/{id}/add/{friendId}', name: 'add_friend', methods: ['POST'])]
@@ -82,7 +92,7 @@ class FriendController extends BaseController
 
         $notification = new Notification();
         $notification->setType('friend_request');
-        $notification->setDescription('You have a new friend request from ' . $user->getUsername());
+        $notification->setDescription('You have a new friend request from ');
         $notification->setLink('');
         $notification->setCreatedAt(new \DateTimeImmutable());
         $notification->setUpdatedAt(new \DateTimeImmutable());

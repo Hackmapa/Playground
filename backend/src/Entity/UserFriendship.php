@@ -2,10 +2,9 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserFriendshipRepository;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserFriendshipRepository::class)]
 class UserFriendship
@@ -13,14 +12,17 @@ class UserFriendship
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user_detail', 'friendship_detail'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['friendship_detail'])]
     private ?User $user;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['friendship_detail'])]
     private ?User $friend;
 
     #[ORM\Column(type: 'boolean')]
