@@ -6,6 +6,7 @@ use App\Repository\BadgesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BadgesRepository::class)]
 class Badges
@@ -13,25 +14,36 @@ class Badges
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['badges_detail', 'user_detail'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['badges_detail'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['badges_detail'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['badges_detail'])]
     private ?string $logo = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'badges')]
+    #[Groups(['badges_detail'])]
     private Collection $user;
 
     #[ORM\Column]
+    #[Groups(['badges_detail'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
+    #[Groups(['badges_detail'])]
     private ?\DateTimeImmutable $updated_at = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['badges_detail', 'user_detail'])]
+    private ?string $tag = null;
 
     public function __construct()
     {
@@ -129,5 +141,17 @@ class Badges
     public function __toString()
     {
         return $this->getName();
+    }
+
+    public function getTag(): ?string
+    {
+        return $this->tag;
+    }
+
+    public function setTag(string $tag): static
+    {
+        $this->tag = $tag;
+
+        return $this;
     }
 }

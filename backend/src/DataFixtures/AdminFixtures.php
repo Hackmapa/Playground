@@ -17,7 +17,6 @@ class AdminFixtures extends Fixture
     
     public function load(ObjectManager $manager): void
     {
-
         $user = new User();
         $user->setUsername('admin');
         $user->setEmail('corentinancel@gmail.com');
@@ -26,7 +25,9 @@ class AdminFixtures extends Fixture
         $user->setRoles(['ROLE_ADMIN']);
         $user->setPassword($this->userPasswordHasher->hashPassword($user, 'admin'));
         $user->setCurrency(1000);
-        $user->setProfilePicture('https://randomuser.me/api/portraits');
+        $user->setProfilePicture('/images/default_profile.png');
+        $user->setCreatedAt(new \DateTimeImmutable());
+        $user->setUpdatedAt(new \DateTimeImmutable());
 
         $manager->persist($user);
         $manager->flush();

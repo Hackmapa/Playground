@@ -21,28 +21,17 @@ class UserFriendshipRepository extends ServiceEntityRepository
         parent::__construct($registry, UserFriendship::class);
     }
 
-    //    /**
-    //     * @return UserFriendship[] Returns an array of UserFriendship objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('b.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @param int $userId
+     * @return UserFriendship[]
+     */
+    public function findAllFriendshipsByUser(int $userId): array
+    {
+        $qb = $this->createQueryBuilder('uf')
+            ->where('uf.user = :userId')
+            ->orWhere('uf.friend = :userId')
+            ->setParameter('userId', $userId);
 
-    //    public function findOneBySomeField($value): ?Badges
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        return $qb->getQuery()->getResult();
+    }
 }
