@@ -10,19 +10,37 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/api/badge', name: 'badge_')]
+#[Route('/api/badges', name: 'badge_')]
 class BadgeController extends BaseController
 {
     private $userRepository;
     private $badgeRepository;
+    private $serializer;
+
     private $entityManager;
 
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager, BadgesRepository $badgeRepository)
+    public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager, BadgesRepository $badgeRepository, SerializerInterface $serializer)
     {
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
         $this->badgeRepository = $badgeRepository;
+    }
+
+    #[Route('', name: 'get_badges', methods: ['GET'])]
+    public function index(): Response
+    {
+        $badges = $this->badgeRepository->findAll();
+
+        if (!$badges) {
+            return $this->json(['message' => 'Badges not found'], 404);
+        }
+
+        $data = $this->serializer->serialize($badges, 'json', ['groups' => 'badges_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/add/{userId}/{id}', name: 'add_badge', methods: ['PUT'])]
