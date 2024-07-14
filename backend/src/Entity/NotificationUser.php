@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\NotificationUserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: NotificationUserRepository::class)]
 class NotificationUser
@@ -11,6 +13,7 @@ class NotificationUser
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user_detail'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'notificationUsers')]

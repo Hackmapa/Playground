@@ -9,17 +9,18 @@ import { addUser } from "../Redux/user/userSlice";
 import { Button } from "../Components/Button/Button";
 import { ToastContainer, toast } from "react-toastify";
 import { socket } from "../socket";
+import { Loader } from "../Components/Loader/Loader";
 
 export const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const actualUser = useAppSelector((state) => state.user);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     let token = "";
     try {
       const loginData = await post(
@@ -36,6 +37,7 @@ export const Login = () => {
       dispatch(login(token));
     } catch (error) {
       toast.error(`${error}`);
+      setLoading(false);
       return;
     }
 
@@ -56,8 +58,11 @@ export const Login = () => {
         socket.emit("login", user);
 
         navigate("/");
+
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       toast.error(`${error}`);
       return;
     }
@@ -92,17 +97,25 @@ export const Login = () => {
                 value={password}
                 onChange={setPassword}
               />
-              <Button
-                className={
-                  "mt-4 " +
-                  (checkValidForm()
-                    ? "bg-primary hover:bg-primary-dark border-primary transition duration-100 ease-in-out"
-                    : "bg-primary-light border-primary-light")
-                }
-                disabled={!checkValidForm()}
-                text="Login"
-                onClick={handleSubmit}
-              />
+              <>
+                {loading ? (
+                  <div className="flex justify-center mt-4">
+                    <Loader />
+                  </div>
+                ) : (
+                  <Button
+                    className={
+                      "mt-4 " +
+                      (checkValidForm()
+                        ? "bg-primary hover:bg-primary-dark border-primary transition duration-100 ease-in-out"
+                        : "bg-primary-light border-primary-light")
+                    }
+                    disabled={!checkValidForm() || loading}
+                    text="Login"
+                    onClick={handleSubmit}
+                  />
+                )}
+              </>
             </div>
           </div>
 

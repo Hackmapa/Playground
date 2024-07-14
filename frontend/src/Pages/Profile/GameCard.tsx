@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks/hooks";
 import { Game } from "../../Interfaces/Game";
 import g from "../../Games/games.json";
+import { User } from "../../Interfaces/User";
 
 interface GameCardProps {
   game: Game;
@@ -57,16 +58,8 @@ export const GameCard = (props: GameCardProps) => {
 
         {!game.winner && !game.draw && <p>Game not finished</p>}
         <div className="flex justify-between mt-5">
-          <div className="flex justify-center flex-col items-center">
-            <img
-              src={game.players[0].profile_picture}
-              alt="profile"
-              className="w-16 h-16 rounded-full"
-            />
-            <p className="text-center mt-2 font-bold">
-              {game.players[0].username}
-            </p>
-          </div>
+          <UserGameCard user={game.players[0]} />
+
           <div className="flex items-center flex-col justify-between">
             <p className="font-bold text-3xl">VS</p>
             <MdOutlineReplay
@@ -76,18 +69,43 @@ export const GameCard = (props: GameCardProps) => {
             />
           </div>
 
-          <div className="flex justify-center flex-col items-center">
-            <img
-              src={game.players[1].profile_picture}
-              alt="profile"
-              className="w-16 h-16 rounded-full"
-            />
-            <p className="text-center mt-2 font-bold">
-              {game.players[1].username}
-            </p>
-          </div>
+          <UserGameCard user={game.players[1]} />
         </div>
       </div>
+    </div>
+  );
+};
+
+interface UserGameCardProps {
+  user: User;
+}
+
+const UserGameCard = (props: UserGameCardProps) => {
+  const { user } = props;
+
+  const navigate = useNavigate();
+
+  const actualUser = useAppSelector((state) => state.user);
+
+  const isActualUser = () => {
+    if (actualUser.id === user.id) {
+      return true;
+    }
+
+    return false;
+  };
+
+  return (
+    <div className="flex justify-center flex-col items-center hover:cursor-pointer">
+      <img
+        src={user.profile_picture}
+        alt="profile"
+        className="w-16 h-16 rounded-full"
+        onClick={() => navigate(`/profile/${user.id}`)}
+      />
+      <p className="text-center mt-2 font-bold">
+        {isActualUser() ? "Vous" : user.username}
+      </p>
     </div>
   );
 };

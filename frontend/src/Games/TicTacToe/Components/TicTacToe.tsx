@@ -10,6 +10,7 @@ import { useAppDispatch } from "../../../hooks/hooks";
 import { updateTttRoom } from "../../../Redux/rooms/tttRoomSlice";
 import { Button } from "../../../Components/Button/Button";
 import { TicTacToeBoard } from "./TicTacToeBoard";
+import { addBadge, checkIfUserHasBadge } from "../../../utils/badge";
 
 export const TicTacToe: React.FC = () => {
   const token = useSelector((state: RootState) => state.token);
@@ -82,10 +83,49 @@ export const TicTacToe: React.FC = () => {
     if (room.finished) {
       if (room.winner && room.winner.user?.id === user.id) {
         setTitle("You won!");
+
+        if (
+          user.winnedGames?.length === 0 &&
+          !checkIfUserHasBadge(user, "first_win")
+        ) {
+          addBadge("first_win", user.id, token);
+        }
+
+        if (
+          user.winnedGames?.length === 4 &&
+          !checkIfUserHasBadge(user, "5_wins")
+        ) {
+          addBadge("5_wins", user.id, token);
+        }
       } else if (room.draw) {
         setTitle("It's a draw!");
       } else {
+        if (
+          user.winnedGames?.length !== user.games?.length &&
+          !checkIfUserHasBadge(user, "first_loss")
+        ) {
+          addBadge("first_loss", user.id, token);
+        }
+
+        if (
+          user.games?.length === 4 &&
+          !checkIfUserHasBadge(user, "5_losses")
+        ) {
+          addBadge("5_losses", user.id, token);
+        }
+
         setTitle("You lost!");
+      }
+
+      if (
+        user.games?.length === 0 &&
+        !checkIfUserHasBadge(user, "first_game")
+      ) {
+        addBadge("first_game", user.id, token);
+      }
+
+      if (user.games?.length === 4 && !checkIfUserHasBadge(user, "5_games")) {
+        addBadge("5_games", user.id, token);
       }
     }
   }, [room]);

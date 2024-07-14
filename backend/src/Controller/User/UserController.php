@@ -3,6 +3,7 @@
 namespace App\Controller\User;
 
 use App\Controller\BaseController;
+use App\Repository\BadgesRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
@@ -18,13 +19,15 @@ use Symfony\Component\HttpFoundation\Response;
 class UserController extends BaseController
 {
     private $userRepository;
+    private $badgeRepository;
     private $entityManager;
     private $userPasswordHasher;
     private $serializer;
 
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, SerializerInterface $serializer)
+    public function __construct(UserRepository $userRepository, BadgesRepository $badgesRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, SerializerInterface $serializer)
     {
         $this->userRepository = $userRepository;
+        $this->badgeRepository = $badgesRepository;
         $this->entityManager = $entityManager;
         $this->userPasswordHasher = $userPasswordHasher;
         $this->serializer = $serializer;
@@ -153,5 +156,30 @@ class UserController extends BaseController
         $em->flush();
 
         return new JsonResponse(['success' => true, 'profile_picture_url' => $profilePictureUrl]);
+    }
+
+    #[Route('/{id}/badges/{tag}', name: 'give_badge', methods: ['POST'])]
+    public function giveBadge(int $id, string $tag): Response
+    {
+        $user = $this->userRepository->find($id);
+
+        if (!$user) {
+            return $this->json(['message' => 'User not found'], 404);
+        }
+
+        $badge = $this->badgeRepository->findOneBy(['tag' => $tag]);
+
+        if (!$badge) {
+            return $this->json(['message' => 'Badge not found'], 404);
+        }
+
+        $user->addBadge($badge);
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        $data = $this->serializer->serialize($user, 'json', ['groups' => 'user_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 }
