@@ -148,7 +148,7 @@ export const Profile = () => {
           <div className="flex justify-between items-end">
             <div className="relative flex gap-5 items-end">
               <img
-                src={`${process.env.REACT_APP_PUBLIC_URL}${user.profile_picture}`}
+                src={user.profile_picture}
                 alt="user_profile"
                 className={
                   "w-52 h-52 rounded-full transition duration-200 ease-in-out transform " +

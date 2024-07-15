@@ -141,7 +141,6 @@ class UserController extends BaseController
         $uploadsDirectory = $this->getParameter('uploads_directory');
 
         $filename = md5(uniqid()) . '.' . $file->guessExtension();
-        
 
         try {
             $file->move($uploadsDirectory, $filename);
@@ -149,7 +148,7 @@ class UserController extends BaseController
             return new JsonResponse(['error' => 'Failed to upload file'], 500);
         }
 
-        $profilePictureUrl = $this->generateUrl('uploaded_file', ['filename' => $filename], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
+        $profilePictureUrl = $this->generateUrl('default_file', ['filename' => $filename], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
 
         $user->setProfilePicture($profilePictureUrl);
         $em->persist($user);
