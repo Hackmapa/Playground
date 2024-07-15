@@ -6,6 +6,10 @@ import { Notification } from "../../../Interfaces/Notification";
 import { socket } from "../../../socket";
 import { IoMdClose } from "react-icons/io";
 import { removeNotification } from "../../../Redux/notifications/notificationSlice";
+import { get } from "../../../utils/requests/get";
+import { useState } from "react";
+import { User } from "../../../Interfaces/User";
+import { addFriends } from "../../../Redux/friends/friendSlice";
 
 interface NotificationCardProps {
   notif: Notification;
@@ -24,8 +28,16 @@ export const NotificationCard = (props: NotificationCardProps) => {
   const notification = notif.notification;
   const friend = notif.friend;
 
+  const fetchFriends = async () => {
+    const response = await get(`friends/${user.id}`, token);
+
+    dispatch(addFriends(response));
+  };
+
   const handleAcceptFriendRequest = async () => {
     dispatch(removeNotification(notification.id));
+
+    fetchFriends();
 
     socket.emit("acceptFriendRequest", user.id, friend?.id, users, token);
 
