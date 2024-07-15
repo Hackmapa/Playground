@@ -56,38 +56,43 @@ const put = async (url, body, token = "") => {
 export default (io, games) => {
   io.on("connection", (socket) => {
     // create tic tac toe game
-    socket.on("createTicTacToeGame", (name, user) => {
-      const game = {
-        id: games.length + 1,
-        name: name,
-        players: [],
-        maxPlayers: 2,
-        messages: [],
-        started: false,
-        finished: false,
-        turn: 0,
-        moves: [],
-        currentBoard: Array(9).fill(""),
-        currentPlayer: {
-          symbol: "",
-          user: null,
-        },
-        winner: null,
-        draw: false,
-      };
+    socket.on(
+      "createTicTacToeGame",
+      (name, user, privateRoom = false, password = "") => {
+        const game = {
+          id: games.length + 1,
+          name: name,
+          players: [],
+          maxPlayers: 2,
+          messages: [],
+          started: false,
+          finished: false,
+          turn: 0,
+          moves: [],
+          currentBoard: Array(9).fill(""),
+          currentPlayer: {
+            symbol: "",
+            user: null,
+          },
+          winner: null,
+          draw: false,
+          privateRoom: privateRoom,
+          password: password,
+        };
 
-      user.ready = false;
-      user.owner = true;
+        user.ready = false;
+        user.owner = true;
 
-      game.players.push(user);
-      socket.join(game.id);
-      games.push(game);
+        game.players.push(user);
+        socket.join(game.id);
+        games.push(game);
 
-      console.log("Game created: ", game.id);
+        console.log("Game created: ", game.id);
 
-      io.to(game.id).emit("ticTacToeRoom", game);
-      io.emit("ticTacToeRooms", games);
-    });
+        io.to(game.id).emit("ticTacToeRoom", game);
+        io.emit("ticTacToeRooms", games);
+      }
+    );
 
     // join tic tac toe game
     socket.on("joinTicTacToeGame", (gameId, user) => {
@@ -128,6 +133,8 @@ export default (io, games) => {
       }
 
       games = games.map((g) => (g.id === game.id ? game : g));
+
+      console.log("Player left game: ", game.id);
 
       io.to(game.id).emit("ticTacToeRoom", game);
       socket.leave(game.id);

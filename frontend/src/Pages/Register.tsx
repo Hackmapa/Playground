@@ -5,7 +5,7 @@ import { Button } from "../Components/Button/Button";
 import { User } from "../Interfaces/User";
 import { login } from "../Redux/token/tokenSlice";
 import { addUser } from "../Redux/user/userSlice";
-import { useAppDispatch, useAppSelector } from "../hooks/hooks";
+import { useAppDispatch } from "../hooks/hooks";
 import { get } from "../utils/requests/get";
 import { post } from "../utils/requests/post";
 import { ToastContainer, toast } from "react-toastify";
@@ -15,8 +15,6 @@ import { Loader } from "../Components/Loader/Loader";
 export const Register = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const actualUser = useAppSelector((state) => state.user);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -120,7 +118,11 @@ export const Register = () => {
         <div className="flex flex-col flex-grow py-10 m-3 overflow-auto rounded-3xl">
           <div className="flex-grow">
             <div className="flex justify-center">
-              <img src="/logo.svg" alt="logo TrainrHub" className="h-44" />
+              <img
+                src={`${process.env.REACT_APP_PUBLIC_URL}/logo.svg`}
+                alt="logo_hackmapa"
+                className="h-44"
+              />
             </div>
 
             <div className="block w-9/12 mx-auto max-xs:w-3/4 max-lg:w-5/12 max-md:w-6/12 max-sm:w-8/12 margin">

@@ -5,7 +5,6 @@ namespace App\Controller\Friend;
 use App\Controller\BaseController;
 use App\Entity\User;
 use App\Entity\UserFriendship;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Notification;
 use App\Entity\NotificationUser;
 use Symfony\Component\Serializer\SerializerInterface;
-use App\Repository\UserFriendshipRepository;
 
 #[Route('/api/friends', name: 'friends_')]
 class FriendController extends BaseController

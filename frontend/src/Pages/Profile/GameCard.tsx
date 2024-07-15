@@ -6,12 +6,12 @@ import g from "../../Games/games.json";
 import { User } from "../../Interfaces/User";
 
 interface GameCardProps {
+  user: User;
   game: Game;
 }
 
 export const GameCard = (props: GameCardProps) => {
-  const user = useAppSelector((state) => state.user);
-  const { game } = props;
+  const { user, game } = props;
 
   const navigate = useNavigate();
 
@@ -54,19 +54,29 @@ export const GameCard = (props: GameCardProps) => {
           </p>
         )}
 
-        {game.draw && <p>Game is a draw</p>}
+        {game.draw && (
+          <p className="text-xl text-blue-500 text-center font-bold uppercase">
+            Match nul
+          </p>
+        )}
 
-        {!game.winner && !game.draw && <p>Game not finished</p>}
+        {!game.winner && !game.draw && (
+          <p className="text-xl text-yellow-500 text-center font-bold uppercase">
+            Partie non terminée
+          </p>
+        )}
         <div className="flex justify-between mt-5">
           <UserGameCard user={game.players[0]} />
 
           <div className="flex items-center flex-col justify-between">
             <p className="font-bold text-3xl">VS</p>
-            <MdOutlineReplay
-              color="white"
-              className="h-6 w-6 cursor-pointer self-end hover:scale-125 transform transition duration-200"
-              onClick={() => navigate(`/tic-tac-toe/replay/${game.id}`)}
-            />
+            {(game.winner || game.draw) && (
+              <MdOutlineReplay
+                color="white"
+                className="h-6 w-6 cursor-pointer self-end hover:scale-125 transform transition duration-200"
+                onClick={() => navigate(`/tic-tac-toe/replay/${game.id}`)}
+              />
+            )}
           </div>
 
           <UserGameCard user={game.players[1]} />

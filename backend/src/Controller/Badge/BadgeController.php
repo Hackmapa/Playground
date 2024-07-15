@@ -59,6 +59,10 @@ class BadgeController extends BaseController
             return $this->json(['message' => 'Badge not found'], 404);
         }
 
+        if ($user->getBadges()->contains($badge)) {
+            return $this->json(['message' => 'Badge already added to the user'], 400);
+        }
+
         $user->addBadge($badge);
         $this->entityManager->persist($user);
         $this->entityManager->flush();

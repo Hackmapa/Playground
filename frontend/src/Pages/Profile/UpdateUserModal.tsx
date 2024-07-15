@@ -54,7 +54,7 @@ export const UpdateUserModal = (props: UpdateUserModalProps) => {
 
   return (
     <div className="">
-      <h2 className="font-bold text-3xl">Update user modal</h2>
+      <h2 className="font-bold text-3xl">Modifiez votre profil</h2>
 
       <div className="flex gap-4">
         <Input

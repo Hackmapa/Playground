@@ -1,12 +1,14 @@
 import { GameCard } from "./GameCard";
 import { Game } from "../../Interfaces/Game";
+import { User } from "../../Interfaces/User";
 
 interface GameHistoryProps {
+  user: User;
   games: Game[];
 }
 
 export const GameHistory = (props: GameHistoryProps) => {
-  const { games } = props;
+  const { user, games } = props;
 
   return (
     <div className="flex flex-col items-center w-full h-full mt-4">
@@ -16,7 +18,9 @@ export const GameHistory = (props: GameHistoryProps) => {
             Pas de parties enregistrées. Jouez pour enregistrer vos parties
           </div>
         ) : (
-          games.map((game) => <GameCard key={game.id} game={game} />)
+          games.map((game) => (
+            <GameCard key={game.id} user={user} game={game} />
+          ))
         )}
       </div>
     </div>

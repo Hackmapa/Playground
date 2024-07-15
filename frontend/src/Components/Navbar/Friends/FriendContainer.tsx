@@ -37,8 +37,6 @@ export const FriendContainer = (props: FriendContainerProps) => {
       token
     );
 
-    console.log(response);
-
     setSearchedUsers(response);
     setLoading(false);
   };
@@ -48,14 +46,14 @@ export const FriendContainer = (props: FriendContainerProps) => {
   };
 
   return (
-    <div className="absolute mt-8 top-3 right-0 w-52 h-96 border-darkBlue bg-white text-darkBlue rounded-md shadow-lg overflow-auto trasnform translate-x-1/2 flex flex-col">
+    <div className="absolute mt-8 top-3 right-0 w-52 h-96 border border-darkBlue-dark bg-darkBlue text-white rounded-xl shadow-lg overflow-auto trasnform translate-x-1/2 flex flex-col">
       <p className="border-b py-2 font-semibold">Amis ({friends.length})</p>
 
       <div className="flex flex-col border-b">
         <input
           type="text"
           placeholder="Rechercher un utilisateur ..."
-          className="px-2 py-1 text-sm"
+          className="px-2 py-1 text-sm font-bold bg-darkBlue-gray focus:outline-none focus:ring-0"
           onChange={handleSearchUser}
         />
       </div>
@@ -66,7 +64,7 @@ export const FriendContainer = (props: FriendContainerProps) => {
         </div>
       ) : !searched ? (
         <>
-          {friends.length === 0 && <p>No friends</p>}
+          {friends.length === 0 && <p className="mt-3">Pas d'amis</p>}
 
           {friends.map((friend, index) => (
             <FriendCard key={index} friend={friend} />

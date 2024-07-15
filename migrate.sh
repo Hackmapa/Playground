@@ -11,7 +11,7 @@ PERMISSIONS_PATH="/config/jwt"
 
 # Check if database exists, and create it if it doesn't
 echo "Checking if database exists..."
-DB_EXISTS=$(docker compose exec -T $DB_SERVICE mysql -u$DB_USER -p$DB_PASS -e "SHOW DATABASES LIKE '$DB_NAME';" | grep -w $DB_NAME)
+DB_EXISTS=$(docker compose exec -T $DB_SERVICE mariadb -u$DB_USER -p$DB_PASS -e "SHOW DATABASES LIKE '$DB_NAME';" | grep -w $DB_NAME)
 
 if [ "$DB_EXISTS" ]; then
     echo "Database already exists."
