@@ -15,6 +15,7 @@ export interface User {
   profile_picture: string;
   notificationUsers?: User[];
   notificationFriends?: User[];
+  friendships?: any;
   winnedGames?: Game[];
   games?: Game[];
   ready?: boolean;

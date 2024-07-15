@@ -73,14 +73,21 @@ export const Navbar = () => {
     if (socket) {
       socket.on("friendRequest", (data: any) => {
         dispatch(addNotification(data));
+        fetchFriends();
       });
 
       socket.on("friendRequestAccepted", (data: any) => {
         dispatch(addNotification(data));
+        fetchFriends();
       });
 
       socket.on("friendRequestDeclined", (data: any) => {
         dispatch(addNotification(data));
+        fetchFriends();
+      });
+
+      socket.on("friendShipRemoved", (data: any) => {
+        fetchFriends();
       });
     }
 
@@ -89,6 +96,7 @@ export const Navbar = () => {
         socket.off("friendRequest");
         socket.off("friendRequestAccepted");
         socket.off("friendRequestDeclined");
+        socket.off("friendShipRemoved");
       }
     };
   }, [notifications]);

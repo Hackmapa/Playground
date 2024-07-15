@@ -34,6 +34,26 @@ class NotificationUserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Find the most recent NotificationUser for a given user and friend.
+     *
+     * @param int $userId
+     * @param int $friendId
+     * @return NotificationUser|null
+     */
+    public function findMostRecentByUserAndFriend(int $userId, int $friendId): ?NotificationUser
+    {
+        return $this->createQueryBuilder('n')
+            ->where('n.user = :userId')
+            ->andWhere('n.friend = :friendId')
+            ->setParameter('userId', $userId)
+            ->setParameter('friendId', $friendId)
+            ->orderBy('n.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    public function findOneBySomeField($value): ?NotificationUser
 //    {
 //        return $this->createQueryBuilder('n')

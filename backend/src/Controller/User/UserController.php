@@ -182,4 +182,31 @@ class UserController extends BaseController
 
         return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
+
+    // search users by username
+    #[Route('/user/search', name: 'search_user', methods: ['GET'])]
+    public function searchUser(Request $request): Response
+    {
+        $username = $request->query->get('username');
+
+        $users = $this->userRepository->findUsersByUsername($username);
+        $newUsers = [];
+
+        foreach ($users as $user) {
+            $friendships = $user->getFriendships();
+
+            $userData = $this->serializer->serialize($user, 'json', ['groups' => 'user_detail']);
+            $userData = json_decode($userData, true);
+
+            $data = $this->serializer->serialize($friendships, 'json', ['groups' => 'friendship_detail']);
+
+            $userData['friendships'] = json_decode($data, true);
+            
+            $newUsers[] = $userData;
+        }
+
+        $data = $this->serializer->serialize($newUsers, 'json', ['groups' => 'user_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
+    }
 }
