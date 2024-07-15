@@ -4,9 +4,6 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { socket } from "../../socket";
 import { useEffect, useState } from "react";
 import { get } from "../../utils/requests/get";
-import { Notification } from "../../Interfaces/Notification";
-import { FaSearch } from "react-icons/fa";
-import { User } from "../../Interfaces/User";
 import { FriendDropdown } from "./Friends/FriendDropdown";
 import { NotificationDropdown } from "./Notifications/NotificationDropdown";
 import {
@@ -14,6 +11,7 @@ import {
   addNotifications,
 } from "../../Redux/notifications/notificationSlice";
 import { GameSearch } from "./GameSearch";
+import { addFriends } from "../../Redux/friends/friendSlice";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -22,10 +20,10 @@ export const Navbar = () => {
   const user = useAppSelector((state) => state.user);
   const token = useAppSelector((state) => state.token);
   const notifications = useAppSelector((state) => state.notifications);
+  const friends = useAppSelector((state) => state.friends);
 
   const [openNotifications, setOpenNotifications] = useState(false);
   const [openFriends, setOpenFriends] = useState(false);
-  const [friends, setFriends] = useState<User[]>([]);
 
   const handleLogout = () => {
     socket.disconnect();
@@ -37,7 +35,7 @@ export const Navbar = () => {
   const fetchFriends = async () => {
     const response = await get(`friends/${user.id}`, token);
 
-    setFriends(response);
+    dispatch(addFriends(response));
   };
 
   useEffect(() => {

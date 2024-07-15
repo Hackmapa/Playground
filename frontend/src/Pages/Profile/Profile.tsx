@@ -17,6 +17,7 @@ import { Badge } from "../../Interfaces/Badges";
 import { checkIfUserHasBadge } from "../../utils/badge";
 import { useParams } from "react-router-dom";
 import { socket } from "../../socket";
+import { addFriends } from "../../Redux/friends/friendSlice";
 
 export const Profile = () => {
   const { id } = useParams<{ id: string }>();
@@ -83,6 +84,40 @@ export const Profile = () => {
     socket.emit("sendFriendRequest", actualUser.id, user?.id, users, token);
   };
 
+  const fetchUser = async () => {
+    const user = await get(`users/${id}`, token);
+    setUser(user);
+  };
+
+  const fetchGames = async () => {
+    const games = await get(`games/user/${id}`, token);
+    setGames(games);
+  };
+
+  const fetchBadges = async () => {
+    const badges = await get(`badges`, token);
+    setBadges(badges);
+  };
+
+  const fetchFriends = async () => {
+    const friends = await get(`friends/${actualUser?.id}`, token);
+    setFriends(friends);
+    dispatch(addFriends(friends));
+  };
+
+  const isAlreadyFriend = () => {
+    if (friends) {
+      return friends.find((friend: any) => friend.friend.id === actualUser.id);
+    }
+    return false;
+  };
+
+  const handleRemoveFriend = async () => {
+    socket.emit("removeFriend", actualUser.id, user?.id, users, token);
+
+    fetchFriends();
+  };
+
   useEffect(() => {
     document.title = "Hackmapa - Profile";
 
@@ -94,40 +129,8 @@ export const Profile = () => {
       await fetchFriends();
       setLoading(false);
     };
-
-    const fetchUser = async () => {
-      const user = await get(`users/${id}`, token);
-      setUser(user);
-    };
-
-    const fetchGames = async () => {
-      const games = await get(`games/user/${id}`, token);
-      setGames(games);
-    };
-
-    const fetchBadges = async () => {
-      const badges = await get(`badges`, token);
-      setBadges(badges);
-    };
-
-    const fetchFriends = async () => {
-      const friends = await get(`friends/${actualUser?.id}`, token);
-      setFriends(friends);
-    };
-
     fetchData();
   }, [id, actualUser]);
-
-  const isAlreadyFriend = () => {
-    if (friends) {
-      return friends.find((friend: any) => friend.friend.id === actualUser.id);
-    }
-    return false;
-  };
-
-  const handleRemoveFriend = async () => {
-    socket.emit("removeFriend", actualUser.id, user?.id, users, token);
-  };
 
   return (
     <>

@@ -21,11 +21,13 @@ services:
       args:
         - REACT_APP_API_URL=""
         - REACT_APP_SOCKET_URL=":8081"
+        - NODE_ENV=production
     volumes:
       - frontend_volume:/var/lib/frontend
     environment:
       - REACT_APP_API_URL=""
       - REACT_APP_SOCKET_URL=":8081"
+      - NODE_ENV=production
     depends_on:
       - backend
     env_file:
