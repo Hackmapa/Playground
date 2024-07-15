@@ -18,14 +18,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        - REACT_APP_API_URL=""
-        - REACT_APP_SOCKET_URL=":8081"
     volumes:
       - frontend_volume:/var/lib/frontend
     environment:
-      - REACT_APP_API_URL=""
-      - REACT_APP_SOCKET_URL=":8081"
+      - NODE_ENV=production
     depends_on:
       - backend
     env_file:
@@ -33,8 +29,6 @@ services:
 
   backend:
     build:
-      args:
-        user: docker-user
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
@@ -52,9 +46,6 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-      args:
-        - PORT="8081"
-        - API_URL=http://hackmapa.fr
     container_name: nodejs-socket
     ports:
       - "8081:8081"
@@ -94,7 +85,3 @@ volumes:
   frontend_volume:
   backend_volume:
   db-data:
-
-networks:
-  default:
-    driver: bridge
