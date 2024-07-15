@@ -1,16 +1,18 @@
-const http = require("http");
-const socketIo = require("socket.io");
-const loginSocket = require("./login/loginSocket");
-const chatSocket = require("./message/chatSocket");
-const ticTacToeSocket = require("./tictactoe/tictactoeSocket");
-const notifications = require("./notifications/notifications");
-require("dotenv").config();
+import http from "http";
+import { Server } from "socket.io";
+import loginSocket from "./login/loginSocket.js";
+import chatSocket from "./message/chatSocket.js";
+import ticTacToeSocket from "./tictactoe/tictactoeSocket.js";
+import notifications from "./notifications/notifications.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const server = http.createServer((req, res) => {
   res.end("Connected");
 });
 
-const io = socketIo(server, {
+const io = new Server(server, {
   cors: {
     origin: "*",
   },

@@ -1,4 +1,4 @@
-module.exports = (io, users) => {
+export default (io, users) => {
   io.on("connection", (socket) => {
     socket.on("friendShipAdded", (notification) => {});
   });

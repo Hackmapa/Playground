@@ -1,24 +1,3 @@
-module.exports = (io, users, ticTacToeGames) => {
-  io.on("connection", (socket) => {
-    socket.on("login", (user) => {
-      users.push({ socketId: socket.id, user: user });
-      console.log("User joined", socket.id);
-      io.emit("users", users);
-    });
-
-    socket.on("disconnect", () => {
-      const user = users.find((user) => user.socketId == socket.id)?.user;
-      users = users.filter((user) => user.socketId !== socket.id);
-
-      leaveTicTacToeGame(io, socket, user, ticTacToeGames);
-
-      console.log("User left", socket.id);
-
-      io.emit("users", users);
-    });
-  });
-};
-
 const leaveTicTacToeGame = (io, socket, user, ticTacToeGames) => {
   if (!user) return;
 
@@ -42,4 +21,25 @@ const leaveTicTacToeGame = (io, socket, user, ticTacToeGames) => {
   io.emit("ticTacToeRooms", ticTacToeGames);
 
   console.log("User left tic tac toe game", game.id);
+};
+
+export default (io, users, ticTacToeGames) => {
+  io.on("connection", (socket) => {
+    socket.on("login", (user) => {
+      users.push({ socketId: socket.id, user: user });
+      console.log("User joined", socket.id);
+      io.emit("users", users);
+    });
+
+    socket.on("disconnect", () => {
+      const user = users.find((user) => user.socketId == socket.id)?.user;
+      users = users.filter((user) => user.socketId !== socket.id);
+
+      leaveTicTacToeGame(io, socket, user, ticTacToeGames);
+
+      console.log("User left", socket.id);
+
+      io.emit("users", users);
+    });
+  });
 };

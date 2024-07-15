@@ -1,5 +1,5 @@
 // messageSocket.js
-module.exports = (io, messages) => {
+export default (io, messages) => {
   io.on("connection", (socket) => {
     socket.on("sendMessage", (message) => {
       message.date = new Date();

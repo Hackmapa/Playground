@@ -1,4 +1,59 @@
-module.exports = (io, games) => {
+import fetch from "node-fetch";
+
+const checkWin = (updatedBoard) => {
+  const winConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  for (let condition of winConditions) {
+    const [a, b, c] = condition;
+    if (
+      updatedBoard[a] &&
+      updatedBoard[a] === updatedBoard[b] &&
+      updatedBoard[a] === updatedBoard[c]
+    ) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const checkDraw = (updatedBoard) => {
+  return updatedBoard.every((cell) => cell !== "");
+};
+
+const post = async (url, body, token = "") => {
+  const response = await fetch(`${process.env.API_URL}/api/${url}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body,
+  });
+  return await response.json();
+};
+
+const put = async (url, body, token = "") => {
+  const response = await fetch(`${process.env.API_URL}/api/${url}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body,
+  });
+  return await response.json();
+};
+
+export default (io, games) => {
   io.on("connection", (socket) => {
     // create tic tac toe game
     socket.on("createTicTacToeGame", (name, user) => {
@@ -189,57 +244,4 @@ module.exports = (io, games) => {
       io.to(game.id).emit("ticTacToeRoom", game);
     });
   });
-};
-
-const checkWin = (updatedBoard) => {
-  const winConditions = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-
-  for (let condition of winConditions) {
-    const [a, b, c] = condition;
-    if (
-      updatedBoard[a] &&
-      updatedBoard[a] === updatedBoard[b] &&
-      updatedBoard[a] === updatedBoard[c]
-    ) {
-      return true;
-    }
-  }
-  return false;
-};
-
-const checkDraw = (updatedBoard) => {
-  return updatedBoard.every((cell) => cell !== "");
-};
-
-const post = async (url, body, token = "") => {
-  const response = await fetch(`${process.env.API_URL}/api/${url}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body,
-  });
-  return await response.json();
-};
-
-const put = async (url, body, token = "") => {
-  const response = await fetch(`${process.env.API_URL}/api/${url}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body,
-  });
-  return await response.json();
 };

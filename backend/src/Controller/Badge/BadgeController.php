@@ -27,6 +27,7 @@ class BadgeController extends BaseController
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
         $this->badgeRepository = $badgeRepository;
+        $this->serializer = $serializer;
     }
 
     #[Route('', name: 'get_badges', methods: ['GET'])]
