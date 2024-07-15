@@ -1,4 +1,5 @@
 import post from "../utils/post.js";
+import deleteMethod from "../utils/delete.js";
 
 export default (io, users) => {
   io.on("connection", (socket) => {
@@ -55,6 +56,29 @@ export default (io, users) => {
 
         if (friend) {
           io.to(friend.socketId).emit("friendRequestDeclined", notification);
+        }
+      }
+    });
+
+    socket.on("removeFriend", async (userId, friendId, users, token) => {
+      const response = await deleteMethod(
+        `friends/${userId}/remove/${friendId}`,
+        {},
+        token
+      );
+
+      if (response.error) {
+        socket.emit("error", response.error);
+      } else {
+        const friend = users.find((user) => user.user.id === friendId);
+        const user = users.find((user) => user.user.id === userId);
+
+        if (friend) {
+          io.to(friend.socketId).emit("friendShipRemoved");
+        }
+
+        if (user) {
+          io.to(user.socketId).emit("friendShipRemoved");
         }
       }
     });

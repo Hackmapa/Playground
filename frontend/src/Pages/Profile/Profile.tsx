@@ -17,7 +17,6 @@ import { Badge } from "../../Interfaces/Badges";
 import { checkIfUserHasBadge } from "../../utils/badge";
 import { useParams } from "react-router-dom";
 import { socket } from "../../socket";
-import { post } from "../../utils/requests/post";
 
 export const Profile = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,7 +33,6 @@ export const Profile = () => {
   const [badges, setBadges] = useState<Badge[]>([]);
   const [user, setUser] = useState<User>();
   const [friends, setFriends] = useState<User[]>([]);
-  const [hasSentRequest, setHasSentRequest] = useState(false);
 
   const handleFileChange = (event: any) => {
     const selectedFile = event.target.files[0];
@@ -118,7 +116,20 @@ export const Profile = () => {
     };
 
     fetchData();
+    console.log(friends);
   }, [id, actualUser]);
+
+  const isAlreadyFriend = () => {
+    console.log(friends, actualUser.id);
+    if (friends) {
+      return friends.find((friend: any) => friend.friend.id === actualUser.id);
+    }
+    return false;
+  };
+
+  const handleRemoveFriend = async () => {
+    socket.emit("removeFriend", actualUser.id, user?.id, users, token);
+  };
 
   return (
     <>
@@ -179,13 +190,24 @@ export const Profile = () => {
               >
                 {!isActualUser() ? (
                   <div className="flex justify-center">
-                    <button
-                      className="w-full bg-darkBlue-dark text-white py-2 px-4 flex border-2 rounded-3xl items-center hover:bg-white hover:text-darkBlue-dark hover:border-darkBlue-dark transition duration-200"
-                      onClick={handleAddFriend}
-                    >
-                      <IoMdAdd />
-                      Ajouter en ami
-                    </button>
+                    {isAlreadyFriend() ? (
+                      <div>
+                        <button
+                          className="w-full bg-red-500 text-white py-2 px-4 flex border-2 rounded-3xl items-center hover:bg-white hover:text-red-500 hover:border-red-500 transition duration-200"
+                          onClick={handleRemoveFriend}
+                        >
+                          Retirer des amis
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className="w-full bg-darkBlue-dark text-white py-2 px-4 flex border-2 rounded-3xl items-center hover:bg-white hover:text-darkBlue-dark hover:border-darkBlue-dark transition duration-200"
+                        onClick={handleAddFriend}
+                      >
+                        <IoMdAdd />
+                        Ajouter en ami
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <>

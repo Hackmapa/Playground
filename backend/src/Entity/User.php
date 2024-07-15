@@ -86,6 +86,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_detail'])]
     private ?string $banner = null;
 
+    #[ORM\OneToMany(mappedBy: 'friend', targetEntity: UserFriendship::class)]
+    #[Groups(['user_detail'])]
+    private Collection $friendships;
+
     #[ORM\Column]
     #[Groups(['user_detail'])]
     private ?\DateTimeImmutable $createdAt = null;
@@ -101,6 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->notificationUsers = new ArrayCollection();
         $this->notificationFriends = new ArrayCollection();
         $this->winnedGames = new ArrayCollection();
+        $this->friendships = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -395,6 +400,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBanner(string $banner): static
     {
         $this->banner = $banner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserFriendship>
+     */
+    public function getFriendships(): Collection
+    {
+        return $this->friendships;
+    }
+
+    public function addFriendship(UserFriendship $friendship): static
+    {
+        if (!$this->friendships->contains($friendship)) {
+            $this->friendships->add($friendship);
+            $friendship->setFriend($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriendship(UserFriendship $friendship): static
+    {
+        if ($this->friendships->removeElement($friendship)) {
+            if ($friendship->getFriend() === $this) {
+                $friendship->setFriend(null);
+            }
+        }
 
         return $this;
     }

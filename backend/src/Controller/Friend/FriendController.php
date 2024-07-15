@@ -19,17 +19,14 @@ use App\Repository\UserFriendshipRepository;
 class FriendController extends BaseController
 {
     private $userRepository;
-    private $userFriendshipRepository;
     private $serializer;
 
     public function __construct(
         UserRepository $userRepository,
-        UserFriendshipRepository $userFriendshipRepository,
         SerializerInterface $serializer
     )
     {
         $this->userRepository = $userRepository;
-        $this->userFriendshipRepository = $userFriendshipRepository;
         $this->serializer = $serializer;
     }
 
@@ -45,7 +42,11 @@ class FriendController extends BaseController
             ]);
         }
 
-        $friends = $this->userFriendshipRepository->findAllFriendshipsByUser($id);
+        $friends = $user->getFriendships();
+
+        $friends = array_filter($friends->toArray(), function($friendship) {
+            return $friendship->getAccepted();
+        });
         
         $data = $this->serializer->serialize($friends, 'json', ['groups' => 'friendship_detail']);
 
@@ -90,6 +91,12 @@ class FriendController extends BaseController
         $friendship->setPending(true);
         $friendship->setAccepted(false);
 
+        $reversedFriendship = new UserFriendship();
+        $reversedFriendship->setUser($friend);
+        $reversedFriendship->setFriend($user);
+        $reversedFriendship->setPending(true);
+        $reversedFriendship->setAccepted(false);
+
         $notification = new Notification();
         $notification->setType('friend_request');
         $notification->setDescription('You have a new friend request from ');
@@ -105,6 +112,7 @@ class FriendController extends BaseController
         $notificationUser->setFriend($user);
 
         $entityManager->persist($friendship);
+        $entityManager->persist($reversedFriendship);
         $entityManager->persist($notification);
         $entityManager->persist($notificationUser);
         $entityManager->flush();
@@ -120,10 +128,7 @@ class FriendController extends BaseController
         $user = $this->userRepository->find($id);
         $friend = $this->userRepository->find($friendId);
 
-        $notificationUser = $entityManager->getRepository(NotificationUser::class)->findOneBy([
-            'user' => $id,
-            'friend' => $friendId,
-        ]);
+        $notificationUser = $entityManager->getRepository(NotificationUser::class)->findMostRecentByUserAndFriend($id, $friendId);
 
         $notification = $notificationUser->getNotification();
 
@@ -132,7 +137,12 @@ class FriendController extends BaseController
             'friend' => $id
         ]);
 
-        if (!$friendship) {
+        $reversedFriendship = $entityManager->getRepository(UserFriendship::class)->findOneBy([
+            'user' => $id,
+            'friend' => $friendId
+        ]);
+
+        if (!$friendship || !$reversedFriendship) {
             return $this->json([
                 'message' => 'Friendship not found.', 
                 'status' => Response::HTTP_NOT_FOUND
@@ -141,6 +151,9 @@ class FriendController extends BaseController
 
         $friendship->setPending(false);
         $friendship->setAccepted(true);
+
+        $reversedFriendship->setPending(false);
+        $reversedFriendship->setAccepted(true);
 
         $notification->setIsNew(false);
         $notification->setIsDismissed(true);
@@ -160,6 +173,7 @@ class FriendController extends BaseController
         $notificationUser->setNotification($newNotification);
 
         $entityManager->persist($newNotification);
+        $entityManager->persist($notification);
         $entityManager->persist($notificationUser);
         $entityManager->flush();
 
@@ -186,7 +200,12 @@ class FriendController extends BaseController
             'friend' => $id
         ]);
 
-        if (!$friendship) {
+        $reverseFriendship = $entityManager->getRepository(UserFriendship::class)->findOneBy([
+            'user' => $id,
+            'friend' => $friendId
+        ]);
+
+        if (!$friendship || !$reverseFriendship) {
             return $this->json([
                 'message' => 'Friendship not found.', 
                 'status' => Response::HTTP_NOT_FOUND
@@ -210,12 +229,42 @@ class FriendController extends BaseController
         $notificationUser->setFriend($user);
         $notificationUser->setNotification($newNotification);
 
-        $entityManager->remove($friendship);  
+        $entityManager->remove($friendship);
+        $entityManager->remove($reverseFriendship);
         $entityManager->persist($newNotification);
         $entityManager->persist($notificationUser);  
         $entityManager->flush();
 
         $data = $this->serializer->serialize($notificationUser, 'json', ['groups' => 'notification_user_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
+    }
+
+    #[Route('/{id}/remove/{friendId}', name: 'remove_friend', methods: ['DELETE'])]
+    public function removeFriend(int $id, int $friendId, EntityManagerInterface $entityManager): Response
+    {
+        $friendship = $entityManager->getRepository(UserFriendship::class)->findOneBy([
+            'user' => $id,
+            'friend' => $friendId
+        ]);
+
+        $reversedFriendship = $entityManager->getRepository(UserFriendship::class)->findOneBy([
+            'user' => $friendId,
+            'friend' => $id
+        ]);
+
+        if (!$friendship || !$reversedFriendship) {
+            return $this->json([
+                'message' => 'Friendship not found.', 
+                'status' => Response::HTTP_NOT_FOUND
+            ]);
+        }
+
+        $entityManager->remove($friendship);
+        $entityManager->remove($reversedFriendship);
+        $entityManager->flush();
+
+        $data = $this->serializer->serialize($friendship, 'json', ['groups' => 'friendship_detail']);
 
         return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
