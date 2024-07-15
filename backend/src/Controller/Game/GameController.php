@@ -52,6 +52,8 @@ class GameController extends AbstractController
 
         $game = new Game();
         $game->setGameId($data['gameId']);
+        $game->setGameTag($data['gameTag']);
+        $game->setName($data['name']);
         $game->setFinished(false);
         $game->setDraw(false);
         foreach ($players as $player) {

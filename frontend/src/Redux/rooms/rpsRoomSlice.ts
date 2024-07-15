@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { TttRoom } from "../../Interfaces/Rooms";
+import { RpsRoom } from "../../Interfaces/Rooms";
 
-const initialState: TttRoom = {
+const initialState: RpsRoom = {
   id: 0,
   name: "",
   players: [],
@@ -11,7 +11,6 @@ const initialState: TttRoom = {
   finished: false,
   turn: 0,
   moves: [],
-  currentBoard: Array(9).fill("null"),
   currentPlayer: {
     symbol: "",
     user: null,
@@ -20,25 +19,25 @@ const initialState: TttRoom = {
     symbol: "",
     user: null,
   },
-  draw: false,
   gameTag: "",
+  draw: false,
 };
 
-export const tttRoomSlice = createSlice({
-  name: "tttRoom",
+export const rpsRoomSlice = createSlice({
+  name: "rpsRoom",
   initialState: initialState,
   reducers: {
-    addTttRoom: (state, action) => {
+    addRpsRoom: (state, action) => {
       state = action.payload;
 
       return state;
     },
-    updateTttRoom: (state, action) => {
+    updateRpsRoom: (state, action) => {
       state = action.payload;
 
       return state;
     },
-    removeTttRoom: (state) => {
+    removeRpsRoom: (state) => {
       state = initialState;
 
       return state;
@@ -46,7 +45,7 @@ export const tttRoomSlice = createSlice({
   },
 });
 
-export const { addTttRoom, updateTttRoom, removeTttRoom } =
-  tttRoomSlice.actions;
+export const { addRpsRoom, updateRpsRoom, removeRpsRoom } =
+  rpsRoomSlice.actions;
 
-export default tttRoomSlice.reducer;
+export default rpsRoomSlice.reducer;

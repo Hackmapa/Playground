@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { TttRoom } from "../../Interfaces/Rooms";
+import { Room, TttRoom } from "../../Interfaces/Rooms";
 import { User } from "../../Interfaces/User";
 
 interface GameStartingButtonProps {
   user: User;
-  room: TttRoom;
+  room: Room;
   canStart: boolean;
   gameStarted: boolean;
   setReady: () => void;

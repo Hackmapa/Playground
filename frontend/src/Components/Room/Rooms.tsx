@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../hooks/hooks";
-import { TttRoom } from "../../Interfaces/Rooms";
+import { Room, RpsRoom, TttRoom } from "../../Interfaces/Rooms";
 import { addTttRoom } from "../../Redux/rooms/tttRoomSlice";
 import { RootState } from "../../Redux/store";
 import { socket } from "../../socket";
@@ -11,6 +11,7 @@ import { difficulty } from "../../utils/difficulty";
 import { RoomCard } from "./RoomCard";
 import { ModalBox } from "../ModalBox/ModalBox";
 import { Input } from "../Input/Input";
+import { addRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
 
 export const Rooms: React.FC = () => {
   const { name } = useParams();
@@ -18,7 +19,7 @@ export const Rooms: React.FC = () => {
   const games = gamesObj.games;
 
   const user = useSelector((state: RootState) => state.user);
-  const [rooms, setRooms] = useState<TttRoom[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [roomName, setRoomName] = useState("");
   const [password, setPassword] = useState("");
   const [privateRoom, setPrivateRoom] = useState(false);
@@ -44,6 +45,16 @@ export const Rooms: React.FC = () => {
           navigate(`/tic-tac-toe/${room.id}`);
         });
         break;
+
+      case "rock-paper-scissors":
+        socket.emit("createRpsGame", roomName, user, privateRoom, password);
+
+        socket.on("rpsRoom", (room: RpsRoom) => {
+          dispatch(addRpsRoom(room));
+
+          navigate(`/rock-paper-scissors/${room.id}`);
+        });
+        break;
       default:
         break;
     }
@@ -52,7 +63,7 @@ export const Rooms: React.FC = () => {
   const findGame = games.find((game) => name === `${game.tag}`);
 
   useEffect(() => {
-    document.title = "Hackmapa - Tic Tac Toe Rooms";
+    document.title = `Hackmapa - Parties de ${findGame?.name}`;
 
     switch (name) {
       case "tic-tac-toe":
@@ -65,8 +76,23 @@ export const Rooms: React.FC = () => {
           socket.off("ticTacToeRooms");
           socket.off("ticTacToeRoom");
         };
+
+      case "rock-paper-scissors":
+        socket.emit("getRpsGames");
+        socket.on("rpsRooms", (rooms: RpsRoom[]) => {
+          setRooms(rooms);
+        });
+
+        return () => {
+          socket.off("rpsRooms");
+          socket.off("rpsRoom");
+        };
     }
   }, [name]);
+
+  const getRoomsGame = () => {
+    return rooms.filter((room: Room) => room.gameTag === name);
+  };
 
   return (
     <div className="w-1/2 mx-auto pt-6 text-white">
@@ -91,7 +117,7 @@ export const Rooms: React.FC = () => {
       )}
       <div className="flex justify-between mt-20">
         <h3 className="text-left font-bold text-3xl">
-          Parties disponibles ({rooms.length})
+          Parties disponibles ({getRoomsGame().length})
         </h3>
         <button
           onClick={() => setOpen(true)}
@@ -103,7 +129,7 @@ export const Rooms: React.FC = () => {
       <div>
         {name && rooms.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-5 mt-10">
-            {rooms.map((room) => (
+            {getRoomsGame().map((room) => (
               <RoomCard key={room.id} room={room} name={name} />
             ))}
           </div>

@@ -3,7 +3,7 @@ import { RootState } from "../../../Redux/store";
 import { socket } from "../../../socket";
 import CircleIcon from "../Assets/circle.png";
 import CrossIcon from "../Assets/cross.png";
-import { TttRoom } from "../../../Interfaces/Rooms";
+import { Room, TttRoom } from "../../../Interfaces/Rooms";
 
 interface TicTacToeBoardProps {
   gameId?: number | undefined;

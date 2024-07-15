@@ -5,6 +5,7 @@ import chatSocket from "./message/chatSocket.js";
 import ticTacToeSocket from "./tictactoe/tictactoeSocket.js";
 import notificationSocket from "./notifications/notificationSocket.js";
 import dotenv from "dotenv";
+import rpsSocket from "./rps/rpsSocket.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ let ticTacToeGames = [];
 loginSocket(io, users, ticTacToeGames);
 chatSocket(io, messages);
 ticTacToeSocket(io, ticTacToeGames, users);
+rpsSocket(io, ticTacToeGames, users);
 notificationSocket(io, users);
 
 const PORT = process.env.PORT;

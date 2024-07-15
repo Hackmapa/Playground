@@ -8,6 +8,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import { combineReducers } from "redux";
 import notificationSlice from "./notifications/notificationSlice";
 import friendSlice from "./friends/friendSlice";
+import rpsRoomSlice from "./rooms/rpsRoomSlice";
 
 const persistConfig = {
   key: "root",
@@ -20,6 +21,7 @@ const reducers = combineReducers({
   token: tokenSlice,
   users: usersSlice,
   tttRoom: tttRoomSlice,
+  rpsRoom: rpsRoomSlice,
   notifications: notificationSlice,
   friends: friendSlice,
 });

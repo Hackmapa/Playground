@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { TttRoom } from "../../Interfaces/Rooms";
+import { Room, TttRoom } from "../../Interfaces/Rooms";
 import { User } from "../../Interfaces/User";
 
 interface RoomInformationsProps {
   user: User;
-  room: TttRoom;
+  room: Room;
   readyPlayers: number;
 }
 

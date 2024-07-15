@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { TicTacToeBoard } from "../../Games/TicTacToe/Components/TicTacToeBoard";
 import { useAppDispatch } from "../../hooks/hooks";
-import { TttRoom } from "../../Interfaces/Rooms";
+import { Room, RpsRoom, TttRoom } from "../../Interfaces/Rooms";
 import { User } from "../../Interfaces/User";
 import { updateTttRoom } from "../../Redux/rooms/tttRoomSlice";
 import { RootState } from "../../Redux/store";
@@ -13,15 +13,31 @@ import { checkIfUserHasBadge, addBadge } from "../../utils/badge";
 import { GameStartingButton } from "./GameStartingButton";
 import { RoomInformations } from "./RoomInformations";
 import { toast } from "react-toastify";
+import { RPS } from "../../Games/RPS/RPS";
+import { updateRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
 
 export const GameRoom: React.FC = () => {
   const token = useSelector((state: RootState) => state.token);
-  const room = useSelector((state: RootState) => state.tttRoom);
   const user = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const { gameTag, id } = useParams();
+
+  const selectRoomState = (state: RootState): Room => {
+    switch (gameTag) {
+      case "tic-tac-toe":
+        return state.tttRoom;
+
+      case "rock-paper-scissors":
+        return state.rpsRoom;
+
+      default:
+        return state.tttRoom;
+    }
+  };
+
+  const room = useSelector((state: RootState) => selectRoomState(state));
 
   const [canStart, setCanStart] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
@@ -32,6 +48,11 @@ export const GameRoom: React.FC = () => {
     switch (gameTag) {
       case "tic-tac-toe":
         socket.emit("resetTicTacToeGame", room.id);
+
+        break;
+
+      case "rock-paper-scissors":
+        socket.emit("resetRpsGame", room.id);
 
         break;
       default:
@@ -53,13 +74,38 @@ export const GameRoom: React.FC = () => {
         });
 
         break;
+
+      case "rock-paper-scissors":
+        socket.emit("getRpsGame", id);
+
+        socket.on("rpsRoom", (r: RpsRoom) => {
+          if (!r) {
+            navigate("/rock-paper-scissors");
+
+            socket.off("rpsRoom");
+          }
+        });
+
+        break;
       default:
         break;
     }
   };
 
   const setReady = () => {
-    socket.emit("setReady", room.id, user.id);
+    switch (gameTag) {
+      case "tic-tac-toe":
+        socket.emit("setReadyTicTacToe", room.id, user.id);
+
+        break;
+
+      case "rock-paper-scissors":
+        socket.emit("setReadyRps", room.id, user.id);
+
+        break;
+      default:
+        break;
+    }
   };
 
   const startGame = () => {
@@ -67,6 +113,11 @@ export const GameRoom: React.FC = () => {
       case "tic-tac-toe":
         socket.emit("startTicTacToeGame", room.id, token);
         break;
+
+      case "rock-paper-scissors":
+        socket.emit("startRpsGame", room.id, token);
+        break;
+
       default:
         break;
     }
@@ -87,7 +138,10 @@ export const GameRoom: React.FC = () => {
   const returnGame = () => {
     switch (gameTag) {
       case "tic-tac-toe":
-        return <TicTacToeBoard gameId={gameId} room={room} />;
+        return <TicTacToeBoard gameId={gameId} room={room as TttRoom} />;
+
+      case "rock-paper-scissors":
+        return <RPS />;
       default:
         return <div></div>;
     }
@@ -178,6 +232,19 @@ export const GameRoom: React.FC = () => {
           socket.emit("leaveTicTacToeGame", room.id, user.id);
         };
 
+      case "rock-paper-scissors":
+        socket.on("rpsRoom", (r: TttRoom, id: number) => {
+          dispatch(updateRpsRoom(r));
+
+          if (id) {
+            setGameId(id);
+          }
+        });
+
+        return () => {
+          socket.emit("leaveRpsGame", room.id, user.id);
+        };
+
       default:
         break;
     }
@@ -205,7 +272,7 @@ export const GameRoom: React.FC = () => {
           <RoomInformations
             user={user}
             room={room}
-            readyPlayers={getReadyPlayers()}
+            readyPlayers={getReadyPlayers() ?? 0}
           />
         </div>
       )}

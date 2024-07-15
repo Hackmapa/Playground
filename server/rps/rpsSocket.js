@@ -1,63 +1,26 @@
-import fetch from "node-fetch";
+import post from "../utils/post.js";
 
-const checkWin = (updatedBoard) => {
+// function to check if a player has won the rock paper scissors game
+const checkWin = (moves) => {
   const winConditions = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
+    ["rock", "scissors"],
+    ["scissors", "paper"],
+    ["paper", "rock"],
   ];
 
-  for (let condition of winConditions) {
-    const [a, b, c] = condition;
-    if (
-      updatedBoard[a] &&
-      updatedBoard[a] === updatedBoard[b] &&
-      updatedBoard[a] === updatedBoard[c]
-    ) {
+  for (let i = 0; i < winConditions.length; i++) {
+    if (moves[0] === winConditions[i][0] && moves[1] === winConditions[i][1]) {
       return true;
     }
   }
   return false;
 };
 
-const checkDraw = (updatedBoard) => {
-  return updatedBoard.every((cell) => cell !== "");
-};
-
-const post = async (url, body, token = "") => {
-  const response = await fetch(`${process.env.API_URL}/api/${url}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body,
-  });
-  return await response.json();
-};
-
-const put = async (url, body, token = "") => {
-  const response = await fetch(`${process.env.API_URL}/api/${url}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body,
-  });
-  return await response.json();
-};
-
 export default (io, games) => {
   io.on("connection", (socket) => {
-    // create tic tac toe game
+    // create rock paper scissors game
     socket.on(
-      "createTicTacToeGame",
+      "createRpsGame",
       (name, user, privateRoom = false, password = "") => {
         const game = {
           id: games.length + 1,
@@ -69,17 +32,15 @@ export default (io, games) => {
           finished: false,
           turn: 0,
           moves: [],
-          currentBoard: Array(9).fill(""),
           currentPlayer: {
-            symbol: "",
             user: null,
           },
           winner: null,
-          draw: false,
           privateRoom: privateRoom,
           password: password,
-          gameTag: "tic-tac-toe",
+          gameTag: "rock-paper-scissors",
         };
+        console.log("User: ", user);
 
         user.ready = false;
         user.owner = true;
@@ -88,15 +49,15 @@ export default (io, games) => {
         socket.join(game.id);
         games.push(game);
 
-        console.log("Game created: ", game.id);
+        console.log("Game RPS created: ", game.id);
 
-        io.to(game.id).emit("ticTacToeRoom", game);
-        io.emit("ticTacToeRooms", games);
+        io.to(game.id).emit("rpsRoom", game);
+        io.emit("rpsRooms", games);
       }
     );
 
-    // join tic tac toe game
-    socket.on("joinTicTacToeGame", (gameId, user) => {
+    // join rock paper scissors game
+    socket.on("joinRpsGame", (gameId, user) => {
       const game = games.find((game) => game.id === gameId);
 
       user.ready = false;
@@ -105,26 +66,26 @@ export default (io, games) => {
       game.players.push(user);
       socket.join(game.id);
 
-      console.log("Player joined game: ", game.id);
+      console.log("Player joined RPS game: ", game.id);
 
-      io.to(game.id).emit("ticTacToeRoom", game);
-      io.emit("ticTacToeRooms", games);
+      io.to(game.id).emit("rpsRoom", game);
+      io.emit("rpsRooms", games);
     });
 
-    // get all tic tac toe games
-    socket.on("getTicTacToeGames", () => {
-      io.emit("ticTacToeRooms", games);
+    // get all rock paper scissors games
+    socket.on("getRpsGames", () => {
+      io.emit("rpsRooms", games);
     });
 
-    // get one tic tac toe game
-    socket.on("getTicTacToeGame", (gameId) => {
+    // get one rock paper scissors game
+    socket.on("getRpsGame", (gameId) => {
       const game = games.find((game) => game.id == gameId);
 
-      io.emit("ticTacToeRoom", game);
+      io.emit("rpsRoom", game);
     });
 
-    // leave tic tac toe game
-    socket.on("leaveTicTacToeGame", (gameId, userId) => {
+    // leave rock paper scissors game
+    socket.on("leaveRpsGame", (gameId, userId) => {
       const game = games.find((game) => game.id === gameId);
       if (!game) return;
       game.players = game.players.filter((player) => player.id != userId);
@@ -137,23 +98,23 @@ export default (io, games) => {
 
       console.log("Player left game: ", game.id);
 
-      io.to(game.id).emit("ticTacToeRoom", game);
+      io.to(game.id).emit("rpsRoom", game);
       socket.leave(game.id);
 
-      io.emit("ticTacToeRooms", games);
+      io.emit("rpsRooms", games);
     });
 
     // set ready
-    socket.on("setReadyTicTacToe", (gameId, userId) => {
+    socket.on("setReadyRps", (gameId, userId) => {
       const game = games.find((game) => game.id == gameId);
       const player = game.players.find((player) => player.id === userId);
 
       player.ready = !player.ready;
 
-      io.to(game.id).emit("ticTacToeRoom", game);
+      io.to(game.id).emit("rpsRoom", game);
     });
 
-    socket.on("startTicTacToeGame", async (gameId, token) => {
+    socket.on("startRpsGame", async (gameId, token) => {
       const game = games.find((game) => game.id == gameId);
       game.started = true;
       const currentPlayer = Math.floor(Math.random() * game.players.length);
@@ -161,21 +122,19 @@ export default (io, games) => {
         symbol: "X",
         user: game.players[currentPlayer],
       };
-      game.currentBoard = Array(9).fill("");
-      game.moves.push({ player: game.currentPlayer, board: game.currentBoard });
 
-      console.log("Game TTT started: ", game.id);
+      console.log("Game started: ", game.id);
 
       const body = {
-        gameId: 2,
+        gameId: 1,
         players: game.players,
         name: game.name,
-        gameTag: "tic-tac-toe",
+        gameTag: "rock-paper-scissors",
       };
 
       const response = await post("games", JSON.stringify(body), token);
       const id = response.id;
-      io.to(game.id).emit("ticTacToeRoom", game, id);
+      io.to(game.id).emit("rpsRoom", game, id);
     });
 
     socket.on("makeMove", async (gameId, userId, index, token, dbGameId) => {
@@ -184,12 +143,6 @@ export default (io, games) => {
       const player = game.currentPlayer;
 
       if (user.id !== player.user.id) return;
-
-      game.currentBoard[index] = player.symbol;
-      game.moves.push({ player: player, board: game.currentBoard });
-
-      const winner = checkWin(game.currentBoard);
-      const draw = checkDraw(game.currentBoard);
 
       if (winner) {
         game.winner = player;
@@ -233,16 +186,15 @@ export default (io, games) => {
       const body = JSON.stringify(game);
       await post(url, body, token);
 
-      io.to(game.id).emit("ticTacToeRoom", game);
+      io.to(game.id).emit("rpsRoom", game);
     });
 
-    socket.on("resetTicTacToeGame", (gameId) => {
+    socket.on("resetRpsGame", (gameId) => {
       const game = games.find((game) => game.id == gameId);
       game.started = false;
       game.finished = false;
       game.turn = 0;
       game.moves = [];
-      game.currentBoard = Array(9).fill("");
       game.currentPlayer = {
         symbol: "",
         user: null,
@@ -251,7 +203,7 @@ export default (io, games) => {
       game.draw = false;
       game.players.map((player) => (player.ready = false));
 
-      io.to(game.id).emit("ticTacToeRoom", game);
+      io.to(game.id).emit("rpsRoom", game);
     });
   });
 };
