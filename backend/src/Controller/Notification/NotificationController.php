@@ -102,5 +102,19 @@ class NotificationController extends AbstractController
         }]);
     }
     
+    #[Route('/{id}/dismiss', name: 'dismiss', methods: ['POST'])]
+    public function dismiss(int $id): Response
+    {
+        $notification = $this->notificationRepository->find($id);
     
+        if (!$notification) {
+            return $this->json(['message' => 'Notification non trouvée.'], Response::HTTP_NOT_FOUND);
+        }
+    
+        $notification->setIsNew(false);
+        $notification->setIsDismissed(true);
+        $this->entityManager->flush();
+    
+        return $this->json(['message' => 'Notification marquée comme lue.'], 200);
+    }   
 }

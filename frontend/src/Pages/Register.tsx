@@ -10,6 +10,7 @@ import { get } from "../utils/requests/get";
 import { post } from "../utils/requests/post";
 import { ToastContainer, toast } from "react-toastify";
 import { socket } from "../socket";
+import { Loader } from "../Components/Loader/Loader";
 
 export const Register = () => {
   const dispatch = useAppDispatch();
@@ -23,8 +24,10 @@ export const Register = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     const body = {
       email,
       password,
@@ -39,15 +42,18 @@ export const Register = () => {
       if (data.email) {
         handleLogin(email, password);
       } else {
+        setLoading(false);
         throw new Error(data.message);
       }
     } catch (error: any) {
       toast.error(`${error}`);
+      setLoading(false);
       return;
     }
   };
 
   const handleLogin = async (email: string, password: string) => {
+    setLoading(true);
     const body = {
       email,
       password,
@@ -61,10 +67,12 @@ export const Register = () => {
         token = data.token;
         dispatch(login(data.token));
       } else {
+        setLoading(false);
         throw new Error(data.message);
       }
     } catch (error: any) {
       toast.error(`${error}`);
+      setLoading(false);
       return;
     }
 
@@ -76,11 +84,15 @@ export const Register = () => {
         socket.connect();
         socket.emit("login", user);
 
+        setLoading(false);
+
         navigate("/");
       } else {
+        setLoading(false);
         throw new Error("User Fetch Error");
       }
     } catch (error: any) {
+      setLoading(false);
       toast.error(`${error}`);
       return;
     }
@@ -158,17 +170,23 @@ export const Register = () => {
               </div>
 
               <div>
-                <Button
-                  className={
-                    "mt-4 " +
-                    (checkValidForm()
-                      ? "bg-primary hover:bg-primary-dark border-primary transition duration-100 ease-in-out"
-                      : "bg-primary-light border-primary-light")
-                  }
-                  disabled={!checkValidForm()}
-                  text="Register"
-                  onClick={handleSubmit}
-                />
+                {loading ? (
+                  <div className="flex justify-center mt-4">
+                    <Loader />
+                  </div>
+                ) : (
+                  <Button
+                    className={
+                      "mt-4 " +
+                      (checkValidForm()
+                        ? "bg-primary hover:bg-primary-dark border-primary transition duration-100 ease-in-out"
+                        : "bg-primary-light border-primary-light")
+                    }
+                    disabled={!checkValidForm()}
+                    text="Register"
+                    onClick={handleSubmit}
+                  />
+                )}
               </div>
             </div>
           </div>

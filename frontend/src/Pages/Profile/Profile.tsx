@@ -24,6 +24,7 @@ export const Profile = () => {
 
   const token = useAppSelector((state) => state.token);
   const actualUser = useAppSelector((state) => state.user);
+  const users = useAppSelector((state) => state.users);
 
   const dispatch = useAppDispatch();
 
@@ -81,22 +82,7 @@ export const Profile = () => {
   };
 
   const handleAddFriend = async () => {
-    const response = await post(
-      `friends/${actualUser.id}/add/${user?.id}`,
-      {},
-      token
-    );
-
-    if (response.status === 404 || response.status === 409) {
-      return toast.error(response.message);
-    } else {
-      toast.success(response.message);
-      setHasSentRequest(true);
-      socket.emit("friendShipAdded", {
-        userId: response.userId,
-        friendId: response.friendId,
-      });
-    }
+    socket.emit("sendFriendRequest", actualUser.id, user?.id, users, token);
   };
 
   useEffect(() => {

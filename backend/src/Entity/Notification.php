@@ -14,27 +14,35 @@ class Notification
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['notification_user_detail'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['notification_user_detail'])]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['notification_user_detail'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['notification_user_detail'])]
     private ?string $link = null;
 
     #[ORM\Column]
+    #[Groups(['notification_user_detail'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
+    #[Groups(['notification_user_detail'])]
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\Column]
+    #[Groups(['notification_user_detail'])]
     private ?bool $is_new = null;
 
     #[ORM\Column]
+    #[Groups(['notification_user_detail'])]
     private ?bool $is_dismissed = null;
 
 

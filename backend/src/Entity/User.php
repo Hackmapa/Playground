@@ -18,14 +18,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user_detail', 'game_detail', 'badges_detail', 'friendship_detail'])]
+    #[Groups(['user_detail', 'game_detail', 'badges_detail', 'friendship_detail', 'notification_user_detail'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\Email(
         message: 'The email "{{ value }}" is not a valid email.',
     )]
-    #[Groups(['user_detail'])]
+    #[Groups(['user_detail', 'notification_user_detail'])]
     private ?string $email = null;
 
     /**
@@ -47,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $currency = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user_detail', 'game_detail', 'friendship_detail'])]
+    #[Groups(['user_detail', 'game_detail', 'friendship_detail', 'notification_user_detail'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
@@ -63,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $badges;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user_detail', 'game_detail', 'friendship_detail'])]
+    #[Groups(['user_detail', 'game_detail', 'friendship_detail', 'notification_user_detail'])]
     private ?string $profile_picture = null;
 
     #[ORM\OneToMany(targetEntity: NotificationUser::class, mappedBy: 'user')]
