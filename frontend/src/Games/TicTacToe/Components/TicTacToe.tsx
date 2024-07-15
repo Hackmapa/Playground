@@ -101,14 +101,16 @@ export const TicTacToe: React.FC = () => {
         setTitle("It's a draw!");
       } else {
         if (
-          user.winnedGames?.length !== user.games?.length &&
+          user.winnedGames?.length === user.games?.length &&
           !checkIfUserHasBadge(user, "first_loss")
         ) {
           addBadge("first_loss", user.id, token);
         }
 
         if (
-          user.games?.length === 4 &&
+          user.games &&
+          user.winnedGames &&
+          user.games?.length - user.winnedGames?.length === 4 &&
           !checkIfUserHasBadge(user, "5_losses")
         ) {
           addBadge("5_losses", user.id, token);
@@ -149,7 +151,7 @@ export const TicTacToe: React.FC = () => {
   return (
     <>
       {room && (
-        <div className="flex bg-[#0F1B21] text-white w-full justify-between">
+        <div className="flex bg-darkBlue-dark text-white w-full justify-between">
           <div className="text-center p-5 h-screen w-[80%]">
             <h1 className="flex items-center justify-center gap-3 text-2xl text-white">
               {title}
@@ -160,7 +162,7 @@ export const TicTacToe: React.FC = () => {
             {room && !gameStarted ? (
               !canStart ? (
                 <Button
-                  className="w-64 h-24 bg-[#1F3540] text-white text-2xl rounded-full mt-2 mb-12"
+                  className="w-64 h-24 bg-darkBlue-gray text-white text-2xl rounded-full mt-2 mb-12"
                   disabled
                   text={`${getReadyPlayers()}/${room.maxPlayers} players ready`}
                 />

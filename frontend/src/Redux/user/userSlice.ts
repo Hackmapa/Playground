@@ -42,9 +42,15 @@ export const userSlice = createSlice({
 
       return state;
     },
+    updateBadges: (state, action) => {
+      state.badges = action.payload;
+
+      return state;
+    },
   },
 });
 
-export const { addUser, removeUser, updateProfilePicture } = userSlice.actions;
+export const { addUser, removeUser, updateProfilePicture, updateBadges } =
+  userSlice.actions;
 
 export default userSlice.reducer;

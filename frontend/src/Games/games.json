@@ -5,14 +5,20 @@
       "name": "Rock Paper Scissors",
       "description": "A simple game of Rock Paper Scissors",
       "link": "/rock-paper-scissors",
-      "image": "./images/rps.png"
+      "image": "./images/rps.png",
+      "tag": "rock-paper-scissors",
+      "difficulty": "easy",
+      "players": 2
     },
     {
       "id": 2,
       "name": "Tic Tac Toe",
       "description": "A simple game of Tic Tac Toe",
       "link": "/tic-tac-toe",
-      "image": "./images/tictactoe.png"
+      "image": "./images/tictactoe.png",
+      "tag": "tic-tac-toe",
+      "difficulty": "easy",
+      "players": 2
     }
   ]
 }

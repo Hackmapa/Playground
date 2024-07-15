@@ -116,11 +116,9 @@ export const Profile = () => {
     };
 
     fetchData();
-    console.log(friends);
   }, [id, actualUser]);
 
   const isAlreadyFriend = () => {
-    console.log(friends, actualUser.id);
     if (friends) {
       return friends.find((friend: any) => friend.friend.id === actualUser.id);
     }
@@ -171,7 +169,7 @@ export const Profile = () => {
             {isActualUser() && (
               <div>
                 <button
-                  className="bg-darkBlue-dark text-white py-2 px-4 flex border-2 rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark hover:border-darkBlue-dark transition duration-200"
+                  className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200"
                   onClick={() => setOpenModal(true)}
                 >
                   <FaRegPenToSquare />
@@ -193,7 +191,7 @@ export const Profile = () => {
                     {isAlreadyFriend() ? (
                       <div>
                         <button
-                          className="w-full bg-red-500 text-white py-2 px-4 flex border-2 rounded-3xl items-center hover:bg-white hover:text-red-500 hover:border-red-500 transition duration-200"
+                          className="w-full bg-red-500 text-white py-2 px-4 flex border-2 border-red-500 rounded-3xl items-center hover:bg-white hover:text-red-500 hover:border-red-500 transition duration-200"
                           onClick={handleRemoveFriend}
                         >
                           Retirer des amis

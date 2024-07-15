@@ -33,7 +33,7 @@ export const GameCard = (props: GameCardProps) => {
               className={`flex flex-col justify-between h-full p-4 absolute top-0 left-0 w-full transition-opacity duration-400 cursor-pointer ${
                 isHovered ? "opacity-100" : "opacity-0"
               }`}
-              onClick={() => navigate(game.link)}
+              onClick={() => navigate(`/rooms${game.link}`)}
             >
               <div>
                 <h1 className="text-xl font-bold text-white">{game.name}</h1>

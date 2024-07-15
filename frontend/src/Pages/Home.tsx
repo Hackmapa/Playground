@@ -63,6 +63,9 @@ export const Home = () => {
       description: "Description",
       image: "none",
       link: "/",
+      tag: "none",
+      difficulty: "none",
+      players: 0,
     });
   }
 
@@ -95,6 +98,9 @@ export const Home = () => {
         description: "Description",
         image: "none",
         link: "/",
+        tag: "none",
+        difficulty: "none",
+        players: 0,
       });
     }
   }, [maxLength]);
