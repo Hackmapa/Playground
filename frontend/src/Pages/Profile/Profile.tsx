@@ -145,7 +145,7 @@ export const Profile = () => {
           <div className="flex justify-between items-end">
             <div className="relative flex gap-5 items-end">
               <img
-                src={user?.profile_picture}
+                src={`${process.env.REACT_APP_PUBLIC_URL}${user.profile_picture}`}
                 alt="user_profile"
                 className={
                   "w-52 h-52 rounded-full transition duration-200 ease-in-out transform " +
@@ -249,7 +249,7 @@ export const Profile = () => {
             </div>
             <div className="w-3/4 flex flex-col text-left bg-darkBlue-gray rounded-xl px-3 py-4">
               <p className="text-2xl font-bold">Historique des parties</p>
-              <GameHistory games={games} />
+              <GameHistory user={user} games={games} />
             </div>
           </div>
         </div>

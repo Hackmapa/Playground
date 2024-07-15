@@ -134,6 +134,8 @@ export default (io, games) => {
 
       games = games.map((g) => (g.id === game.id ? game : g));
 
+      console.log("Player left game: ", game.id);
+
       io.to(game.id).emit("ticTacToeRoom", game);
       socket.leave(game.id);
 

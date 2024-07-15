@@ -23,7 +23,7 @@ export const GameCard = (props: GameCardProps) => {
         {game.image !== "none" && (
           <>
             <img
-              src={game.image}
+              src={`${process.env.REACT_APP_PUBLIC_URL}${game.image}`}
               alt={game.name}
               className={`h-full w-full object-cover absolute top-0 left-0 transition-opacity duration-400 ${
                 isHovered ? "opacity-0" : "opacity-100"

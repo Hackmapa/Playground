@@ -7,16 +7,13 @@ import { Login } from "../Pages/Login";
 import { Register } from "../Pages/Register";
 import { RPS } from "../Games/RPS/RPS";
 import { socket } from "../socket";
-import { TicTacToe } from "../Games/TicTacToe/Components/TicTacToe";
 import { useEffect } from "react";
 import { Profile } from "../Pages/Profile/Profile";
 import { TicTacToeReplay } from "../Games/TicTacToe/Components/TicTacToeReplay";
 import { Rooms } from "./Room/Rooms";
-import { toast } from "react-toastify";
-import { addUser } from "../Redux/user/userSlice";
-import { get } from "../utils/requests/get";
 import { useAppDispatch } from "../hooks/hooks";
 import { getUser } from "../utils/getUser";
+import { GameRoom } from "./Room/Room";
 
 export const RouterContainer = () => {
   const dispatch = useAppDispatch();
@@ -44,7 +41,7 @@ export const RouterContainer = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/rock-paper-scissors" element={<RPS />} />
             <Route path="/rooms/:name" element={<Rooms />} />
-            <Route path="/tic-tac-toe/:id" element={<TicTacToe />} />
+            <Route path="/:gameTag/:id" element={<GameRoom />} />
             <Route
               path="/tic-tac-toe/replay/:gameId"
               element={<TicTacToeReplay />}

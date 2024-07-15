@@ -72,7 +72,11 @@ export const Rooms: React.FC = () => {
     <div className="w-1/2 mx-auto pt-6 text-white">
       {findGame && (
         <div className="flex gap-8">
-          <img src={findGame.image} alt="" className="w-52 h-52 rounded-sm" />
+          <img
+            src={`${process.env.REACT_APP_PUBLIC_URL}${findGame.image}`}
+            alt=""
+            className="w-52 h-52 rounded-sm"
+          />
           <div className="flex flex-col justify-between text-left">
             <div>
               <h2 className="text-4xl font-bold">{findGame?.name}</h2>
@@ -143,12 +147,12 @@ export const Rooms: React.FC = () => {
           </div>
           <button
             className={
-              (roomName.length < 3 && roomName.length > 16
+              (roomName.length < 3 || roomName.length > 16
                 ? "cursor-not-allowed text-gray-500"
                 : "cursor-pointer hover:bg-darkBlue hover:text-white transition duration-200 text-white") +
               " bg-darkBlue-gray  py-2 px-4 rounded-3xl mt-8"
             }
-            disabled={roomName.length < 3 && roomName.length > 16}
+            disabled={roomName.length < 3 || roomName.length > 16}
             onClick={createRoom}
           >
             Créer la partie
