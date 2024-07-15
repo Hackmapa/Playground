@@ -1,5 +1,4 @@
 export const get = async (url: string, token: string = "") => {
-  console.log(process.env.REACT_APP_API_URL);
   const response = await fetch(`${process.env.REACT_APP_API_URL}/api/${url}`, {
     method: "GET",
     headers: {

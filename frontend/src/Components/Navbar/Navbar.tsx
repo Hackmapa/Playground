@@ -9,6 +9,10 @@ import { FaSearch } from "react-icons/fa";
 import { User } from "../../Interfaces/User";
 import { FriendDropdown } from "./Friends/FriendDropdown";
 import { NotificationDropdown } from "./Notifications/NotificationDropdown";
+import {
+  addNotification,
+  addNotifications,
+} from "../../Redux/notifications/notificationSlice";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -16,10 +20,10 @@ export const Navbar = () => {
 
   const user = useAppSelector((state) => state.user);
   const token = useAppSelector((state) => state.token);
+  const notifications = useAppSelector((state) => state.notifications);
 
   const [openNotifications, setOpenNotifications] = useState(false);
   const [openFriends, setOpenFriends] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [friends, setFriends] = useState<User[]>([]);
 
   const handleLogout = () => {
@@ -44,18 +48,13 @@ export const Navbar = () => {
       try {
         const response = await get(`notification/${user.id}`, token);
 
-        setNotifications(response);
+        dispatch(addNotifications(response));
       } catch (error) {
         console.error(error);
       }
     };
 
     getAllNotifications();
-
-    socket.on("friendShipAdded", (data: Notification) => {
-      // setMessages((prevMessages) => [...prevMessages, data]);
-      console.log(data);
-    });
   }, [user, token]);
 
   useEffect(() => {
@@ -69,6 +68,30 @@ export const Navbar = () => {
       setOpenNotifications(false);
     }
   }, [openFriends]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("friendRequest", (data: any) => {
+        dispatch(addNotification(data));
+      });
+
+      socket.on("friendRequestAccepted", (data: any) => {
+        dispatch(addNotification(data));
+      });
+
+      socket.on("friendRequestDeclined", (data: any) => {
+        dispatch(addNotification(data));
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("friendRequest");
+        socket.off("friendRequestAccepted");
+        socket.off("friendRequestDeclined");
+      }
+    };
+  }, [notifications]);
 
   return (
     <div className="sticky top-0 z-30 w-full px-4 py-2 bg-darkBlue-gray text-white">

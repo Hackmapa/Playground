@@ -53,7 +53,7 @@ class FriendController extends BaseController
     }
 
     #[Route('/{id}/add/{friendId}', name: 'add_friend', methods: ['POST'])]
-    public function sendFriendRequest(int $id, int $friendId, EntityManagerInterface $entityManager): JsonResponse
+    public function sendFriendRequest(int $id, int $friendId, EntityManagerInterface $entityManager): Response
     {
         $user = $entityManager->getRepository(User::class)->find($id);
         $friend = $entityManager->getRepository(User::class)->find($friendId);
@@ -98,7 +98,6 @@ class FriendController extends BaseController
         $notification->setUpdatedAt(new \DateTimeImmutable());
         $notification->setIsNew(true);
         $notification->setIsDismissed(false);
-        
 
         $notificationUser = new NotificationUser();
         $notificationUser->setUser($friend);
@@ -110,19 +109,17 @@ class FriendController extends BaseController
         $entityManager->persist($notificationUser);
         $entityManager->flush();
 
+        $data = $this->serializer->serialize($notificationUser, 'json', ['groups' => 'notification_user_detail']);
 
-        return $this->json([
-            'message' => 'Friend request sent.',
-            'status' => Response::HTTP_OK,
-            'notification' => $notification
-//            'userId' => $notificationUser->getUser()->getId(),
-//            'friendId' => $notificationUser->getFriend()->getId()
-        ]);
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/{id}/accept/{friendId}', name: 'accept_friend_request', methods: ['POST'])]
     public function acceptFriendRequest(int $id, int $friendId, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->userRepository->find($id);
+        $friend = $this->userRepository->find($friendId);
+
         $notificationUser = $entityManager->getRepository(NotificationUser::class)->findOneBy([
             'user' => $id,
             'friend' => $friendId,
@@ -145,19 +142,38 @@ class FriendController extends BaseController
         $friendship->setPending(false);
         $friendship->setAccepted(true);
 
+        $notification->setIsNew(false);
         $notification->setIsDismissed(true);
 
+        $newNotification = new Notification();
+        $newNotification->setType('friend_request_accepted');
+        $newNotification->setDescription('You are now friends with ');
+        $newNotification->setLink('');
+        $newNotification->setCreatedAt(new \DateTimeImmutable());
+        $newNotification->setUpdatedAt(new \DateTimeImmutable());
+        $newNotification->setIsNew(true);
+        $newNotification->setIsDismissed(false);
+        
+        $notificationUser = new NotificationUser();
+        $notificationUser->setUser($friend);
+        $notificationUser->setFriend($user);
+        $notificationUser->setNotification($newNotification);
+
+        $entityManager->persist($newNotification);
+        $entityManager->persist($notificationUser);
         $entityManager->flush();
 
-        return $this->json([
-            'message' => 'Friend request accepted.', 
-            'status' => Response::HTTP_OK
-        ]);
+        $data = $this->serializer->serialize($notificationUser, 'json', ['groups' => 'notification_user_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/{id}/decline/{friendId}', name: 'decline_friend_request', methods: ['POST'])]
     public function declineFriendRequest(int $id, int $friendId, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->userRepository->find($id);
+        $friend = $this->userRepository->find($friendId);
+
         $notificationUser = $entityManager->getRepository(NotificationUser::class)->findOneBy([
             'user' => $id,
             'friend' => $friendId,
@@ -177,14 +193,30 @@ class FriendController extends BaseController
             ]);
         }
         
+        $notification->setIsNew(false);
         $notification->setIsDismissed(true);
 
-        $entityManager->remove($friendship);    
+        $newNotification = new Notification();
+        $newNotification->setType('friend_request_declined');
+        $newNotification->setDescription('Your friend request has been declined by ');
+        $newNotification->setLink('');
+        $newNotification->setCreatedAt(new \DateTimeImmutable());
+        $newNotification->setUpdatedAt(new \DateTimeImmutable());
+        $newNotification->setIsNew(true);
+        $newNotification->setIsDismissed(false);
+
+        $notificationUser = new NotificationUser();
+        $notificationUser->setUser($friend);
+        $notificationUser->setFriend($user);
+        $notificationUser->setNotification($newNotification);
+
+        $entityManager->remove($friendship);  
+        $entityManager->persist($newNotification);
+        $entityManager->persist($notificationUser);  
         $entityManager->flush();
 
-        return $this->json([
-            'message' => 'Friend request declined.', 
-            'status' => Response::HTTP_OK
-        ]);
+        $data = $this->serializer->serialize($notificationUser, 'json', ['groups' => 'notification_user_detail']);
+
+        return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 }

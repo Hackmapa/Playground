@@ -30,7 +30,6 @@ const checkDraw = (updatedBoard) => {
 };
 
 const post = async (url, body, token = "") => {
-  console.log(process.env.API_URL);
   const response = await fetch(`${process.env.API_URL}/api/${url}`, {
     method: "POST",
     headers: {

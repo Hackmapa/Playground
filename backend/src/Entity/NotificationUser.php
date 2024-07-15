@@ -13,16 +13,19 @@ class NotificationUser
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user_detail'])]
+    #[Groups(['user_detail', 'notification_user_detail'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'notificationUsers')]
+    #[Groups(['notification_user_detail'])]
     private ?Notification $notification = null;
 
     #[ORM\ManyToOne(inversedBy: 'friend')]
+    #[Groups(['notification_user_detail'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'notificationFriends')]
+    #[Groups(['notification_user_detail'])]
     private ?User $friend = null;
 
     public function getId(): ?int

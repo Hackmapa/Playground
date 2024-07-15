@@ -5,6 +5,7 @@ import { socket } from "../socket";
 import { useEffect } from "react";
 import { ChatBox } from "./ChatBox/ChatBox";
 import { useAppDispatch } from "../hooks/hooks";
+import { send } from "process";
 
 interface OverlayProps {
   children: React.ReactNode;
