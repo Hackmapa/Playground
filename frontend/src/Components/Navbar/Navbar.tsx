@@ -13,6 +13,7 @@ import {
   addNotification,
   addNotifications,
 } from "../../Redux/notifications/notificationSlice";
+import { GameSearch } from "./GameSearch";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -105,25 +106,18 @@ export const Navbar = () => {
     <div className="sticky top-0 z-30 w-full px-4 py-2 bg-darkBlue-gray text-white">
       <div className="flex items-center justify-between px-2">
         <img
-          src="logo.svg"
+          src={`${process.env.REACT_APP_PUBLIC_URL}/logo.svg`}
           alt="logo"
           className="w-12 cursor-pointer"
           onClick={() => navigate("/")}
         />
-        <div className="flex items-center w-1/4 bg-darkBlue rounded-3xl">
-          <input
-            type="text"
-            placeholder="Recherchez un jeu ..."
-            className="flex-grow bg-darkBlue font-bold px-5 py-2 text-gray-400 focus:outline-none focus:ring-0 rounded-3xl"
-          />
-          <FaSearch className="text-gray-400 mr-4" />
-        </div>
+        <GameSearch />
         <div className="flex items-center gap-10">
           <div className="flex gap-2">
             <FriendDropdown friends={friends} />
             <NotificationDropdown notifications={notifications} />
             <img
-              src={user?.profile_picture}
+              src={user.profile_picture}
               alt="profile"
               className="w-10 h-10 rounded-full hover:cursor-pointer"
               onClick={() => navigate(`/profile/${user.id}`)}

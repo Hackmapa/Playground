@@ -14,6 +14,8 @@ export interface TttRoom {
   currentPlayer: Player;
   winner: Player;
   draw: boolean;
+  privateRoom?: boolean;
+  password?: string;
 }
 
 interface Player {

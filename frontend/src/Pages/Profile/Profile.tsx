@@ -116,11 +116,9 @@ export const Profile = () => {
     };
 
     fetchData();
-    console.log(friends);
   }, [id, actualUser]);
 
   const isAlreadyFriend = () => {
-    console.log(friends, actualUser.id);
     if (friends) {
       return friends.find((friend: any) => friend.friend.id === actualUser.id);
     }
@@ -147,7 +145,7 @@ export const Profile = () => {
           <div className="flex justify-between items-end">
             <div className="relative flex gap-5 items-end">
               <img
-                src={user?.profile_picture}
+                src={`${process.env.REACT_APP_PUBLIC_URL}${user.profile_picture}`}
                 alt="user_profile"
                 className={
                   "w-52 h-52 rounded-full transition duration-200 ease-in-out transform " +
@@ -171,7 +169,7 @@ export const Profile = () => {
             {isActualUser() && (
               <div>
                 <button
-                  className="bg-darkBlue-dark text-white py-2 px-4 flex border-2 rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark hover:border-darkBlue-dark transition duration-200"
+                  className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200"
                   onClick={() => setOpenModal(true)}
                 >
                   <FaRegPenToSquare />
@@ -193,7 +191,7 @@ export const Profile = () => {
                     {isAlreadyFriend() ? (
                       <div>
                         <button
-                          className="w-full bg-red-500 text-white py-2 px-4 flex border-2 rounded-3xl items-center hover:bg-white hover:text-red-500 hover:border-red-500 transition duration-200"
+                          className="w-full bg-red-500 text-white py-2 px-4 flex border-2 border-red-500 rounded-3xl items-center hover:bg-white hover:text-red-500 hover:border-red-500 transition duration-200"
                           onClick={handleRemoveFriend}
                         >
                           Retirer des amis
@@ -251,7 +249,7 @@ export const Profile = () => {
             </div>
             <div className="w-3/4 flex flex-col text-left bg-darkBlue-gray rounded-xl px-3 py-4">
               <p className="text-2xl font-bold">Historique des parties</p>
-              <GameHistory games={games} />
+              <GameHistory user={user} games={games} />
             </div>
           </div>
         </div>

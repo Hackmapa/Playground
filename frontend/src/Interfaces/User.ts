@@ -22,4 +22,5 @@ export interface User {
   owner?: boolean;
   createdAt: Date;
   updatedAt: Date;
+  symbol?: string;
 }

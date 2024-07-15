@@ -82,7 +82,11 @@ export const Login = () => {
         <div className="flex flex-col flex-grow py-10 m-3 overflow-auto rounded-3xl">
           <div className="flex-grow">
             <div className="flex justify-center">
-              <img src="/logo.svg" alt="logo TrainrHub" className="h-44" />
+              <img
+                src={`${process.env.REACT_APP_PUBLIC_URL}/logo.svg`}
+                alt="logo_hackmapa"
+                className="h-44"
+              />
             </div>
             <div className="block w-9/12 mx-auto max-xs:w-3/4 max-lg:w-5/12 max-md:w-6/12 max-sm:w-8/12 margin">
               <Input

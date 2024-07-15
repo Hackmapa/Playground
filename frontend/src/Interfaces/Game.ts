@@ -7,6 +7,9 @@ export interface GameInfos {
   description: string;
   link: string;
   image: string;
+  tag: string;
+  difficulty: string;
+  players: number;
 }
 
 export interface Game {
