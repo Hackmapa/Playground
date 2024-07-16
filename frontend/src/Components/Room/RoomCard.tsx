@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { TttRoom } from "../../Interfaces/Rooms";
+import { Room, RpsRoom, TttRoom } from "../../Interfaces/Rooms";
 import { RootState } from "../../Redux/store";
 import { socket } from "../../socket";
 import { Button } from "../Button/Button";
@@ -10,7 +10,7 @@ import { Input } from "../Input/Input";
 import { toast } from "react-toastify";
 
 interface RoomCardProps {
-  room: TttRoom;
+  room: Room;
   name: string;
 }
 
@@ -40,6 +40,16 @@ export const RoomCard = (props: RoomCardProps) => {
           navigate(`/tic-tac-toe/${room.id}`);
         });
         break;
+
+      case "rock-paper-scissors":
+        socket.emit("joinRpsGame", room.id, user);
+
+        socket.on("rpsRoom", (room: RpsRoom) => {
+          toast.success(`Vous avez rejoint la partie ${room.name}`);
+          navigate(`/rock-paper-scissors/${room.id}`);
+        });
+        break;
+
       default:
         break;
     }

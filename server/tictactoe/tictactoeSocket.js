@@ -78,6 +78,7 @@ export default (io, games) => {
           draw: false,
           privateRoom: privateRoom,
           password: password,
+          gameTag: "tic-tac-toe",
         };
 
         user.ready = false;
@@ -143,7 +144,7 @@ export default (io, games) => {
     });
 
     // set ready
-    socket.on("setReady", (gameId, userId) => {
+    socket.on("setReadyTicTacToe", (gameId, userId) => {
       const game = games.find((game) => game.id == gameId);
       const player = game.players.find((player) => player.id === userId);
 
@@ -163,11 +164,13 @@ export default (io, games) => {
       game.currentBoard = Array(9).fill("");
       game.moves.push({ player: game.currentPlayer, board: game.currentBoard });
 
-      console.log("Game started: ", game.id);
+      console.log("Game TTT started: ", game.id);
 
       const body = {
         gameId: 2,
         players: game.players,
+        name: game.name,
+        gameTag: "tic-tac-toe",
       };
 
       const response = await post("games", JSON.stringify(body), token);

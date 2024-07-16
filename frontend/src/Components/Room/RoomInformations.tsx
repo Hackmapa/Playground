@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { TttRoom } from "../../Interfaces/Rooms";
+import { Room, TttRoom } from "../../Interfaces/Rooms";
 import { User } from "../../Interfaces/User";
 
 interface RoomInformationsProps {
   user: User;
-  room: TttRoom;
+  room: Room;
   readyPlayers: number;
 }
 
@@ -91,20 +91,28 @@ export const RoomInformations = (props: RoomInformationsProps) => {
               {room && getGameStatus()}
             </p>
             <p>
-              {room && room.finished
-                ? room.winner
-                  ? `Gagnant: ${room.winner.user?.username}`
-                  : "Match nul"
-                : ""}
+              {room && room.finished ? (
+                room.winner.user ? (
+                  <>
+                    <span className="font-bold">Gagnant: </span>
+                    {room.winner.user?.username}
+                  </>
+                ) : (
+                  <span className="font-bold">"Match nul"</span>
+                )
+              ) : (
+                ""
+              )}
             </p>
             <p>
-              {room &&
-              room.moves &&
-              room.moves.length > 0 && (
-                <span className="font-bold"> Nombre de coups: </span>
-              )
-                ? `Nombre de coups: ${room.moves.length - 1}`
-                : ""}
+              {room && room.moves && room.moves.length > 0 ? (
+                <>
+                  <span className="font-bold">Nombre de coups: </span>
+                  {room.turn}
+                </>
+              ) : (
+                ""
+              )}
             </p>
           </div>
         </div>

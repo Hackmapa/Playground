@@ -39,7 +39,6 @@ export const RouterContainer = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/rock-paper-scissors" element={<RPS />} />
             <Route path="/rooms/:name" element={<Rooms />} />
             <Route path="/:gameTag/:id" element={<GameRoom />} />
             <Route
