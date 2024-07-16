@@ -6,6 +6,7 @@ export interface GameInfos {
   name: string;
   description: string;
   link: string;
+  video?: string;
   image: string;
   tag: string;
   difficulty: string;

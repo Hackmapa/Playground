@@ -10,6 +10,7 @@ import { Box, Typography, Slider } from "@mui/material";
 import { RpsRoundCircles } from "./Components/RpsRoundCircles";
 import { ReplayHeader } from "../../Components/Game/ReplayHeader";
 import { dateToString, dateToTimeString } from "../../utils/utils";
+import { getGameName } from "../../utils/gameInfos";
 
 export const RpsReplay = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ export const RpsReplay = () => {
   };
 
   useEffect(() => {
-    document.title = `Tic Tac Toe - Game ${gameId} Replay`;
+    document.title = `${gameId} Replay`;
 
     fetchGame();
   }, []);

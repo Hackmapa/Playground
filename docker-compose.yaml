@@ -22,6 +22,7 @@ services:
       - frontend_volume:/var/lib/frontend
     environment:
       - NODE_ENV=production
+      - REACT_APP_PUBLIC_URL=http://hackmapa.fr
     depends_on:
       - backend
     env_file:

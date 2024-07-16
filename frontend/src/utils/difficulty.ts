@@ -3,7 +3,7 @@ export const difficulty = (level: string) => {
     case "easy":
       return "Facile";
     case "medium":
-      return "Moyen";
+      return "Moyenne";
     case "hard":
       return "Difficile";
     default:

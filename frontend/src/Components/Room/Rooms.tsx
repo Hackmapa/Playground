@@ -101,7 +101,7 @@ export const Rooms: React.FC = () => {
           <img
             src={`${process.env.REACT_APP_PUBLIC_URL}${findGame.image}`}
             alt=""
-            className="w-52 h-52 rounded-sm"
+            className="w-52 h-52 rounded-sm object-cover"
           />
           <div className="flex flex-col justify-between text-left">
             <div>

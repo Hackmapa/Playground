@@ -6,6 +6,7 @@
       "description": "Découvrez le classique jeu de Pierre Feuille Ciseaux",
       "link": "/rock-paper-scissors",
       "image": "/images/rps.png",
+      "video": "/images/rps.gif",
       "tag": "rock-paper-scissors",
       "difficulty": "easy",
       "players": 2,
@@ -17,10 +18,35 @@
       "description": "Jouez au jeu du morpion, un jeu de réflexion rapide et amusant se pratiquant à deux joueurs",
       "link": "/tic-tac-toe",
       "image": "/images/tictactoe.png",
+      "video": "/images/tictactoe.gif",
       "tag": "tic-tac-toe",
       "difficulty": "easy",
       "players": 2,
       "howToPlay": "Le jeu du morpion est un jeu de réflexion se pratiquant à deux joueurs au tour par tour et dont le but est de créer le premier un alignement sur une grille. Le jeu se joue sur une grille carrée de 3x3 cases. Deux joueurs s'affrontent. Ils doivent remplir chacun à leur tour une case de la grille avec le symbole qui leur est attribué : O ou X. Le premier joueur qui parvient à aligner trois de ses symboles horizontalement, verticalement ou en diagonale a gagné."
+    },
+    {
+      "id": 3,
+      "name": "Puissance 4",
+      "description": "Jouez au jeu du Puissance 4, un jeu amusant et stratégique se pratiquant à deux joueurs !",
+      "link": "/connect-four",
+      "image": "/images/connect_four.png",
+      "video": "/images/connect_four.gif",
+      "tag": "connect-four",
+      "difficulty": "medium",
+      "players": 2,
+      "howToPlay": "Le Puissance 4 est un jeu de stratégie se pratiquant à deux joueurs. Le but du jeu est d'aligner une suite de 4 pions de sa couleur horizontalement, verticalement ou en diagonale. Les joueurs jouent à tour de rôle en plaçant un pion dans une colonne de la grille. Le premier joueur qui parvient à aligner 4 pions de sa couleur a gagné."
+    },
+    {
+      "id": 4,
+      "name": "Harry Potter - Duels",
+      "description": "Jouez au jeu des duels de sorciers inspiré de l'univers de Harry Potter !",
+      "link": "/harry-potter-duels",
+      "image": "/images/harry_potter.png",
+      "video": "/images/harry_potter.gif",
+      "tag": "harry-potter-duels",
+      "difficulty": "hard",
+      "players": 2,
+      "howToPlay": "Les duels de sorciers sont un jeu de réflexion et de stratégie se pratiquant à deux joueurs. Chaque joueur incarne un sorcier et doit choisir une action parmi les trois proposées : attaque, défense ou sortilège. Les sorts sont efficaces contre les attaques, les attaques sont efficaces contre les défenses et les défenses sont efficaces contre les sorts. Le joueur qui remporte le plus de duels a gagné."
     }
   ]
 }
