@@ -88,7 +88,7 @@ export const RpsReplay = () => {
                       <div className="flex flex-col items-center mx-auto">
                         <div>
                           <img
-                            src={`${process.env.REACT_APP_PUBLIC_URL}/images/${move.move}.png`}
+                            src={`${process.env.REACT_APP_PUBLIC_URL}/${move.move}.png`}
                             alt="image"
                             className="w-52 h-52 bg-white rounded-full p-5"
                           />

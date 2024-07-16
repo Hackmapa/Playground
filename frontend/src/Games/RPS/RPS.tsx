@@ -65,7 +65,7 @@ export const RPS = (props: RPSProps) => {
               : "cursor-pointer hover:transform hover:scale-110 transition duration-200") +
             " w-52 h-52 bg-white rounded-full p-5"
           }
-          src={`${process.env.REACT_APP_PUBLIC_URL}/images/rock.png`}
+          src={`${process.env.REACT_APP_PUBLIC_URL}/rock.png`}
           alt=""
           onClick={() => sendMove("rock")}
         />
@@ -76,7 +76,7 @@ export const RPS = (props: RPSProps) => {
               : "cursor-pointer hover:transform hover:scale-110 transition duration-200") +
             " w-52 h-52 bg-white rounded-full p-5"
           }
-          src={`${process.env.REACT_APP_PUBLIC_URL}/images/paper.png`}
+          src={`${process.env.REACT_APP_PUBLIC_URL}/paper.png`}
           alt=""
           onClick={() => sendMove("paper")}
         />
@@ -87,7 +87,7 @@ export const RPS = (props: RPSProps) => {
               : "cursor-pointer hover:transform hover:scale-110 transition duration-200") +
             " w-52 h-52 bg-white rounded-full p-5"
           }
-          src={`${process.env.REACT_APP_PUBLIC_URL}/images/scissors.png`}
+          src={`${process.env.REACT_APP_PUBLIC_URL}/scissors.png`}
           alt=""
           onClick={() => sendMove("scissors")}
         />
