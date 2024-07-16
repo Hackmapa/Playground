@@ -15,6 +15,7 @@ import { useAppDispatch } from "../hooks/hooks";
 import { getUser } from "../utils/getUser";
 import { GameRoom } from "./Room/Room";
 import { RpsReplay } from "../Games/RPS/RpsReplay";
+import { ConnectFourReplay } from "../Games/ConnectFour/Components/ConnectFourReplay";
 
 export const RouterContainer = () => {
   const dispatch = useAppDispatch();
@@ -49,6 +50,10 @@ export const RouterContainer = () => {
             <Route
               path="/rock-paper-scissors/replay/:gameId"
               element={<RpsReplay />}
+            />
+            <Route
+              path="/connect-four/replay/:gameId"
+              element={<ConnectFourReplay />}
             />
             <Route path="/profile/:id" element={<Profile />} />
           </Routes>

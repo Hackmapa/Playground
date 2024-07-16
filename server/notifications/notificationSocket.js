@@ -10,8 +10,6 @@ export default (io, users) => {
         token
       );
 
-      console.log(response);
-
       if (response.error) {
         socket.emit("error", response.error);
       } else {

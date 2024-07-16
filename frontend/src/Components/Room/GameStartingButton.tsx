@@ -107,5 +107,7 @@ export const GameStartingButton = (props: GameStartingButtonProps) => {
     }
   }, [room]);
 
-  return <div className="w-full flex justify-center">{returnButton()}</div>;
+  return (
+    <div className="w-full flex justify-center mt-6">{returnButton()}</div>
+  );
 };

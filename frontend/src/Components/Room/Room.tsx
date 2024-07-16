@@ -4,7 +4,12 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { TicTacToeBoard } from "../../Games/TicTacToe/Components/TicTacToeBoard";
 import { useAppDispatch } from "../../hooks/hooks";
-import { Room, RpsRoom, TttRoom } from "../../Interfaces/Rooms";
+import {
+  ConnectFourRoom,
+  Room,
+  RpsRoom,
+  TttRoom,
+} from "../../Interfaces/Rooms";
 import { User } from "../../Interfaces/User";
 import { updateTttRoom } from "../../Redux/rooms/tttRoomSlice";
 import { RootState } from "../../Redux/store";
@@ -16,6 +21,8 @@ import { toast } from "react-toastify";
 import { RPS } from "../../Games/RPS/RPS";
 import { updateRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
 import { HowToPlay } from "./HowToPlay";
+import { ConnectFourBoard } from "../../Games/ConnectFour/Components/ConnectFourBoard";
+import { updateConnectFourRoom } from "../../Redux/rooms/connectFourSlice";
 
 export const GameRoom: React.FC = () => {
   const token = useSelector((state: RootState) => state.token);
@@ -33,6 +40,9 @@ export const GameRoom: React.FC = () => {
       case "rock-paper-scissors":
         return state.rpsRoom;
 
+      case "connect-four":
+        return state.connectFourRoom;
+
       default:
         return state.tttRoom;
     }
@@ -44,18 +54,22 @@ export const GameRoom: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOwner, setGameOwner] = useState(false);
   const [gameId, setGameId] = useState<number>();
+  const [alreadySetBadge, setAlreadySetBadge] = useState(false);
 
   const resetGame = () => {
     switch (gameTag) {
       case "tic-tac-toe":
         socket.emit("resetTicTacToeGame", room.id);
-
         break;
 
       case "rock-paper-scissors":
         socket.emit("resetRpsGame", room.id);
-
         break;
+
+      case "connect-four":
+        socket.emit("resetConnectFourGame", room.id);
+        break;
+
       default:
         break;
     }
@@ -88,6 +102,19 @@ export const GameRoom: React.FC = () => {
         });
 
         break;
+
+      case "connect-four":
+        socket.emit("getConnectFourGame", id);
+
+        socket.on("connectFourRoom", (r: ConnectFourRoom) => {
+          if (!r) {
+            navigate("/connect-four");
+
+            socket.off("connectFourRoom");
+          }
+        });
+
+        break;
       default:
         break;
     }
@@ -104,6 +131,11 @@ export const GameRoom: React.FC = () => {
         socket.emit("setReadyRps", room.id, user.id);
 
         break;
+
+      case "connect-four":
+        socket.emit("setReadyConnectFour", room.id, user.id);
+
+        break;
       default:
         break;
     }
@@ -117,6 +149,10 @@ export const GameRoom: React.FC = () => {
 
       case "rock-paper-scissors":
         socket.emit("startRpsGame", room.id, token);
+        break;
+
+      case "connect-four":
+        socket.emit("startConnectFourGame", room.id, token);
         break;
 
       default:
@@ -143,6 +179,12 @@ export const GameRoom: React.FC = () => {
 
       case "rock-paper-scissors":
         return <RPS gameId={gameId} room={room as RpsRoom} />;
+
+      case "connect-four":
+        return (
+          <ConnectFourBoard gameId={gameId} room={room as ConnectFourRoom} />
+        );
+
       default:
         return <div></div>;
     }
@@ -170,14 +212,16 @@ export const GameRoom: React.FC = () => {
 
         if (
           user.winnedGames?.length === 0 &&
-          !checkIfUserHasBadge(user, "first_win")
+          !checkIfUserHasBadge(user, "first_win") &&
+          !alreadySetBadge
         ) {
           addBadge("first_win", user.id, token);
         }
 
         if (
           user.winnedGames?.length === 4 &&
-          !checkIfUserHasBadge(user, "5_wins")
+          !checkIfUserHasBadge(user, "5_wins") &&
+          !alreadySetBadge
         ) {
           addBadge("5_wins", user.id, token);
         }
@@ -186,7 +230,8 @@ export const GameRoom: React.FC = () => {
       } else {
         if (
           user.winnedGames?.length === user.games?.length &&
-          !checkIfUserHasBadge(user, "first_loss")
+          !checkIfUserHasBadge(user, "first_loss") &&
+          !alreadySetBadge
         ) {
           addBadge("first_loss", user.id, token);
         }
@@ -195,7 +240,8 @@ export const GameRoom: React.FC = () => {
           user.games &&
           user.winnedGames &&
           user.games?.length - user.winnedGames?.length === 4 &&
-          !checkIfUserHasBadge(user, "5_losses")
+          !checkIfUserHasBadge(user, "5_losses") &&
+          !alreadySetBadge
         ) {
           addBadge("5_losses", user.id, token);
         }
@@ -205,14 +251,21 @@ export const GameRoom: React.FC = () => {
 
       if (
         user.games?.length === 0 &&
-        !checkIfUserHasBadge(user, "first_game")
+        !checkIfUserHasBadge(user, "first_game") &&
+        !alreadySetBadge
       ) {
         addBadge("first_game", user.id, token);
       }
 
-      if (user.games?.length === 4 && !checkIfUserHasBadge(user, "5_games")) {
+      if (
+        user.games?.length === 4 &&
+        !checkIfUserHasBadge(user, "5_games") &&
+        !alreadySetBadge
+      ) {
         addBadge("5_games", user.id, token);
       }
+
+      setAlreadySetBadge(true);
     }
   }, [room]);
 
@@ -244,6 +297,19 @@ export const GameRoom: React.FC = () => {
 
         return () => {
           socket.emit("leaveRpsGame", room.id, user.id);
+        };
+
+      case "connect-four":
+        socket.on("connectFourRoom", (r: ConnectFourRoom, id: number) => {
+          dispatch(updateConnectFourRoom(r));
+
+          if (id) {
+            setGameId(id);
+          }
+        });
+
+        return () => {
+          socket.emit("leaveConnectFourGame", room.id, user.id);
         };
 
       default:

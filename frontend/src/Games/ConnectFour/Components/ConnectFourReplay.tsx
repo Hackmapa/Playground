@@ -1,7 +1,6 @@
 import { Game } from "../../../Interfaces/Game";
-import { TicTacToeBoard } from "./TicTacToeBoard";
 import { useEffect, useState } from "react";
-import { TttRoom } from "../../../Interfaces/Rooms";
+import { ConnectFourRoom, TttRoom } from "../../../Interfaces/Rooms";
 import { get } from "../../../utils/requests/get";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../Redux/store";
@@ -10,12 +9,12 @@ import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Loader } from "../../../Components/Loader/Loader";
-import CircleIcon from "../Assets/circle.png";
-import CrossIcon from "../Assets/cross.png";
+
 import { ReplayHeader } from "../../../Components/Game/ReplayHeader";
 import { dateToString, dateToTimeString } from "../../../utils/utils";
+import { ConnectFourBoard } from "./ConnectFourBoard";
 
-export const TicTacToeReplay = () => {
+export const ConnectFourReplay = () => {
   const navigate = useNavigate();
 
   const token = useSelector((state: RootState) => state.token);
@@ -28,13 +27,13 @@ export const TicTacToeReplay = () => {
   const [players, setPlayers] = useState<any[]>([]);
 
   const getPlayers = () => {
-    const firstTurn = game?.turns[0].state as TttRoom;
+    const firstTurn = game?.turns[0].state as ConnectFourRoom;
     const players = firstTurn.players;
 
     setPlayers(players);
 
-    const player1Symbol = firstTurn.currentPlayer.symbol;
-    const player2Symbol = player1Symbol === "X" ? "O" : "X";
+    const player1Symbol = firstTurn.currentPlayer.color;
+    const player2Symbol = player1Symbol === "Red" ? "Yellow" : "Red";
 
     players[0].symbol = player1Symbol;
     players[1].symbol = player2Symbol;
@@ -56,7 +55,7 @@ export const TicTacToeReplay = () => {
   };
 
   useEffect(() => {
-    document.title = `Tic Tac Toe - Game ${gameId} Replay`;
+    document.title = `Puissance 4 - Replay de la partie ${gameId}`;
 
     fetchGame();
   }, []);
@@ -74,9 +73,12 @@ export const TicTacToeReplay = () => {
           <div className="text-center p-5 w-4/5">
             <ReplayHeader
               game={game}
-              description="Rejouez une partie de morpion !"
+              description="Rejouez une partie de puissance 4 !"
             />
-            <TicTacToeBoard room={game.turns[currentTurn].state as TttRoom} />
+            <ConnectFourBoard
+              gameId={gameId}
+              room={game.turns[currentTurn].state as ConnectFourRoom}
+            />
             <div className="flex justify-center mt-6">
               <Box sx={{ width: 300, margin: "auto", textAlign: "center" }}>
                 <Typography variant="h6" gutterBottom>
@@ -116,15 +118,17 @@ export const TicTacToeReplay = () => {
                           alt="avatar"
                           className="w-8 h-8 rounded-full"
                         />
-                        <p className="text-lg" key={player.id}>
+                        <p className="text-lg " key={player.id}>
                           {isActualUser(player.id) ? "Vous" : player.username}
                         </p>
                       </div>
                       <div className="mx-2 text-right">
-                        <img
-                          src={player.symbol === "X" ? CrossIcon : CircleIcon}
-                          className="w-8 h-8"
-                          alt={`${player.symbol} icon`}
+                        <div
+                          className={`w-8 h-8 rounded-full ${
+                            player.symbol === "Red"
+                              ? "bg-red-500"
+                              : "bg-yellow-400"
+                          }`}
                         />
                       </div>
                     </div>

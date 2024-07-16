@@ -9,6 +9,7 @@ import { combineReducers } from "redux";
 import notificationSlice from "./notifications/notificationSlice";
 import friendSlice from "./friends/friendSlice";
 import rpsRoomSlice from "./rooms/rpsRoomSlice";
+import connectFourRoomSlice from "./rooms/connectFourSlice";
 
 const persistConfig = {
   key: "root",
@@ -22,6 +23,7 @@ const reducers = combineReducers({
   users: usersSlice,
   tttRoom: tttRoomSlice,
   rpsRoom: rpsRoomSlice,
+  connectFourRoom: connectFourRoomSlice,
   notifications: notificationSlice,
   friends: friendSlice,
 });
