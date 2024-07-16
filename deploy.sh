@@ -1,4 +1,3 @@
 docker compose down
 docker volume rm $(docker volume ls -q)  
 docker compose up -d --build
-sh migrate.sh
