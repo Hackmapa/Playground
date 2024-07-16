@@ -33,4 +33,10 @@ docker exec -it --user root $MIGRATION_SERVICE php bin/console lexik:jwt:generat
 echo "Loading fixtures..."
 docker exec -it --user root $MIGRATION_SERVICE php bin/console doctrine:fixtures:load --no-interaction
 
+# Set permissions
+echo "Setting permissions..."
+docker exec -it --user root $MIGRATION_SERVICE chown -R www-data:www-data public/
+docker exec -it --user root $MIGRATION_SERVICE chmod -R 775 public/
+
+
 echo "Setup completed."
