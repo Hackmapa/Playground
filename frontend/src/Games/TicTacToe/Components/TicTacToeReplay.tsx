@@ -50,7 +50,6 @@ export const TicTacToeReplay = () => {
 
   const fetchGame = async () => {
     const game = await get(`games/${gameId}`, token);
-    console.log(game);
     setGame(game);
   };
 

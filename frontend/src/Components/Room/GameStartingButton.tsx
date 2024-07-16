@@ -30,7 +30,6 @@ export const GameStartingButton = (props: GameStartingButtonProps) => {
   const returnButton = () => {
     if (room) {
       if (!gameStarted) {
-        console.log(canStart);
         if (!canStart) {
           return (
             <button

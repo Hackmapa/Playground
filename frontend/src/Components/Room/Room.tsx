@@ -243,7 +243,6 @@ export const GameRoom: React.FC = () => {
         });
 
         return () => {
-          console.log(room.id, user.id);
           socket.emit("leaveRpsGame", room.id, user.id);
         };
 

@@ -27,6 +27,6 @@ docker exec $MIGRATION_SERVICE php bin/console doctrine:migrations:migrate --no-
 
 # Generate JWT keys
 echo "Generating JWT keys..."
-docker exec $MIGRATION_SERVICE php bin/console lexik:jwt:generate-keypair --skip-if-exists
+docker exec -it --user root $MIGRATION_SERVICE php bin/console lexik:jwt:generate-keypair --skip-if-exists
 
 echo "Setup completed."

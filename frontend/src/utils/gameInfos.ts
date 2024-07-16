@@ -17,7 +17,6 @@ export const getGameLink = (gameId: number) => {
 
   g.games.forEach((g) => {
     if (g.id === gameId) {
-      console.log(g.link);
       link = g.link;
     }
   });
