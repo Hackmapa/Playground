@@ -24,7 +24,7 @@ export const HowToPlay = (props: HowToPlayProps) => {
 
   return (
     <div className="mt-4 mb-10 w-1/2 flex flex-col items-center mx-auto">
-      <h2 className="text-2xl font-bold">Comment jouer?</h2>
+      <h2 className="text-2xl font-bold">Comment jouer ?</h2>
       <p className="mt-4">{game?.howToPlay}</p>
     </div>
   );
