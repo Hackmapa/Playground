@@ -1,8 +1,11 @@
+import { Message } from "postcss";
+import { Character } from "./HarryPotter/Character";
+import { Log } from "./HarryPotter/Log";
 import { User } from "./User";
 
 export interface TttRoom extends DefaultRoom {
   turn: number;
-  moves: [];
+  moves: any[];
   currentBoard: any[];
   currentPlayer: Player;
   draw: boolean;
@@ -10,7 +13,7 @@ export interface TttRoom extends DefaultRoom {
 
 export interface ConnectFourRoom extends DefaultRoom {
   turn: number;
-  moves: [];
+  moves: any[];
   currentBoard: any[];
   currentPlayer: Player;
   draw: boolean;
@@ -18,9 +21,23 @@ export interface ConnectFourRoom extends DefaultRoom {
 
 export interface RpsRoom extends DefaultRoom {
   turn: number;
-  moves: any[];
   currentPlayer: Player;
   roundWinners: User[] | string[];
+  moves: any[];
+}
+
+export interface HarryPotterRoom extends DefaultRoom {
+  characters: Character[];
+  logs: Log[];
+  results: {
+    winner: Character | null;
+    loser: Character | null;
+  };
+  currentTurn: number;
+  started: boolean;
+  moves: any[];
+  turn: number;
+  currentPlayer: Player;
 }
 
 export interface DefaultRoom {
@@ -36,6 +53,9 @@ export interface DefaultRoom {
   finished: boolean;
   gameTag: string;
   draw: boolean;
+  moves: any[];
+  turn: number;
+  currentPlayer: Player;
 }
 
 interface Player {
@@ -44,4 +64,9 @@ interface Player {
   color?: string;
 }
 
-export type Room = TttRoom | RpsRoom | ConnectFourRoom;
+export type Room =
+  | TttRoom
+  | RpsRoom
+  | ConnectFourRoom
+  | HarryPotterRoom
+  | DefaultRoom;

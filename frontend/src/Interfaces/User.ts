@@ -1,5 +1,6 @@
 import { Badge } from "./Badges";
 import { Game } from "./Game";
+import { Character } from "./HarryPotter/Character";
 
 export interface User {
   id: number;
@@ -23,4 +24,5 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
   symbol?: string;
+  character?: Character;
 }

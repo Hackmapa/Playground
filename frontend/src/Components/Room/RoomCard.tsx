@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Room, RpsRoom, TttRoom } from "../../Interfaces/Rooms";
+import {
+  HarryPotterRoom,
+  Room,
+  RpsRoom,
+  TttRoom,
+} from "../../Interfaces/Rooms";
 import { RootState } from "../../Redux/store";
 import { socket } from "../../socket";
 import { Button } from "../Button/Button";
@@ -56,6 +61,15 @@ export const RoomCard = (props: RoomCardProps) => {
         socket.on("connectFourRoom", (room: RpsRoom) => {
           toast.success(`Vous avez rejoint la partie ${room.name}`);
           navigate(`/connect-four/${room.id}`);
+        });
+        break;
+
+      case "harry-potter":
+        socket.emit("joinHarryPotterGame", room.id, user);
+
+        socket.on("harryPotterRoom", (room: HarryPotterRoom) => {
+          toast.success(`Vous avez rejoint la partie ${room.name}`);
+          navigate(`/harry-potter/${room.id}`);
         });
         break;
 

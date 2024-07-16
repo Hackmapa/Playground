@@ -6,6 +6,7 @@ import { TicTacToeBoard } from "../../Games/TicTacToe/Components/TicTacToeBoard"
 import { useAppDispatch } from "../../hooks/hooks";
 import {
   ConnectFourRoom,
+  HarryPotterRoom,
   Room,
   RpsRoom,
   TttRoom,
@@ -23,6 +24,7 @@ import { updateRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
 import { HowToPlay } from "./HowToPlay";
 import { ConnectFourBoard } from "../../Games/ConnectFour/Components/ConnectFourBoard";
 import { updateConnectFourRoom } from "../../Redux/rooms/connectFourSlice";
+import { setHarryPotterRoom } from "../../Redux/rooms/harryPotterRoomSlice";
 
 export const GameRoom: React.FC = () => {
   const token = useSelector((state: RootState) => state.token);
@@ -42,6 +44,9 @@ export const GameRoom: React.FC = () => {
 
       case "connect-four":
         return state.connectFourRoom;
+
+      case "harry-potter":
+        return state.harryPotterRoom;
 
       default:
         return state.tttRoom;
@@ -68,6 +73,10 @@ export const GameRoom: React.FC = () => {
 
       case "connect-four":
         socket.emit("resetConnectFourGame", room.id);
+        break;
+
+      case "harry-potter":
+        socket.emit("resetHarryPotterGame", room.id);
         break;
 
       default:
@@ -115,6 +124,19 @@ export const GameRoom: React.FC = () => {
         });
 
         break;
+
+      case "harry-potter":
+        socket.emit("getHarryPotterGame", id);
+
+        socket.on("harryPotterRoom", (r: Room) => {
+          console.log(r);
+          if (!r) {
+            navigate("/harry-potter");
+
+            socket.off("harryPotterRoom");
+          }
+        });
+        break;
       default:
         break;
     }
@@ -136,6 +158,11 @@ export const GameRoom: React.FC = () => {
         socket.emit("setReadyConnectFour", room.id, user.id);
 
         break;
+
+      case "harry-potter":
+        socket.emit("setReadyHarryPotter", room.id, user.id);
+
+        break;
       default:
         break;
     }
@@ -153,6 +180,10 @@ export const GameRoom: React.FC = () => {
 
       case "connect-four":
         socket.emit("startConnectFourGame", room.id, token);
+        break;
+
+      case "harry-potter":
+        socket.emit("startHarryPotterGame", room.id, token);
         break;
 
       default:
@@ -183,6 +214,13 @@ export const GameRoom: React.FC = () => {
       case "connect-four":
         return (
           <ConnectFourBoard gameId={gameId} room={room as ConnectFourRoom} />
+        );
+
+      case "harry-potter":
+        return (
+          <div>
+            <h1>Harry Potter</h1>
+          </div>
         );
 
       default:
@@ -310,6 +348,20 @@ export const GameRoom: React.FC = () => {
 
         return () => {
           socket.emit("leaveConnectFourGame", room.id, user.id);
+        };
+
+      case "harry-potter":
+        socket.on("harryPotterRoom", (r: HarryPotterRoom, id: number) => {
+          console.log(r);
+          dispatch(setHarryPotterRoom(r));
+
+          if (id) {
+            setGameId(id);
+          }
+        });
+
+        return () => {
+          socket.emit("leaveHarryPotterGame", room.id, user.id);
         };
 
       default:
