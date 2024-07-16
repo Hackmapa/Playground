@@ -1,9 +1,16 @@
 import { Game } from "./Game";
-import { TttRoom } from "./Rooms";
+import { RpsRoom, TttRoom } from "./Rooms";
+import { User } from "./User";
 
 export interface Turn {
   id: number;
   game: Game;
   timestamp: string;
-  state: TttRoom;
+  state: TttRoom | RpsRoom;
+}
+
+export interface Round {
+  move: string;
+  user: User;
+  winner: User | string;
 }

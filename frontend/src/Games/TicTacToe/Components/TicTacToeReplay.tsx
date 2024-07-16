@@ -12,6 +12,12 @@ import Box from "@mui/material/Box";
 import { Loader } from "../../../Components/Loader/Loader";
 import CircleIcon from "../Assets/circle.png";
 import CrossIcon from "../Assets/cross.png";
+import { ReplayHeader } from "../../../Components/Game/ReplayHeader";
+import {
+  dateToString,
+  dateToTimeString,
+  fullDateToString,
+} from "../../../utils/utils";
 
 export const TicTacToeReplay = () => {
   const token = useSelector((state: RootState) => state.token);
@@ -44,6 +50,7 @@ export const TicTacToeReplay = () => {
 
   const fetchGame = async () => {
     const game = await get(`games/${gameId}`, token);
+    console.log(game);
     setGame(game);
   };
 
@@ -68,6 +75,10 @@ export const TicTacToeReplay = () => {
       {game ? (
         <>
           <div className="text-center p-5 w-4/5">
+            <ReplayHeader
+              game={game}
+              description="Rejouez une partie de morpion !"
+            />
             <TicTacToeBoard room={game.turns[currentTurn].state as TttRoom} />
             <div className="flex justify-center">
               <Box sx={{ width: 300, margin: "auto", textAlign: "center" }}>
@@ -119,7 +130,7 @@ export const TicTacToeReplay = () => {
                     </div>
                   ))}
                 </div>
-                <h2 className="mt-10 text-xl font-bold">
+                <h2 className="mt-10 text-xl font-bold text-left">
                   Gagnant :
                   {game.winner
                     ? isActualUser(game.winner.id)
@@ -127,6 +138,10 @@ export const TicTacToeReplay = () => {
                       : game.winner.username
                     : " Pas de gagnant"}
                 </h2>
+                <p className="text-lg mt-4 text-left">
+                  Partie jouée le {dateToString(game.createdAt)} à{" "}
+                  {dateToTimeString(game.createdAt)}
+                </p>
               </div>
             </div>
           </div>

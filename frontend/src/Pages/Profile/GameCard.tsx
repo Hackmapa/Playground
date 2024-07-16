@@ -2,8 +2,8 @@ import { MdOutlineReplay } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks/hooks";
 import { Game } from "../../Interfaces/Game";
-import g from "../../Games/games.json";
 import { User } from "../../Interfaces/User";
+import { getGameLink, getGameName } from "../../utils/gameInfos";
 
 interface GameCardProps {
   user: User;
@@ -14,31 +14,6 @@ export const GameCard = (props: GameCardProps) => {
   const { user, game } = props;
 
   const navigate = useNavigate();
-
-  const getGameName = (gameId: number) => {
-    let name = "";
-
-    g.games.forEach((g) => {
-      if (g.id === gameId) {
-        name = g.name;
-      }
-    });
-
-    return name;
-  };
-
-  const getGameLink = (gameId: number) => {
-    let link = "";
-
-    g.games.forEach((g) => {
-      if (g.id === gameId) {
-        console.log(g.link);
-        link = g.link;
-      }
-    });
-
-    return link;
-  };
 
   const checkIfUserIsWinner = (game: Game) => {
     let winner = false;

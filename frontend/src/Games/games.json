@@ -2,8 +2,8 @@
   "games": [
     {
       "id": 1,
-      "name": "Rock Paper Scissors",
-      "description": "A simple game of Rock Paper Scissors",
+      "name": "Pierre Feuille Ciseaux",
+      "description": "Découvrez le classique jeu de Pierre Feuille Ciseaux",
       "link": "/rock-paper-scissors",
       "image": "/images/rps.png",
       "tag": "rock-paper-scissors",
@@ -13,8 +13,8 @@
     },
     {
       "id": 2,
-      "name": "Tic Tac Toe",
-      "description": "A simple game of Tic Tac Toe",
+      "name": "Morpion",
+      "description": "Jouez au jeu du morpion, un jeu de réflexion rapide et amusant se pratiquant à deux joueurs",
       "link": "/tic-tac-toe",
       "image": "/images/tictactoe.png",
       "tag": "tic-tac-toe",
