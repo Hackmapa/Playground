@@ -8,4 +8,6 @@ RUN npm install
 
 EXPOSE 8081
 
+RUN npm install
+
 CMD ["npm", "start"]
