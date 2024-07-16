@@ -50,6 +50,15 @@ export const RoomCard = (props: RoomCardProps) => {
         });
         break;
 
+      case "connect-four":
+        socket.emit("joinConnectFourGame", room.id, user);
+
+        socket.on("connectFourRoom", (room: RpsRoom) => {
+          toast.success(`Vous avez rejoint la partie ${room.name}`);
+          navigate(`/connect-four/${room.id}`);
+        });
+        break;
+
       default:
         break;
     }

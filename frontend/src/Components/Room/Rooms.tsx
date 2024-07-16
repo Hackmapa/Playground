@@ -12,6 +12,7 @@ import { RoomCard } from "./RoomCard";
 import { ModalBox } from "../ModalBox/ModalBox";
 import { Input } from "../Input/Input";
 import { addRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
+import { addConnectFourRoom } from "../../Redux/rooms/connectFourSlice";
 
 export const Rooms: React.FC = () => {
   const { name } = useParams();
@@ -55,6 +56,22 @@ export const Rooms: React.FC = () => {
           navigate(`/rock-paper-scissors/${room.id}`);
         });
         break;
+
+      case "connect-four":
+        socket.emit(
+          "createConnectFourGame",
+          roomName,
+          user,
+          privateRoom,
+          password
+        );
+
+        socket.on("connectFourRoom", (room: Room) => {
+          dispatch(addConnectFourRoom(room));
+
+          navigate(`/connect-four/${room.id}`);
+        });
+        break;
       default:
         break;
     }
@@ -86,6 +103,17 @@ export const Rooms: React.FC = () => {
         return () => {
           socket.off("rpsRooms");
           socket.off("rpsRoom");
+        };
+
+      case "connect-four":
+        socket.emit("getConnectFourGames");
+        socket.on("connectFourRooms", (rooms: Room[]) => {
+          setRooms(rooms);
+        });
+
+        return () => {
+          socket.off("connectFourRooms");
+          socket.off("connectFourRoom");
         };
     }
   }, [name]);

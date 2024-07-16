@@ -6,6 +6,7 @@ import ticTacToeSocket from "./tictactoe/tictactoeSocket.js";
 import notificationSocket from "./notifications/notificationSocket.js";
 import dotenv from "dotenv";
 import rpsSocket from "./rps/rpsSocket.js";
+import connect_fourSocket from "./connectFour/connectFourSocket.js";
 
 dotenv.config();
 
@@ -22,11 +23,14 @@ const io = new Server(server, {
 let users = [];
 let messages = [];
 let ticTacToeGames = [];
+let rpsGames = [];
+let connectFourGames = [];
 
 loginSocket(io, users, ticTacToeGames);
 chatSocket(io, messages);
 ticTacToeSocket(io, ticTacToeGames, users);
-rpsSocket(io, ticTacToeGames, users);
+rpsSocket(io, rpsGames, users);
+connect_fourSocket(io, connectFourGames);
 notificationSocket(io, users);
 
 const PORT = process.env.PORT;

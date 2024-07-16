@@ -8,6 +8,14 @@ export interface TttRoom extends DefaultRoom {
   draw: boolean;
 }
 
+export interface ConnectFourRoom extends DefaultRoom {
+  turn: number;
+  moves: [];
+  currentBoard: any[];
+  currentPlayer: Player;
+  draw: boolean;
+}
+
 export interface RpsRoom extends DefaultRoom {
   turn: number;
   moves: any[];
@@ -32,7 +40,8 @@ export interface DefaultRoom {
 
 interface Player {
   user: User | null;
-  symbol: string;
+  symbol?: string;
+  color?: string;
 }
 
-export type Room = TttRoom | RpsRoom;
+export type Room = TttRoom | RpsRoom | ConnectFourRoom;
