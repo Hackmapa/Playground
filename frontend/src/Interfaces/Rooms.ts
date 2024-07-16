@@ -10,8 +10,9 @@ export interface TttRoom extends DefaultRoom {
 
 export interface RpsRoom extends DefaultRoom {
   turn: number;
-  moves: [];
+  moves: any[];
   currentPlayer: Player;
+  roundWinners: User[] | string[];
 }
 
 export interface DefaultRoom {

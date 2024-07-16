@@ -27,6 +27,80 @@ export const GameStartingButton = (props: GameStartingButtonProps) => {
 
   const [userRoom, setUserRoom] = useState<User>();
 
+  const returnButton = () => {
+    if (room) {
+      if (!gameStarted) {
+        console.log(canStart);
+        if (!canStart) {
+          return (
+            <button
+              className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200"
+              onClick={setReady}
+            >
+              {userRoom?.ready ? "Annuler" : "Prêt"}
+            </button>
+          );
+        }
+
+        if (canStart && gameOwner) {
+          return (
+            <button
+              className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200"
+              onClick={startGame}
+            >
+              Lancer la partie
+            </button>
+          );
+        }
+
+        if (canStart && !gameOwner) {
+          return (
+            <button className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2">
+              En attente du lancement ...
+            </button>
+          );
+        }
+      }
+
+      if (gameStarted && !room.finished && !room.currentPlayer) {
+        return <></>;
+      }
+
+      if (gameStarted && !room.finished && room.currentPlayer) {
+        return (
+          <div>
+            <p className="text-2xl">
+              {room && room.currentPlayer.user?.id === user.id
+                ? "A vous de jouer !"
+                : "En attente de votre tour ..."}
+            </p>
+          </div>
+        );
+      }
+
+      if (gameOwner && room.finished) {
+        return (
+          <button
+            className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200"
+            onClick={resetGame}
+          >
+            Reset la partie
+          </button>
+        );
+      }
+
+      if (!gameOwner && room.finished) {
+        return (
+          <button className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200">
+            En attente du reset
+          </button>
+        );
+      }
+
+      return <div>a</div>;
+    }
+  };
+
   useEffect(() => {
     if (room) {
       const userRoom = room.players.find((p) => p.id === user.id);
@@ -34,52 +108,5 @@ export const GameStartingButton = (props: GameStartingButtonProps) => {
     }
   }, [room]);
 
-  return (
-    <div className="w-full flex justify-center">
-      {room && !gameStarted ? (
-        !canStart ? (
-          <button
-            className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200"
-            onClick={setReady}
-          >
-            {userRoom?.ready ? "Annuler" : "Prêt"}
-          </button>
-        ) : gameOwner ? (
-          <button
-            className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200"
-            onClick={startGame}
-          >
-            Commencer la partie
-          </button>
-        ) : (
-          <button className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200">
-            En attente du propriétaire pour démarrer la partie ...
-          </button>
-        )
-      ) : (
-        <div>
-          {!room.finished ? (
-            <div>
-              <p className="text-2xl">
-                {room && room.currentPlayer.user?.id === user.id
-                  ? "A vous de jouer !"
-                  : "En attente de votre tour ..."}
-              </p>
-            </div>
-          ) : gameOwner ? (
-            <button
-              className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200"
-              onClick={resetGame}
-            >
-              Reset la partie
-            </button>
-          ) : (
-            <button className="bg-darkBlue text-white py-2 px-4 flex rounded-3xl items-center gap-2 hover:bg-white hover:text-darkBlue-dark transition duration-200">
-              En attente du reset
-            </button>
-          )}
-        </div>
-      )}
-    </div>
-  );
+  return <div className="w-full flex justify-center">{returnButton()}</div>;
 };

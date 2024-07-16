@@ -66,6 +66,7 @@ export const Home = () => {
       tag: "none",
       difficulty: "none",
       players: 0,
+      howToPlay: "none",
     });
   }
 
@@ -101,6 +102,7 @@ export const Home = () => {
         tag: "none",
         difficulty: "none",
         players: 0,
+        howToPlay: "none",
       });
     }
   }, [maxLength]);

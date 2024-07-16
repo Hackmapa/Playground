@@ -15,6 +15,7 @@ import { RoomInformations } from "./RoomInformations";
 import { toast } from "react-toastify";
 import { RPS } from "../../Games/RPS/RPS";
 import { updateRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
+import { HowToPlay } from "./HowToPlay";
 
 export const GameRoom: React.FC = () => {
   const token = useSelector((state: RootState) => state.token);
@@ -141,7 +142,7 @@ export const GameRoom: React.FC = () => {
         return <TicTacToeBoard gameId={gameId} room={room as TttRoom} />;
 
       case "rock-paper-scissors":
-        return <RPS />;
+        return <RPS gameId={gameId} room={room as RpsRoom} />;
       default:
         return <div></div>;
     }
@@ -165,7 +166,7 @@ export const GameRoom: React.FC = () => {
 
     if (room.finished) {
       if (room.winner && room.winner.user?.id === user.id) {
-        toast.success("You won!");
+        toast.success("Vous avez gagné !");
 
         if (
           user.winnedGames?.length === 0 &&
@@ -181,7 +182,7 @@ export const GameRoom: React.FC = () => {
           addBadge("5_wins", user.id, token);
         }
       } else if (room.draw) {
-        toast.info("It's a draw!");
+        toast.info("Egalité !");
       } else {
         if (
           user.winnedGames?.length === user.games?.length &&
@@ -199,7 +200,7 @@ export const GameRoom: React.FC = () => {
           addBadge("5_losses", user.id, token);
         }
 
-        toast.error("You lost!");
+        toast.error("Vous avez perdu !");
       }
 
       if (
@@ -233,7 +234,7 @@ export const GameRoom: React.FC = () => {
         };
 
       case "rock-paper-scissors":
-        socket.on("rpsRoom", (r: TttRoom, id: number) => {
+        socket.on("rpsRoom", (r: RpsRoom, id: number) => {
           dispatch(updateRpsRoom(r));
 
           if (id) {
@@ -242,6 +243,7 @@ export const GameRoom: React.FC = () => {
         });
 
         return () => {
+          console.log(room.id, user.id);
           socket.emit("leaveRpsGame", room.id, user.id);
         };
 
@@ -252,9 +254,11 @@ export const GameRoom: React.FC = () => {
 
   return (
     <>
-      {room && (
+      {room && gameTag && id && (
         <div className="flex bg-darkBlue-dark text-white w-full justify-between">
           <div className="text-center p-5 w-4/5">
+            <HowToPlay gameTag={gameTag} />
+
             {returnGame()}
 
             <GameStartingButton

@@ -8,7 +8,8 @@
       "image": "/images/rps.png",
       "tag": "rock-paper-scissors",
       "difficulty": "easy",
-      "players": 2
+      "players": 2,
+      "howToPlay": "Pierre Feuille Ciseaux est un jeu simple et rapide. Chaque joueur choisit un des trois éléments (pierre, feuille ou ciseaux) en même temps. La pierre bat les ciseaux, les ciseaux battent la feuille et la feuille bat la pierre. Si les deux joueurs choisissent le même élément, la partie est nulle."
     },
     {
       "id": 2,
@@ -18,7 +19,8 @@
       "image": "/images/tictactoe.png",
       "tag": "tic-tac-toe",
       "difficulty": "easy",
-      "players": 2
+      "players": 2,
+      "howToPlay": "Le jeu du morpion est un jeu de réflexion se pratiquant à deux joueurs au tour par tour et dont le but est de créer le premier un alignement sur une grille. Le jeu se joue sur une grille carrée de 3x3 cases. Deux joueurs s'affrontent. Ils doivent remplir chacun à leur tour une case de la grille avec le symbole qui leur est attribué : O ou X. Le premier joueur qui parvient à aligner trois de ses symboles horizontalement, verticalement ou en diagonale a gagné."
     }
   ]
 }

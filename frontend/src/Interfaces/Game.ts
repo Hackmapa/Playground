@@ -10,6 +10,7 @@ export interface GameInfos {
   tag: string;
   difficulty: string;
   players: number;
+  howToPlay: string;
 }
 
 export interface Game {

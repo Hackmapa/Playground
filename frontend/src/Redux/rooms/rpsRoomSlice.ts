@@ -21,6 +21,7 @@ const initialState: RpsRoom = {
   },
   gameTag: "",
   draw: false,
+  roundWinners: [],
 };
 
 export const rpsRoomSlice = createSlice({

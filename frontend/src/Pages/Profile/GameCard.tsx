@@ -27,6 +27,19 @@ export const GameCard = (props: GameCardProps) => {
     return name;
   };
 
+  const getGameLink = (gameId: number) => {
+    let link = "";
+
+    g.games.forEach((g) => {
+      if (g.id === gameId) {
+        console.log(g.link);
+        link = g.link;
+      }
+    });
+
+    return link;
+  };
+
   const checkIfUserIsWinner = (game: Game) => {
     let winner = false;
 
@@ -74,7 +87,9 @@ export const GameCard = (props: GameCardProps) => {
               <MdOutlineReplay
                 color="white"
                 className="h-6 w-6 cursor-pointer self-end hover:scale-125 transform transition duration-200"
-                onClick={() => navigate(`/tic-tac-toe/replay/${game.id}`)}
+                onClick={() =>
+                  navigate(`${getGameLink(game.game_id)}/replay/${game.id}`)
+                }
               />
             )}
           </div>

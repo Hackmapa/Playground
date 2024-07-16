@@ -1,19 +1,23 @@
 import post from "../utils/post.js";
+import put from "../utils/put.js";
 
-// function to check if a player has won the rock paper scissors game
-const checkWin = (moves) => {
-  const winConditions = [
-    ["rock", "scissors"],
-    ["scissors", "paper"],
-    ["paper", "rock"],
-  ];
+const checkWin = (move) => {
+  const beats = {
+    rock: "scissors",
+    paper: "rock",
+    scissors: "paper",
+  };
 
-  for (let i = 0; i < winConditions.length; i++) {
-    if (moves[0] === winConditions[i][0] && moves[1] === winConditions[i][1]) {
-      return true;
-    }
+  const move1 = move[0];
+  const move2 = move[1];
+
+  if (move1.move === move2.move) {
+    return "draw";
+  } else if (beats[move1.move] === move2.move) {
+    return move1.user;
+  } else {
+    return move2.user;
   }
-  return false;
 };
 
 export default (io, games) => {
@@ -32,15 +36,14 @@ export default (io, games) => {
           finished: false,
           turn: 0,
           moves: [],
-          currentPlayer: {
+          winner: {
             user: null,
           },
-          winner: null,
           privateRoom: privateRoom,
           password: password,
           gameTag: "rock-paper-scissors",
+          roundWinners: [null, null, null],
         };
-        console.log("User: ", user);
 
         user.ready = false;
         user.owner = true;
@@ -117,12 +120,13 @@ export default (io, games) => {
     socket.on("startRpsGame", async (gameId, token) => {
       const game = games.find((game) => game.id == gameId);
       game.started = true;
-      const currentPlayer = Math.floor(Math.random() * game.players.length);
-      game.currentPlayer = {
-        symbol: "X",
-        user: game.players[currentPlayer],
+      game.draw = false;
+      game.turn = 0;
+      game.moves = [[], [], []];
+      game.roundWinners = [null, null, null];
+      game.winner = {
+        user: null,
       };
-
       console.log("Game started: ", game.id);
 
       const body = {
@@ -134,57 +138,73 @@ export default (io, games) => {
 
       const response = await post("games", JSON.stringify(body), token);
       const id = response.id;
+      console.log("Game created in DB: ", id);
       io.to(game.id).emit("rpsRoom", game, id);
     });
 
-    socket.on("makeMove", async (gameId, userId, index, token, dbGameId) => {
+    socket.on("makeRpsMove", async (gameId, userId, token, dbGameId, move) => {
       const game = games.find((game) => game.id == gameId);
       const user = game.players.find((user) => user.id === userId);
-      const player = game.currentPlayer;
 
-      if (user.id !== player.user.id) return;
-
-      if (winner) {
-        game.winner = player;
-        game.currentPlayer = {
-          symbol: "",
-          user: null,
-        };
-        game.finished = true;
-
-        const body = {
-          finished: true,
-          draw: false,
-          winner: player.user.id,
-        };
-
-        const url = `games/${dbGameId}`;
-        await put(url, JSON.stringify(body), token);
-      } else if (draw) {
-        game.draw = true;
-        game.currentPlayer = {
-          symbol: "",
-          user: null,
-        };
-        game.finished = true;
-
-        const body = {
-          finished: true,
-          draw: true,
-        };
-
-        const url = `games/${dbGameId}`;
-        await put(url, JSON.stringify(body), token);
-      } else {
-        game.currentPlayer = {
-          symbol: player.symbol === "X" ? "O" : "X",
-          user: game.players.find((user) => user.id !== player.user.id),
-        };
+      // check if user has already made a move
+      if (
+        game.moves[game.turn] &&
+        game.moves[game.turn].find((m) => m.user.id === userId)
+      ) {
+        return;
       }
 
-      const url = `turns/${parseInt(dbGameId)}`;
-      const body = JSON.stringify(game);
-      await post(url, body, token);
+      game.moves[game.turn].push({
+        user: user,
+        move: move,
+      });
+
+      // check if all players have made a move
+      if (
+        game.moves[game.turn] &&
+        game.moves[game.turn].length === game.players.length
+      ) {
+        const winner = checkWin(game.moves[game.turn]);
+        game.roundWinners[game.turn] = winner;
+        game.moves[game.turn].push({ winner: winner });
+
+        const url = `turns/${parseInt(dbGameId)}`;
+        const body = JSON.stringify(game);
+        await post(url, body, token);
+
+        if (game.turn === 2) {
+          game.finished = true;
+          game.turn++;
+
+          // check who won the game
+          const player1 = game.roundWinners.filter(
+            (winner) => winner === game.players[0]
+          ).length;
+
+          const player2 = game.roundWinners.filter(
+            (winner) => winner === game.players[1]
+          ).length;
+
+          if (player1 > player2) {
+            game.winner.user = game.players[0];
+          } else if (player2 > player1) {
+            game.winner.user = game.players[1];
+          } else {
+            game.draw = true;
+          }
+
+          const body = {
+            finished: true,
+            draw: game.draw,
+            winner: game.winner.user ? game.winner.user.id : null,
+          };
+
+          const url = `games/${dbGameId}`;
+          await put(url, JSON.stringify(body), token);
+        } else {
+          game.turn++;
+        }
+      }
 
       io.to(game.id).emit("rpsRoom", game);
     });
@@ -195,10 +215,6 @@ export default (io, games) => {
       game.finished = false;
       game.turn = 0;
       game.moves = [];
-      game.currentPlayer = {
-        symbol: "",
-        user: null,
-      };
       game.winner = null;
       game.draw = false;
       game.players.map((player) => (player.ready = false));
