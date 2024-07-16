@@ -52,7 +52,7 @@ services:
       - "8081:8081"
     environment:
       - PORT=8081
-      - API_URL=http://hackmapa.fr
+      - API_URL=http://82.112.240.84
     env_file:
       - ./server/.env.production
 
