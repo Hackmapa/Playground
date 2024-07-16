@@ -13,3 +13,19 @@ export const dateToString = (date: Date) => {
     month < 10 ? `0${month}` : month
   }/${year}`;
 };
+
+export const dateToTimeString = (date: Date) => {
+  date = new Date(date);
+
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+
+  return `${hours < 10 ? `0${hours}` : hours}:${
+    minutes < 10 ? `0${minutes}` : minutes
+  }:${seconds < 10 ? `0${seconds}` : seconds}`;
+};
+
+export const fullDateToString = (date: Date) => {
+  return `${dateToString(date)} ${dateToTimeString(date)}`;
+};

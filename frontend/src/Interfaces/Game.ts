@@ -1,4 +1,4 @@
-import { Turn } from "./Turn";
+import { Round, Turn } from "./Turn";
 import { User } from "./User";
 
 export interface GameInfos {
@@ -21,4 +21,6 @@ export interface Game {
   finished: boolean;
   draw: boolean;
   turns: Turn[];
+  rounds?: Round[];
+  createdAt: Date;
 }

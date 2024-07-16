@@ -42,6 +42,7 @@ class Game
     private ?User $winner = null;
 
     #[ORM\Column]
+    #[Groups(['game_detail', 'game_list'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(length: 255)]

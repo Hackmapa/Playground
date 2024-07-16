@@ -5,6 +5,7 @@ import { socket } from "../../socket";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { User } from "../../Interfaces/User";
+import { RpsRoundCircles } from "./Components/RpsRoundCircles";
 
 interface RPSProps {
   gameId: number | undefined;
@@ -26,7 +27,6 @@ export const RPS = (props: RPSProps) => {
     }
 
     if (hasAlreadyPlayed) {
-      console.log("You have already played");
       return;
     }
     socket.emit("makeRpsMove", room.id, user.id, token, gameId, move);
@@ -62,8 +62,8 @@ export const RPS = (props: RPSProps) => {
           className={
             (hasAlreadyPlayed
               ? ""
-              : "hover:transform hover:scale-110 transition duration-200") +
-            " cursor-pointer w-52 h-52 bg-white rounded-full p-5"
+              : "cursor-pointer hover:transform hover:scale-110 transition duration-200") +
+            " w-52 h-52 bg-white rounded-full p-5"
           }
           src={`${process.env.REACT_APP_PUBLIC_URL}/images/rock.png`}
           alt=""
@@ -73,8 +73,8 @@ export const RPS = (props: RPSProps) => {
           className={
             (hasAlreadyPlayed
               ? ""
-              : "hover:transform hover:scale-110 transition duration-200") +
-            " cursor-pointer w-52 h-52 bg-white rounded-full p-5"
+              : "cursor-pointer hover:transform hover:scale-110 transition duration-200") +
+            " w-52 h-52 bg-white rounded-full p-5"
           }
           src={`${process.env.REACT_APP_PUBLIC_URL}/images/paper.png`}
           alt=""
@@ -84,8 +84,8 @@ export const RPS = (props: RPSProps) => {
           className={
             (hasAlreadyPlayed
               ? ""
-              : "hover:transform hover:scale-110 transition duration-200") +
-            " cursor-pointer w-52 h-52 bg-white rounded-full p-5"
+              : "cursor-pointer hover:transform hover:scale-110 transition duration-200") +
+            " w-52 h-52 bg-white rounded-full p-5"
           }
           src={`${process.env.REACT_APP_PUBLIC_URL}/images/scissors.png`}
           alt=""
@@ -93,39 +93,7 @@ export const RPS = (props: RPSProps) => {
         />
       </div>
 
-      <div className="flex flex-col items-center mt-8">
-        <p className="text-left text-xl font-bold">Manches : </p>
-        <div className="flex w-1/2 justify-between mt-4">
-          {room.roundWinners &&
-            room.roundWinners.map((winner: any) => (
-              <>
-                {winner && winner.id && (
-                  <div className="flex items-center gap-3 w-24 h-24 bg-darkBlue rounded-full">
-                    <div className="flex justify-center items-center w-full">
-                      <img
-                        className="w-20 h-20 rounded-full"
-                        src={winner.profile_picture}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {!winner && (
-                  <div className="flex items-center gap-3 w-24 h-24 bg-darkBlue rounded-full"></div>
-                )}
-
-                {winner && winner === "draw" && (
-                  <div className="flex items-center gap-3 w-24 h-24 bg-darkBlue rounded-full">
-                    <div className="flex justify-center items-center w-full">
-                      <p className="text-2xl">X</p>
-                    </div>
-                  </div>
-                )}
-              </>
-            ))}
-        </div>
-      </div>
+      <RpsRoundCircles room={room} />
 
       {room.started &&
         (hasAlreadyPlayed ? (
