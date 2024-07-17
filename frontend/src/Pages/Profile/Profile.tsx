@@ -294,7 +294,11 @@ const BadgeMedal = (props: BadgeMedalProps) => {
     >
       {checkIfUserHasBadge(user, badge.tag) ? (
         <div>
-          <img src={badge.logo} alt={badge.name} className="w-8 h-8" />
+          <img
+            src={`${process.env.REACT_APP_PUBLIC_URL}${badge.logo}`}
+            alt={badge.name}
+            className="w-8 h-8"
+          />
           {showInfo && (
             <div className="absolute bg-white rounded-xl bottom-9 text-darkBlue-dark p-3 min-w-72">
               <h3 className="text-center font-bold text-xl">{badge.name}</h3>

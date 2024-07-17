@@ -13,9 +13,9 @@ import { TicTacToeReplay } from "../Games/TicTacToe/Components/TicTacToeReplay";
 import { Rooms } from "./Room/Rooms";
 import { useAppDispatch } from "../hooks/hooks";
 import { getUser } from "../utils/getUser";
-import { GameRoom } from "./Room/Room";
 import { RpsReplay } from "../Games/RPS/RpsReplay";
 import { ConnectFourReplay } from "../Games/ConnectFour/Components/ConnectFourReplay";
+import { GameRoom } from "./Room/Room";
 
 export const RouterContainer = () => {
   const dispatch = useAppDispatch();

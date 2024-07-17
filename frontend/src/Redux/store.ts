@@ -10,6 +10,7 @@ import notificationSlice from "./notifications/notificationSlice";
 import friendSlice from "./friends/friendSlice";
 import rpsRoomSlice from "./rooms/rpsRoomSlice";
 import connectFourRoomSlice from "./rooms/connectFourSlice";
+import harryPotterRoomSlice from "./rooms/harryPotterRoomSlice";
 
 const persistConfig = {
   key: "root",
@@ -24,6 +25,7 @@ const reducers = combineReducers({
   tttRoom: tttRoomSlice,
   rpsRoom: rpsRoomSlice,
   connectFourRoom: connectFourRoomSlice,
+  harryPotterRoom: harryPotterRoomSlice,
   notifications: notificationSlice,
   friends: friendSlice,
 });

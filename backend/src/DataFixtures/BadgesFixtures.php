@@ -16,7 +16,7 @@ class BadgesFixtures extends Fixture
         $badge->setName('Première partie');
         $badge->setTag('first_game');
         $badge->setDescription('Vous avez terminé votre première partie.');
-        $badge->setLogo('https://randomuser.me/api/portraits');
+        $badge->setLogo('/badge1.png');
         $badge->setCreatedAt(new \DateTimeImmutable());
         $badge->setUpdatedAt(new \DateTimeImmutable());
 
@@ -27,7 +27,7 @@ class BadgesFixtures extends Fixture
         $badge->setName('Première victoire');
         $badge->setTag('first_win');
         $badge->setDescription('Vous avez remporté votre première partie.');
-        $badge->setLogo('https://randomuser.me/api/portraits');
+        $badge->setLogo('/badge2.png');
         $badge->setCreatedAt(new \DateTimeImmutable());
         $badge->setUpdatedAt(new \DateTimeImmutable());
 
@@ -38,7 +38,7 @@ class BadgesFixtures extends Fixture
         $badge->setName('Première défaite');
         $badge->setTag('first_loss');
         $badge->setDescription('Vous avez perdu votre première partie.');
-        $badge->setLogo('https://randomuser.me/api/portraits');
+        $badge->setLogo('/badge3.png');
         $badge->setCreatedAt(new \DateTimeImmutable());
         $badge->setUpdatedAt(new \DateTimeImmutable());
 
@@ -49,7 +49,7 @@ class BadgesFixtures extends Fixture
         $badge->setName('Premier ami');
         $badge->setTag('first_friend');
         $badge->setDescription('Vous avez ajouté votre premier ami.');
-        $badge->setLogo('https://randomuser.me/api/portraits');
+        $badge->setLogo('/badge4.png');
         $badge->setCreatedAt(new \DateTimeImmutable());
         $badge->setUpdatedAt(new \DateTimeImmutable());
 
@@ -60,7 +60,7 @@ class BadgesFixtures extends Fixture
         $badge->setName('5 parties');
         $badge->setTag('5_games');
         $badge->setDescription('Vous avez joué 5 parties.');
-        $badge->setLogo('https://randomuser.me/api/portraits');
+        $badge->setLogo('/badge5.png');
         $badge->setCreatedAt(new \DateTimeImmutable());
         $badge->setUpdatedAt(new \DateTimeImmutable());
 
@@ -71,7 +71,7 @@ class BadgesFixtures extends Fixture
         $badge->setName('5 victoires');
         $badge->setTag('5_wins');
         $badge->setDescription('Vous avez remporté 5 parties.');
-        $badge->setLogo('https://randomuser.me/api/portraits');
+        $badge->setLogo('/badge6.png');
         $badge->setCreatedAt(new \DateTimeImmutable());
         $badge->setUpdatedAt(new \DateTimeImmutable());
 
@@ -82,7 +82,7 @@ class BadgesFixtures extends Fixture
         $badge->setName('5 défaites');
         $badge->setTag('5_losses');
         $badge->setDescription('Vous avez perdu 5 parties.');
-        $badge->setLogo('https://randomuser.me/api/portraits');
+        $badge->setLogo('/badge7.png');
         $badge->setCreatedAt(new \DateTimeImmutable());
         $badge->setUpdatedAt(new \DateTimeImmutable());
 
@@ -93,7 +93,7 @@ class BadgesFixtures extends Fixture
         $badge->setName('5 amis');
         $badge->setTag('5_friends');
         $badge->setDescription('Vous avez ajouté 5 amis.');
-        $badge->setLogo('https://randomuser.me/api/portraits');
+        $badge->setLogo('/badge8.png');
         $badge->setCreatedAt(new \DateTimeImmutable());
         $badge->setUpdatedAt(new \DateTimeImmutable());
 

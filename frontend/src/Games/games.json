@@ -40,10 +40,10 @@
       "id": 4,
       "name": "Harry Potter - Duels",
       "description": "Jouez au jeu des duels de sorciers inspiré de l'univers de Harry Potter !",
-      "link": "/harry-potter-duels",
+      "link": "/harry-potter",
       "image": "/harry_potter.png",
       "video": "/harry_potter.gif",
-      "tag": "harry-potter-duels",
+      "tag": "harry-potter",
       "difficulty": "hard",
       "players": 2,
       "howToPlay": "Les duels de sorciers sont un jeu de réflexion et de stratégie se pratiquant à deux joueurs. Chaque joueur incarne un sorcier et doit choisir une action parmi les trois proposées : attaque, défense ou sortilège. Les sorts sont efficaces contre les attaques, les attaques sont efficaces contre les défenses et les défenses sont efficaces contre les sorts. Le joueur qui remporte le plus de duels a gagné."

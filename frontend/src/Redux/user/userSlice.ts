@@ -47,10 +47,20 @@ export const userSlice = createSlice({
 
       return state;
     },
+    updateUser: (state, action) => {
+      state = action.payload;
+
+      return state;
+    },
   },
 });
 
-export const { addUser, removeUser, updateProfilePicture, updateBadges } =
-  userSlice.actions;
+export const {
+  addUser,
+  removeUser,
+  updateProfilePicture,
+  updateBadges,
+  updateUser,
+} = userSlice.actions;
 
 export default userSlice.reducer;

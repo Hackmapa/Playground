@@ -38,5 +38,9 @@ echo "Setting permissions..."
 docker exec -it --user root $MIGRATION_SERVICE chown -R www-data:www-data public/
 docker exec -it --user root $MIGRATION_SERVICE chmod -R 775 public/
 
+# warmup cache
+echo "Warming up cache..."
+docker exec -it --user root $MIGRATION_SERVICE php bin/console cache:warmup --env=prod
+
 
 echo "Setup completed."
