@@ -62,8 +62,6 @@ export const GameRoom: React.FC = () => {
 
   const room = useSelector((state: RootState) => selectRoomState(state));
 
-  console.log(room);
-
   const [canStart, setCanStart] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOwner, setGameOwner] = useState(false);
@@ -225,7 +223,6 @@ export const GameRoom: React.FC = () => {
         );
 
       case "harry-potter":
-        console.log(room);
         return <HarryPotter gameId={gameId} room={room as HarryPotterRoom} />;
 
       default:
