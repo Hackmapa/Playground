@@ -46,14 +46,17 @@ export const HarryPotter = (props: HarryPotterProps) => {
     <div className="game-container">
       <div className="game-characters-container">
         {room &&
-          characters.map((character: Character, index: number) => (
-            <CharacterComponent
-              key={character.id}
-              character={character}
-              flip={isOdd(index) ? true : false}
-              user={user}
-            />
-          ))}
+          characters.map(
+            (character: Character, index: number) =>
+              character && (
+                <CharacterComponent
+                  key={character.id}
+                  character={character}
+                  flip={isOdd(index) ? true : false}
+                  user={user}
+                />
+              )
+          )}
       </div>
 
       {room && (

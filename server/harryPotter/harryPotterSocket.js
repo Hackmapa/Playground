@@ -102,6 +102,8 @@ export default (io, rooms) => {
       room.players.push(user);
       socket.join(room.id);
 
+      console.log("Player joined game: ", room.id);
+
       io.to(room.id).emit("harryPotterRoom", room);
       io.emit("harryPotterRooms", rooms);
     });
@@ -146,6 +148,9 @@ export default (io, rooms) => {
       async (actualRoom, character, target, castedSpell, token, dbGameId) => {
         const updatedRoom = rooms.find((room) => room.id === actualRoom.id);
         const thisSpell = spells.find((spell) => spell.id === castedSpell);
+
+        if (updatedRoom.players.length < updatedRoom.maxPlayers) return;
+
         const casterCharacter = updatedRoom.game.characters.find(
           (c) => c.id === character.id
         );
@@ -252,24 +257,27 @@ export default (io, rooms) => {
     });
 
     // Leave room
-    socket.on("leaveHarryPotterRoom", (actualRoom, actualUser) => {
-      rooms.map((room) => {
-        if (room.id === actualRoom.id) {
-          room.players = room.players.filter(
-            (user) => user.id !== actualUser.id
-          );
-          room.characters = room.characters.filter(
-            (character) => character.id !== actualUser.id
-          );
+    socket.on("leaveHarryPotterGame", (roomId, userId) => {
+      const room = rooms.find((room) => room.id === roomId);
 
-          return room;
-        }
-      });
+      if (!room) return;
 
-      const updatedRoom = rooms.find((room) => room.id === actualRoom.id);
+      room.players = room.players.filter((player) => player.id !== userId);
+      room.characters = room.characters.filter(
+        (character) => character.id !== userId
+      );
+      socket.leave(room.id);
 
-      socket.leave(actualRoom.id);
-      io.to(actualRoom.id).emit("roomLeft", updatedRoom);
+      if (room.players.length === 0) {
+        // If no players left, delete the room
+        rooms = rooms.filter((r) => r.id !== roomId);
+      } else {
+        // Otherwise, notify the remaining players
+        io.to(room.id).emit("harryPotterRoom", room);
+        io.emit("harryPotterRooms", rooms);
+      }
+
+      console.log(`User ${userId} left room: ${roomId}`);
     });
 
     socket.on("resetHarryPotterGame", (gameId) => {

@@ -98,22 +98,23 @@ export default (io, games) => {
 
     // leave tic tac toe game
     socket.on("leaveTicTacToeGame", (gameId, userId) => {
-      const game = games.find((game) => game.id === gameId);
+      const game = games.find((room) => room.id === gameId);
+
       if (!game) return;
-      game.players = game.players.filter((player) => player.id != userId);
 
-      if (game.players.length === 0) {
-        games = games.filter((g) => g.id !== game.id);
-      }
-
-      games = games.map((g) => (g.id === game.id ? game : g));
-
-      console.log("Player left game: ", game.id);
-
-      io.to(game.id).emit("ticTacToeRoom", game);
+      game.players = game.players.filter((player) => player.id !== userId);
       socket.leave(game.id);
 
-      io.emit("ticTacToeRooms", games);
+      if (game.players.length === 0) {
+        // If no players left, delete the room
+        games = games.filter((r) => r.id !== gameId);
+      } else {
+        // Otherwise, notify the remaining players
+        io.to(game.id).emit("ticTacToeRoom", game);
+        io.emit("ticTacToeRooms", games);
+      }
+
+      console.log(`User ${userId} left room: ${gameId}`);
     });
 
     // set ready
@@ -154,6 +155,9 @@ export default (io, games) => {
     socket.on("makeMove", async (gameId, userId, index, token, dbGameId) => {
       const game = games.find((game) => game.id == gameId);
       const user = game.players.find((user) => user.id === userId);
+
+      if (game.players.length < game.maxPlayers) return;
+
       const player = game.currentPlayer;
 
       if (user.id !== player.user.id) return;

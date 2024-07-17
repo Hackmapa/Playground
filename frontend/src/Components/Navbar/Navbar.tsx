@@ -12,6 +12,12 @@ import {
 } from "../../Redux/notifications/notificationSlice";
 import { GameSearch } from "./GameSearch";
 import { addFriends } from "../../Redux/friends/friendSlice";
+import { removeRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
+import { removeConnectFourRoom } from "../../Redux/rooms/connectFourSlice";
+import { removeHarryPotterRoom } from "../../Redux/rooms/harryPotterRoomSlice";
+import { removeTttRoom } from "../../Redux/rooms/tttRoomSlice";
+import { removeUser } from "../../Redux/user/userSlice";
+import { removeUsers } from "../../Redux/users/usersSlice";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -29,6 +35,13 @@ export const Navbar = () => {
     socket.disconnect();
 
     dispatch({ type: "token/logout" });
+    dispatch(removeRpsRoom());
+    dispatch(removeConnectFourRoom());
+    dispatch(removeHarryPotterRoom());
+    dispatch(removeTttRoom());
+    dispatch(removeUser());
+    dispatch(removeUsers());
+
     navigate("/login");
   };
 

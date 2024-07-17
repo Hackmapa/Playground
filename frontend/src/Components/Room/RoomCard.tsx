@@ -13,6 +13,7 @@ import { Button } from "../Button/Button";
 import { ModalBox } from "../ModalBox/ModalBox";
 import { Input } from "../Input/Input";
 import { toast } from "react-toastify";
+import { setHarryPotterRoom } from "../../Redux/rooms/harryPotterRoomSlice";
 
 interface RoomCardProps {
   room: Room;
@@ -67,9 +68,9 @@ export const RoomCard = (props: RoomCardProps) => {
       case "harry-potter":
         socket.emit("joinHarryPotterGame", room.id, user);
 
-        socket.on("harryPotterRoom", (room: HarryPotterRoom) => {
-          toast.success(`Vous avez rejoint la partie ${room.name}`);
-          navigate(`/harry-potter/${room.id}`);
+        socket.on("harryPotterRoom", (r: HarryPotterRoom) => {
+          toast.success(`Vous avez rejoint la partie ${r.name}`);
+          navigate(`/harry-potter/${r.id}`);
         });
         break;
 

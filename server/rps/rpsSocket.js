@@ -89,22 +89,24 @@ export default (io, games) => {
 
     // leave rock paper scissors game
     socket.on("leaveRpsGame", (gameId, userId) => {
-      const game = games.find((game) => game.id === gameId);
+      const game = games.find((room) => room.id === gameId);
+
       if (!game) return;
-      game.players = game.players.filter((player) => player.id != userId);
 
-      if (game.players.length === 0) {
-        games = games.filter((g) => g.id !== game.id);
-      }
+      game.players = game.players.filter((player) => player.id !== userId);
 
-      games = games.map((g) => (g.id === game.id ? game : g));
-
-      console.log("Player left game: ", game.id);
-
-      io.to(game.id).emit("rpsRoom", game);
       socket.leave(game.id);
 
-      io.emit("rpsRooms", games);
+      if (game.players.length === 0) {
+        // If no players left, delete the room
+        games = games.filter((r) => r.id !== gameId);
+      } else {
+        // Otherwise, notify the remaining players
+        io.to(game.id).emit("rpsRoom", game);
+        io.emit("rpsRooms", games);
+      }
+
+      console.log(`User ${userId} left room: ${gameId}`);
     });
 
     // set ready
@@ -145,6 +147,8 @@ export default (io, games) => {
     socket.on("makeRpsMove", async (gameId, userId, token, dbGameId, move) => {
       const game = games.find((game) => game.id == gameId);
       const user = game.players.find((user) => user.id === userId);
+
+      if (game.players.length < game.maxPlayers) return;
 
       // check if user has already made a move
       if (

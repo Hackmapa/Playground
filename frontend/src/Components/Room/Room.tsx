@@ -12,7 +12,7 @@ import {
   TttRoom,
 } from "../../Interfaces/Rooms";
 import { User } from "../../Interfaces/User";
-import { updateTttRoom } from "../../Redux/rooms/tttRoomSlice";
+import { removeTttRoom, updateTttRoom } from "../../Redux/rooms/tttRoomSlice";
 import { RootState } from "../../Redux/store";
 import { socket } from "../../socket";
 import { checkIfUserHasBadge, addBadge } from "../../utils/badge";
@@ -23,8 +23,14 @@ import { RPS } from "../../Games/RPS/RPS";
 import { updateRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
 import { HowToPlay } from "./HowToPlay";
 import { ConnectFourBoard } from "../../Games/ConnectFour/Components/ConnectFourBoard";
-import { updateConnectFourRoom } from "../../Redux/rooms/connectFourSlice";
-import { setHarryPotterRoom } from "../../Redux/rooms/harryPotterRoomSlice";
+import {
+  removeConnectFourRoom,
+  updateConnectFourRoom,
+} from "../../Redux/rooms/connectFourSlice";
+import {
+  removeHarryPotterRoom,
+  setHarryPotterRoom,
+} from "../../Redux/rooms/harryPotterRoomSlice";
 import { HarryPotter } from "../../Games/HarryPotter/pages/Game/HarryPotter";
 
 export const GameRoom: React.FC = () => {
@@ -55,6 +61,8 @@ export const GameRoom: React.FC = () => {
   };
 
   const room = useSelector((state: RootState) => selectRoomState(state));
+
+  console.log(room);
 
   const [canStart, setCanStart] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
@@ -92,7 +100,7 @@ export const GameRoom: React.FC = () => {
 
         socket.on("ticTacToeRoom", (r: TttRoom) => {
           if (!r) {
-            navigate("/tic-tac-toe");
+            navigate("/rooms/tic-tac-toe");
 
             socket.off("ticTacToeRoom");
           }
@@ -105,7 +113,7 @@ export const GameRoom: React.FC = () => {
 
         socket.on("rpsRoom", (r: RpsRoom) => {
           if (!r) {
-            navigate("/rock-paper-scissors");
+            navigate("/rooms/rock-paper-scissors");
 
             socket.off("rpsRoom");
           }
@@ -118,7 +126,7 @@ export const GameRoom: React.FC = () => {
 
         socket.on("connectFourRoom", (r: ConnectFourRoom) => {
           if (!r) {
-            navigate("/connect-four");
+            navigate("/rooms/connect-four");
 
             socket.off("connectFourRoom");
           }
@@ -131,7 +139,7 @@ export const GameRoom: React.FC = () => {
 
         socket.on("harryPotterRoom", (r: Room) => {
           if (!r) {
-            navigate("/harry-potter");
+            navigate("/rooms/harry-potter");
 
             socket.off("harryPotterRoom");
           }
@@ -217,6 +225,7 @@ export const GameRoom: React.FC = () => {
         );
 
       case "harry-potter":
+        console.log(room);
         return <HarryPotter gameId={gameId} room={room as HarryPotterRoom} />;
 
       default:
@@ -318,6 +327,7 @@ export const GameRoom: React.FC = () => {
 
         return () => {
           socket.emit("leaveTicTacToeGame", room.id, user.id);
+          dispatch(removeTttRoom());
         };
 
       case "rock-paper-scissors":
@@ -331,6 +341,7 @@ export const GameRoom: React.FC = () => {
 
         return () => {
           socket.emit("leaveRpsGame", room.id, user.id);
+          dispatch(removeConnectFourRoom());
         };
 
       case "connect-four":
@@ -344,6 +355,7 @@ export const GameRoom: React.FC = () => {
 
         return () => {
           socket.emit("leaveConnectFourGame", room.id, user.id);
+          dispatch(removeConnectFourRoom());
         };
 
       case "harry-potter":
@@ -357,6 +369,7 @@ export const GameRoom: React.FC = () => {
 
         return () => {
           socket.emit("leaveHarryPotterGame", room.id, user.id);
+          dispatch(removeHarryPotterRoom());
         };
 
       default:

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ConnectFourRoom, HarryPotterRoom } from "../../Interfaces/Rooms";
+import { HarryPotterRoom } from "../../Interfaces/Rooms";
 
 const initialState: HarryPotterRoom = {
   characters: [],
@@ -24,7 +24,7 @@ const initialState: HarryPotterRoom = {
     user: null,
   },
   finished: false,
-  gameTag: "",
+  gameTag: "harry-potter",
   draw: false,
   game: {
     characters: [],
@@ -36,20 +36,29 @@ const initialState: HarryPotterRoom = {
 };
 
 const harryPotterRoomSlice = createSlice({
-  name: "HarryPotterRoom",
-  initialState,
+  name: "harryPotterRoom",
+  initialState: initialState,
   reducers: {
     setHarryPotterRoom: (state, action) => {
-      return (state = action.payload);
+      state = action.payload;
+
+      return state;
     },
 
     updateHarryPotterRoom: (state, action) => {
       return (state = action.payload);
     },
+
+    removeHarryPotterRoom: (state) => {
+      return (state = initialState);
+    },
   },
 });
 
-export const { setHarryPotterRoom, updateHarryPotterRoom } =
-  harryPotterRoomSlice.actions;
+export const {
+  setHarryPotterRoom,
+  updateHarryPotterRoom,
+  removeHarryPotterRoom,
+} = harryPotterRoomSlice.actions;
 
 export default harryPotterRoomSlice.reducer;

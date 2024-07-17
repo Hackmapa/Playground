@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { SocketUser } from "../../Interfaces/SocketUser";
+import { removeUser } from "../user/userSlice";
 
 const initialState: SocketUser[] = [];
 
@@ -12,9 +13,15 @@ export const usersSlice = createSlice({
 
       return state;
     },
+
+    removeUsers: (state) => {
+      state = initialState;
+
+      return state;
+    },
   },
 });
 
-export const { setUsers } = usersSlice.actions;
+export const { setUsers, removeUsers } = usersSlice.actions;
 
 export default usersSlice.reducer;
