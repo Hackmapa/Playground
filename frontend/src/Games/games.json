@@ -15,7 +15,7 @@
     {
       "id": 2,
       "name": "Morpion",
-      "description": "Jouez au jeu du morpion, un jeu de réflexion rapide et amusant se pratiquant à deux joueurs !",
+      "description": "Jouez au jeu du morpion, un jeu de réflexion rapide et amusant se pratiquant à deux joueurs!",
       "link": "/tic-tac-toe",
       "image": "/tictactoe.png",
       "video": "/tictactoe.gif",
