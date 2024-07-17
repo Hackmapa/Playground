@@ -27,16 +27,16 @@ docker exec $MIGRATION_SERVICE php bin/console doctrine:migrations:migrate --no-
 
 # Generate JWT keys
 echo "Generating JWT keys..."
-docker exec -it --user root $MIGRATION_SERVICE php bin/console lexik:jwt:generate-keypair --skip-if-exists
+docker exec --user root $MIGRATION_SERVICE php bin/console lexik:jwt:generate-keypair --skip-if-exists
 
 # Fixtures
 echo "Loading fixtures..."
-docker exec -it --user root $MIGRATION_SERVICE php bin/console doctrine:fixtures:load --no-interaction
+docker exec --user root $MIGRATION_SERVICE php bin/console doctrine:fixtures:load --no-interaction
 
 # Set permissions
 echo "Setting permissions..."
-docker exec -it --user root $MIGRATION_SERVICE chown -R www-data:www-data public/
-docker exec -it --user root $MIGRATION_SERVICE chmod -R 775 public/
+docker exec --user root $MIGRATION_SERVICE chown -R www-data:www-data public/
+docker exec --user root $MIGRATION_SERVICE chmod -R 775 public/
 
 # warmup cache
 echo "Warming up cache..."
