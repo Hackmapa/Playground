@@ -23,5 +23,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            "cd ${{ secrets.PATH }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && docker compose down && docker volume ls | grep playground_frontend_volume && docker volume rm playground_frontend_volume || echo 'No volume to remove' &&
-            docker compose up --build -d && bash migrate.sh && exit"
+            echo "Deploying to remote server"
