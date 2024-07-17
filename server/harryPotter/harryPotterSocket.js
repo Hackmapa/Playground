@@ -1,6 +1,8 @@
 import Character from "./classes/character.js";
 import Game from "./classes/game.js";
 import spells from "./constants/spells.js";
+import post from "../utils/post.js";
+import put from "../utils/put.js";
 
 const createCharacterFromUser = (user) => {
   const character = new Character(
@@ -32,22 +34,18 @@ const createCharacter = (character) => {
   return newCharacter;
 };
 
-const createLog = (room, message) => {
-  const newLog = {
-    id: room.logs.length + 1,
-    message: message,
-    createdAt: new Date(),
-  };
-
-  return newLog;
-};
-
 export default (io, rooms) => {
   // Socket connection
   io.on("connection", (socket) => {
     // Update rooms
     socket.on("getHarryPotterGames", () => {
       io.emit("harryPotterRooms", rooms);
+    });
+
+    socket.on("getHarryPotterGame", (gameId) => {
+      const room = rooms.find((game) => game.id == gameId);
+
+      io.emit("harryPotterRoom", room);
     });
 
     // Create room
@@ -67,7 +65,9 @@ export default (io, rooms) => {
         },
         started: false,
         finished: false,
-        winner: null,
+        winner: {
+          user: null,
+        },
         draw: false,
         privateRoom: privateRoom,
         password: password,
@@ -76,6 +76,10 @@ export default (io, rooms) => {
 
       user.ready = false;
       user.owner = true;
+
+      const character = createCharacterFromUser(user);
+
+      room.characters.push(character);
 
       room.players.push(user);
       socket.join(room.id);
@@ -96,88 +100,128 @@ export default (io, rooms) => {
 
       room.characters.push(character);
       room.players.push(user);
-      socket.join(roomId);
+      socket.join(room.id);
 
       io.to(room.id).emit("harryPotterRoom", room);
       io.emit("harryPotterRooms", rooms);
     });
 
     // Start game
-    socket.on("startHarryPotterGame", (characters, actualRoom) => {
+    socket.on("startHarryPotterGame", async (gameId, token) => {
+      const room = rooms.find((room) => room.id === gameId);
+      const characters = room.characters;
+
+      if (room.players.length < 2) {
+        return;
+      }
+
       const newCharacters = characters.map((character) => {
         return createCharacter(character);
       });
 
-      const game = new Game(newCharacters, actualRoom.id);
+      const game = new Game(newCharacters, room.id);
 
       game.startGame();
-      actualRoom.game = game;
+      room.game = game;
+      room.started = true;
 
-      const actualRoomIndex = rooms.findIndex(
-        (room) => room.id === actualRoom.id
-      );
+      const body = {
+        gameId: 4,
+        players: room.players,
+        name: room.name,
+        gameTag: "harry-potter",
+      };
 
-      rooms[actualRoomIndex] = actualRoom;
+      const response = await post("games", JSON.stringify(body), token);
+      const id = response.id;
 
-      actualRoom.logs = game.logs;
+      room.logs = game.logs;
 
-      io.to(actualRoom.id).emit("gameStarted", game, actualRoom);
+      io.to(room.id).emit("harryPotterRoom", room, id);
     });
 
     // Cast spell
-    socket.on("castSpell", (actualRoom, character, target, castedSpell) => {
-      const updatedRoom = rooms.find((room) => room.id === actualRoom.id);
-      const thisSpell = spells.find((spell) => spell.id === castedSpell);
-      const casterCharacter = updatedRoom.game.characters.find(
-        (c) => c.id === character.id
-      );
-      const targetCharacter = updatedRoom.game.characters.find(
-        (character) => character.id === target.id
-      );
-      const game = updatedRoom.game;
+    socket.on(
+      "castHarryPotterSpell",
+      async (actualRoom, character, target, castedSpell, token, dbGameId) => {
+        const updatedRoom = rooms.find((room) => room.id === actualRoom.id);
+        const thisSpell = spells.find((spell) => spell.id === castedSpell);
+        const casterCharacter = updatedRoom.game.characters.find(
+          (c) => c.id === character.id
+        );
+        const targetCharacter = updatedRoom.game.characters.find(
+          (character) => character.id === target.id
+        );
+        const game = updatedRoom.game;
 
-      game.characters.map((actualCharacter) => {
-        if (actualCharacter.id === character.id) {
-          socket.action = actualCharacter.castSpell.bind(
-            actualCharacter,
-            thisSpell,
-            targetCharacter
-          );
-          socket.character = casterCharacter;
-        }
-      });
+        game.characters.map((actualCharacter) => {
+          if (actualCharacter.id === character.id) {
+            socket.action = actualCharacter.castSpell.bind(
+              actualCharacter,
+              thisSpell,
+              targetCharacter
+            );
+            socket.character = casterCharacter;
+          }
+        });
 
-      const room = io.sockets.adapter.rooms.get(actualRoom.id);
+        const room = io.sockets.adapter.rooms.get(actualRoom.id);
 
-      let canExecute = true;
+        let canExecute = true;
 
-      for (const socketId of room) {
-        const socket = io.sockets.sockets.get(socketId);
-        if (!socket.action) {
-          canExecute = false;
-          break;
-        }
-      }
-
-      if (canExecute) {
         for (const socketId of room) {
           const socket = io.sockets.sockets.get(socketId);
-
-          game.handleUserTurn(socket.character, socket.action);
-          socket.action = null;
+          if (!socket.action) {
+            canExecute = false;
+            break;
+          }
         }
-        if (!game.isGameOver()) game.endTurn();
-      } else {
-        return;
+
+        if (canExecute) {
+          for (const socketId of room) {
+            const socket = io.sockets.sockets.get(socketId);
+
+            game.handleUserTurn(socket.character, socket.action);
+            socket.action = null;
+          }
+          if (!game.isGameOver()) {
+            const url = `turns/${parseInt(dbGameId)}`;
+            const body = JSON.stringify(game);
+            await post(url, body, token);
+
+            game.endTurn();
+          } else {
+            game.endGame();
+
+            updatedRoom.finished = true;
+            const winnerId = game.results.winner.id;
+            const winner = updatedRoom.players.find(
+              (player) => player.id === winnerId
+            );
+            updatedRoom.winner.user = winner;
+
+            const body = {
+              finished: true,
+              draw: false,
+              winner: winnerId,
+            };
+
+            const url = `games/${dbGameId}`;
+            await put(url, JSON.stringify(body), token);
+          }
+        } else {
+          return;
+        }
+
+        const updatedGame = updatedRoom.game;
+
+        updatedRoom.characters = updatedGame.characters;
+        updatedRoom.game = updatedGame;
+        updatedRoom.logs = updatedGame.logs;
+
+        io.to(actualRoom.id).emit("harryPotterRoom", updatedRoom);
       }
-
-      const updatedGame = updatedRoom.game;
-
-      updatedRoom.characters = updatedGame.characters;
-      updatedRoom.logs = updatedGame.logs;
-
-      io.to(actualRoom.id).emit("harryPotterRoom", updatedGame, updatedRoom);
-    });
+    );
 
     // Set ready
     socket.on("setReadyHarryPotter", (roomId, userId) => {
@@ -208,7 +252,7 @@ export default (io, rooms) => {
     });
 
     // Leave room
-    socket.on("leaveRoom", (actualRoom, actualUser) => {
+    socket.on("leaveHarryPotterRoom", (actualRoom, actualUser) => {
       rooms.map((room) => {
         if (room.id === actualRoom.id) {
           room.players = room.players.filter(
@@ -228,11 +272,28 @@ export default (io, rooms) => {
       io.to(actualRoom.id).emit("roomLeft", updatedRoom);
     });
 
-    // End game
-    socket.on("endGame", (actualRoom, results) => {
-      const { winner, loser } = results;
+    socket.on("resetHarryPotterGame", (gameId) => {
+      const room = rooms.find((room) => room.id === gameId);
 
-      io.to(actualRoom.id).emit("gameEnded", results);
+      room.started = false;
+      room.finished = false;
+      const characters = [];
+
+      room.players.map((character) => {
+        const newCharacter = createCharacter(character);
+        characters.push(newCharacter);
+      });
+
+      room.characters = characters;
+      room.game = new Game(characters, room.id);
+      room.logs = [];
+      room.winner = {
+        user: null,
+      };
+      room.draw = false;
+      room.players.map((player) => (player.ready = false));
+
+      io.to(room.id).emit("harryPotterRoom", room);
     });
 
     // Disconnect

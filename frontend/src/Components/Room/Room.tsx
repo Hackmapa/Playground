@@ -25,6 +25,7 @@ import { HowToPlay } from "./HowToPlay";
 import { ConnectFourBoard } from "../../Games/ConnectFour/Components/ConnectFourBoard";
 import { updateConnectFourRoom } from "../../Redux/rooms/connectFourSlice";
 import { setHarryPotterRoom } from "../../Redux/rooms/harryPotterRoomSlice";
+import { HarryPotter } from "../../Games/HarryPotter/pages/Game/HarryPotter";
 
 export const GameRoom: React.FC = () => {
   const token = useSelector((state: RootState) => state.token);
@@ -129,7 +130,6 @@ export const GameRoom: React.FC = () => {
         socket.emit("getHarryPotterGame", id);
 
         socket.on("harryPotterRoom", (r: Room) => {
-          console.log(r);
           if (!r) {
             navigate("/harry-potter");
 
@@ -217,11 +217,7 @@ export const GameRoom: React.FC = () => {
         );
 
       case "harry-potter":
-        return (
-          <div>
-            <h1>Harry Potter</h1>
-          </div>
-        );
+        return <HarryPotter gameId={gameId} room={room as HarryPotterRoom} />;
 
       default:
         return <div></div>;
@@ -352,7 +348,6 @@ export const GameRoom: React.FC = () => {
 
       case "harry-potter":
         socket.on("harryPotterRoom", (r: HarryPotterRoom, id: number) => {
-          console.log(r);
           dispatch(setHarryPotterRoom(r));
 
           if (id) {

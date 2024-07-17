@@ -1,27 +1,28 @@
 import { Character } from "../../../../../../Interfaces/HarryPotter/Character";
 import { Spell } from "../../../../../../Interfaces/HarryPotter/Spell";
+import { socket } from "../../../../../../socket";
 import Button from "../../../../Components/Button/Button";
 
-import "./SpellSelection.css";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
 interface SpellSelectionProps {
+  gameId: number | undefined;
   characters: Character[];
   isGameStarted: boolean;
-  socket: any;
   hasChosenSpell: boolean;
   setHasChosenSpell: (hasChosenSpell: boolean) => void;
 }
 
 export const SpellSelection = (props: SpellSelectionProps) => {
-  const actualRoom = useSelector((state: any) => state.ActualRoom);
-  const actualUser = useSelector((state: any) => state.User);
+  const user = useSelector((state: any) => state.user);
+  const room = useSelector((state: any) => state.harryPotterRoom);
+  const token = useSelector((state: any) => state.token);
 
   const {
+    gameId,
     characters,
     isGameStarted,
-    socket,
     hasChosenSpell,
     setHasChosenSpell,
   } = props;
@@ -31,7 +32,15 @@ export const SpellSelection = (props: SpellSelectionProps) => {
 
   const handleCastSpell = (spellId: number | undefined, target: Character) => {
     setHasChosenSpell(true);
-    socket.emit("castSpell", actualRoom, actualUser, target, spellId);
+    socket.emit(
+      "castHarryPotterSpell",
+      room,
+      user,
+      target,
+      spellId,
+      token,
+      gameId
+    );
     setIsChoosingTarget(false);
   };
 
@@ -45,36 +54,40 @@ export const SpellSelection = (props: SpellSelectionProps) => {
   };
 
   return (
-    <div className="spell-target-selection-container">
+    <div className="w-full flex flex-col">
       {!isChoosingTarget ? (
         <>
-          <div className="game-spells-container">
+          <div className="flex flex-col justify-between items-center w-full flex-1">
             {isGameStarted &&
               characters.map((character: Character) => {
-                if (character.id === actualUser?.id)
+                if (character.id === user.id)
                   return (
                     <div key={character.id}>
                       {!hasChosenSpell ? (
-                        <div className="character-turn">
-                          <h2>{character.firstname}, choisis un sort !</h2>
+                        <div className="flex items-center justify-around">
+                          <h2 className="my-4 font-bold text-2xl">
+                            Choisissez un sort !
+                          </h2>
                         </div>
                       ) : (
-                        <div className="character-turn">
-                          <h2>
-                            Attends que {getOpponent(character)?.firstname}{" "}
+                        <div className="flex items-center justify-around">
+                          <h2 className="my-4 font-bold text-2xl">
+                            Attends que {getOpponent(character)?.username}{" "}
                             choisisse ... !
                           </h2>
                         </div>
                       )}
 
                       {!hasChosenSpell && (
-                        <div key={character.id} className="game-spells">
+                        <div
+                          key={character.id}
+                          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-5 mt-5"
+                        >
                           {character.spells.map((spell: Spell) => {
                             return (
                               <Button
                                 key={spell.id}
                                 onClick={() => handleChoseSpell(spell)}
-                                className={`${spell.type}-button`}
                                 label={spell.name}
                                 spell={spell}
                               />
@@ -90,15 +103,14 @@ export const SpellSelection = (props: SpellSelectionProps) => {
         </>
       ) : (
         isChoosingTarget && (
-          <div className="target-container">
-            {actualRoom &&
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-5 mt-5">
+            {room &&
               characters.map((character: Character) => {
                 return (
                   <Button
-                    className="button-target"
                     key={character.id}
                     label={
-                      character.id === actualUser?.id
+                      character.id === user.id
                         ? `${character.firstname} (You)`
                         : character.firstname
                     }

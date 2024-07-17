@@ -61,11 +61,15 @@ export const GameStartingButton = (props: GameStartingButtonProps) => {
         }
       }
 
-      if (gameStarted && !room.finished && !room.currentPlayer) {
+      if (
+        gameStarted &&
+        !room.finished &&
+        (!room.currentPlayer || !room.currentPlayer.user)
+      ) {
         return <></>;
       }
 
-      if (gameStarted && !room.finished && room.currentPlayer) {
+      if (gameStarted && !room.finished && room.currentPlayer.user) {
         return (
           <div>
             <p className="text-2xl">

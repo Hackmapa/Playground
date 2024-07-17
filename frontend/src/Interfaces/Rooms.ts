@@ -2,6 +2,7 @@ import { Message } from "postcss";
 import { Character } from "./HarryPotter/Character";
 import { Log } from "./HarryPotter/Log";
 import { User } from "./User";
+import { HarryPotterGame } from "./HarryPotter/HarryPotterGame";
 
 export interface TttRoom extends DefaultRoom {
   turn: number;
@@ -38,6 +39,7 @@ export interface HarryPotterRoom extends DefaultRoom {
   moves: any[];
   turn: number;
   currentPlayer: Player;
+  game: HarryPotterGame;
 }
 
 export interface DefaultRoom {

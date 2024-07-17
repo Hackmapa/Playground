@@ -26,6 +26,13 @@ const initialState: HarryPotterRoom = {
   finished: false,
   gameTag: "",
   draw: false,
+  game: {
+    characters: [],
+    currentTurn: 0,
+    started: false,
+    finished: false,
+    logs: [],
+  },
 };
 
 const harryPotterRoomSlice = createSlice({

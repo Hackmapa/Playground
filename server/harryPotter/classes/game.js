@@ -2,8 +2,8 @@ export default class Game {
   constructor(characters) {
     this.characters = characters;
     this.currentTurn = 0;
-    this.isStarted = false;
-    this.isFinished = false;
+    this.started = false;
+    this.finished = false;
     this.results = null;
     this.logs = [];
   }
@@ -22,7 +22,7 @@ export default class Game {
   }
 
   endGame() {
-    this.isFinished = true;
+    this.finished = true;
     this.results = {
       winner: this.getWinner(),
       loser: this.getLoser(),
@@ -108,7 +108,7 @@ export default class Game {
 
   startGame() {
     this.currentTurn = 1;
-    this.isStarted = true;
+    this.started = true;
     this.sendMessage("Game started");
   }
 

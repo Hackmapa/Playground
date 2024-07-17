@@ -142,7 +142,6 @@ export const Rooms: React.FC = () => {
       case "harry-potter":
         socket.emit("getHarryPotterGames");
         socket.on("harryPotterRooms", (rooms: HarryPotterRoom[]) => {
-          console.log(rooms);
           setRooms(rooms);
         });
 
