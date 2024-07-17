@@ -1,3 +1,4 @@
+import { Character } from "./HarryPotter/Character";
 import { Round, Turn } from "./Turn";
 import { User } from "./User";
 
@@ -24,4 +25,6 @@ export interface Game {
   turns: Turn[];
   rounds?: Round[];
   createdAt: Date;
+  updatedAt: Date;
+  characters?: Character[];
 }

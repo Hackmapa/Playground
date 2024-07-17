@@ -19,7 +19,6 @@ export const RPS = (props: RPSProps) => {
   const token = useSelector((state: RootState) => state.token);
 
   const [hasAlreadyPlayed, setHasAlreadyPlayed] = useState(false);
-  const [gameWinner, setGameWinner] = useState<any>();
 
   const sendMove = (move: string) => {
     if (!room.started) {

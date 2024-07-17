@@ -1,4 +1,5 @@
-import fetch from "node-fetch";
+import post from "../utils/post.js";
+import put from "../utils/put.js";
 
 const checkWin = (updatedBoard) => {
   const winConditions = [
@@ -27,30 +28,6 @@ const checkWin = (updatedBoard) => {
 
 const checkDraw = (updatedBoard) => {
   return updatedBoard.every((cell) => cell !== "");
-};
-
-const post = async (url, body, token = "") => {
-  const response = await fetch(`${process.env.API_URL}/api/${url}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body,
-  });
-  return await response.json();
-};
-
-const put = async (url, body, token = "") => {
-  const response = await fetch(`${process.env.API_URL}/api/${url}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body,
-  });
-  return await response.json();
 };
 
 export default (io, games) => {
@@ -88,8 +65,6 @@ export default (io, games) => {
         socket.join(game.id);
         games.push(game);
 
-        console.log("Game created: ", game.id);
-
         io.to(game.id).emit("ticTacToeRoom", game);
         io.emit("ticTacToeRooms", games);
       }
@@ -104,8 +79,6 @@ export default (io, games) => {
 
       game.players.push(user);
       socket.join(game.id);
-
-      console.log("Player joined game: ", game.id);
 
       io.to(game.id).emit("ticTacToeRoom", game);
       io.emit("ticTacToeRooms", games);

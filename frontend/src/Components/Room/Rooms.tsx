@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../hooks/hooks";
-import { Room, RpsRoom, TttRoom } from "../../Interfaces/Rooms";
+import {
+  ConnectFourRoom,
+  HarryPotterRoom,
+  Room,
+  RpsRoom,
+  TttRoom,
+} from "../../Interfaces/Rooms";
 import { addTttRoom } from "../../Redux/rooms/tttRoomSlice";
 import { RootState } from "../../Redux/store";
 import { socket } from "../../socket";
@@ -13,6 +19,7 @@ import { ModalBox } from "../ModalBox/ModalBox";
 import { Input } from "../Input/Input";
 import { addRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
 import { addConnectFourRoom } from "../../Redux/rooms/connectFourSlice";
+import { setHarryPotterRoom } from "../../Redux/rooms/harryPotterRoomSlice";
 
 export const Rooms: React.FC = () => {
   const { name } = useParams();
@@ -72,6 +79,22 @@ export const Rooms: React.FC = () => {
           navigate(`/connect-four/${room.id}`);
         });
         break;
+
+      case "harry-potter":
+        socket.emit(
+          "createHarryPotterGame",
+          roomName,
+          user,
+          privateRoom,
+          password
+        );
+
+        socket.on("harryPotterRoom", (room: Room) => {
+          dispatch(setHarryPotterRoom(room));
+
+          navigate(`/harry-potter/${room.id}`);
+        });
+        break;
       default:
         break;
     }
@@ -107,13 +130,24 @@ export const Rooms: React.FC = () => {
 
       case "connect-four":
         socket.emit("getConnectFourGames");
-        socket.on("connectFourRooms", (rooms: Room[]) => {
+        socket.on("connectFourRooms", (rooms: ConnectFourRoom[]) => {
           setRooms(rooms);
         });
 
         return () => {
           socket.off("connectFourRooms");
           socket.off("connectFourRoom");
+        };
+
+      case "harry-potter":
+        socket.emit("getHarryPotterGames");
+        socket.on("harryPotterRooms", (rooms: HarryPotterRoom[]) => {
+          setRooms(rooms);
+        });
+
+        return () => {
+          socket.off("harryPotterRooms");
+          socket.off("harryPotterRoom");
         };
     }
   }, [name]);
