@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "Pierre Feuille Ciseaux",
-      "description": "Découvrez le classique jeu de Pierre Feuille Ciseaux.",
+      "description": "Découvrez le classique jeu de Pierre Feuille Ciseaux !",
       "link": "/rock-paper-scissors",
       "image": "/rps.png",
       "video": "/rps.gif",
