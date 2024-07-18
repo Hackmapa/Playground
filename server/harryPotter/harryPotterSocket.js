@@ -241,24 +241,6 @@ export default (io, rooms) => {
       io.to(room.id).emit("harryPotterRoom", room);
     });
 
-    // Send message
-    socket.on("sendMessage", (actualRoom, message) => {
-      const newMessage = { ...message, createdAt: new Date() };
-
-      const updatedRoom =
-        rooms.find((room) => room.id === actualRoom.id) || actualRoom;
-
-      updatedRoom.messages.push(newMessage);
-
-      rooms.map((room) => {
-        if (room.id === actualRoom.id) {
-          room.messages = updatedRoom.messages;
-        }
-      });
-
-      io.to(actualRoom.id).emit("messageSent", updatedRoom.messages);
-    });
-
     // Leave room
     socket.on("leaveHarryPotterGame", async (roomId, userId, token) => {
       let room = rooms.find((room) => room.id === roomId);
