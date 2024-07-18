@@ -46,7 +46,7 @@ export const ChatMessage = (props: ChatMessageProps) => {
           <img
             src={message.user.profile_picture}
             alt="profile"
-            className="w-8 h-8 rounded-full cursor-pointer"
+            className="w-8 h-8 rounded-full cursor-pointer object-cover"
             onClick={() => navigate(`/profile/${message.user.id}`)}
           />
           <div className="flex justify-between w-full">

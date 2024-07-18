@@ -44,7 +44,7 @@ export const FriendCard = (props: FriendCardProps) => {
                 <img
                   src={actualFriend.profile_picture}
                   alt="profile"
-                  className="w-8 h-8 rounded-full"
+                  className="w-8 h-8 rounded-full  object-cover"
                 />
                 <p>{actualFriend?.username}</p>
               </div>

@@ -116,7 +116,7 @@ export const ConnectFourReplay = () => {
                         <img
                           src={player.profile_picture}
                           alt="avatar"
-                          className="w-8 h-8 rounded-full"
+                          className="w-8 h-8 rounded-full object-cover"
                         />
                         <p className="text-lg " key={player.id}>
                           {isActualUser(player.id) ? "Vous" : player.username}

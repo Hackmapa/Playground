@@ -100,7 +100,7 @@ const UserGameCard = (props: UserGameCardProps) => {
       <img
         src={user.profile_picture}
         alt="profile"
-        className="w-16 h-16 rounded-full"
+        className="w-16 h-16 rounded-full object-cover"
         onClick={() => navigate(`/profile/${user.id}`)}
       />
       <p className="text-center mt-2 font-bold">
