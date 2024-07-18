@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -61,6 +61,9 @@ export const GameRoom: React.FC = () => {
   };
 
   const room = useSelector((state: RootState) => selectRoomState(state));
+
+  const roomRef = useRef(room);
+  const userRef = useRef(user);
 
   const [canStart, setCanStart] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
@@ -310,6 +313,14 @@ export const GameRoom: React.FC = () => {
   }, [room]);
 
   useEffect(() => {
+    roomRef.current = room;
+  }, [room]);
+
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
+  useEffect(() => {
     getActualRoom();
 
     switch (gameTag) {
@@ -323,7 +334,11 @@ export const GameRoom: React.FC = () => {
         });
 
         return () => {
-          socket.emit("leaveTicTacToeGame", room.id, user.id);
+          socket.emit(
+            "leaveTicTacToeGame",
+            roomRef.current.id,
+            userRef.current.id
+          );
           dispatch(removeTttRoom());
         };
 
@@ -337,7 +352,7 @@ export const GameRoom: React.FC = () => {
         });
 
         return () => {
-          socket.emit("leaveRpsGame", room.id, user.id);
+          socket.emit("leaveRpsGame", roomRef.current.id, userRef.current.id);
           dispatch(removeConnectFourRoom());
         };
 
@@ -351,7 +366,11 @@ export const GameRoom: React.FC = () => {
         });
 
         return () => {
-          socket.emit("leaveConnectFourGame", room.id, user.id);
+          socket.emit(
+            "leaveConnectFourGame",
+            roomRef.current.id,
+            userRef.current.id
+          );
           dispatch(removeConnectFourRoom());
         };
 
@@ -365,7 +384,11 @@ export const GameRoom: React.FC = () => {
         });
 
         return () => {
-          socket.emit("leaveHarryPotterGame", room.id, user.id);
+          socket.emit(
+            "leaveHarryPotterGame",
+            roomRef.current.id,
+            userRef.current.id
+          );
           dispatch(removeHarryPotterRoom());
         };
 

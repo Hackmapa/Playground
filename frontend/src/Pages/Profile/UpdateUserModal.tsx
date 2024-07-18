@@ -21,7 +21,6 @@ export const UpdateUserModal = (props: UpdateUserModalProps) => {
   const [username, setUsername] = useState(user.username);
   const [firstname, setFirstName] = useState(user.firstname);
   const [lastname, setLastName] = useState(user.lastname);
-  const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
@@ -30,7 +29,6 @@ export const UpdateUserModal = (props: UpdateUserModalProps) => {
       username,
       firstname,
       lastname,
-      email,
       password: "",
     };
 
@@ -62,13 +60,6 @@ export const UpdateUserModal = (props: UpdateUserModalProps) => {
           placeholder="Pseudo"
           value={username}
           onChange={(e) => setUsername(e)}
-        />
-
-        <Input
-          type="text"
-          placeholder="E-mail"
-          value={email}
-          onChange={(e) => setEmail(e)}
         />
       </div>
 

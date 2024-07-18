@@ -97,14 +97,12 @@ export default (io, games) => {
 
       socket.leave(game.id);
 
-      if (game.players.length === 0) {
-        // If no players left, delete the room
-        games = games.filter((r) => r.id !== gameId);
-      } else {
-        // Otherwise, notify the remaining players
-        io.to(game.id).emit("rpsRoom", game);
-        io.emit("rpsRooms", games);
-      }
+      // If no players left, delete the room
+      games = games.filter((r) => r.id !== gameId);
+
+      // Otherwise, notify the remaining players
+      io.to(game.id).emit("rpsRoom", game);
+      io.emit("rpsRooms", games);
 
       console.log(`User ${userId} left room: ${gameId}`);
     });
@@ -142,6 +140,7 @@ export default (io, games) => {
       const id = response.id;
       console.log("Game created in DB: ", id);
       io.to(game.id).emit("rpsRoom", game, id);
+      io.emit("rpsRooms", games);
     });
 
     socket.on("makeRpsMove", async (gameId, userId, token, dbGameId, move) => {

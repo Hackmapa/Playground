@@ -105,14 +105,12 @@ export default (io, games) => {
       game.players = game.players.filter((player) => player.id !== userId);
       socket.leave(game.id);
 
-      if (game.players.length === 0) {
-        // If no players left, delete the room
-        games = games.filter((r) => r.id !== gameId);
-      } else {
-        // Otherwise, notify the remaining players
-        io.to(game.id).emit("ticTacToeRoom", game);
-        io.emit("ticTacToeRooms", games);
-      }
+      // If no players left, delete the room
+      games = games.filter((r) => r.id !== gameId);
+
+      // Otherwise, notify the remaining players
+      io.to(game.id).emit("ticTacToeRoom", game);
+      io.emit("ticTacToeRooms", games);
 
       console.log(`User ${userId} left room: ${gameId}`);
     });
@@ -150,6 +148,7 @@ export default (io, games) => {
       const response = await post("games", JSON.stringify(body), token);
       const id = response.id;
       io.to(game.id).emit("ticTacToeRoom", game, id);
+      io.emit("ticTacToeRooms", games);
     });
 
     socket.on("makeMove", async (gameId, userId, index, token, dbGameId) => {
@@ -229,6 +228,7 @@ export default (io, games) => {
       game.players.map((player) => (player.ready = false));
 
       io.to(game.id).emit("ticTacToeRoom", game);
+      io.emit("ticTacToeRooms", games);
     });
   });
 };

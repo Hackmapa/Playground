@@ -119,14 +119,12 @@ export default (io, games) => {
 
       socket.leave(game.id);
 
-      if (game.players.length === 0) {
-        // If no players left, delete the room
-        games = games.filter((r) => r.id !== gameId);
-      } else {
-        // Otherwise, notify the remaining players
-        io.to(game.id).emit("connectFourRoom", game);
-        io.emit("connectFourRooms", games);
-      }
+      // If no players left, delete the room
+      games = games.filter((r) => r.id !== gameId);
+
+      // Otherwise, notify the remaining players
+      io.to(game.id).emit("connectFourRoom", game);
+      io.emit("connectFourRooms", games);
 
       console.log(`User ${userId} left room: ${gameId}`);
     });
@@ -167,6 +165,7 @@ export default (io, games) => {
       const response = await post("games", JSON.stringify(body), token);
       const id = response.id;
       io.to(game.id).emit("connectFourRoom", game, id);
+      io.emit("connectFourRooms", games);
     });
 
     socket.on(

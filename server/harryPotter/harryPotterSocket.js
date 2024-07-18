@@ -140,6 +140,7 @@ export default (io, rooms) => {
       room.logs = game.logs;
 
       io.to(room.id).emit("harryPotterRoom", room, id);
+      io.emit("harryPotterRooms", rooms);
     });
 
     // Cast spell
@@ -268,14 +269,12 @@ export default (io, rooms) => {
       );
       socket.leave(room.id);
 
-      if (room.players.length === 0) {
-        // If no players left, delete the room
-        rooms = rooms.filter((r) => r.id !== roomId);
-      } else {
-        // Otherwise, notify the remaining players
-        io.to(room.id).emit("harryPotterRoom", room);
-        io.emit("harryPotterRooms", rooms);
-      }
+      // If no players left, delete the room
+      rooms = rooms.filter((r) => r.id !== roomId);
+
+      // Otherwise, notify the remaining players
+      io.to(room.id).emit("harryPotterRoom", room);
+      io.emit("harryPotterRooms", rooms);
 
       console.log(`User ${userId} left room: ${roomId}`);
     });
