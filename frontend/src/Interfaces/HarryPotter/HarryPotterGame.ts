@@ -1,5 +1,5 @@
 import { Character } from "./Character";
-import { Log } from "./Log";
+import { Log } from "../Log";
 
 export interface HarryPotterGame {
   characters: Character[];

@@ -46,7 +46,7 @@ export const FriendContainer = (props: FriendContainerProps) => {
   };
 
   return (
-    <div className="absolute mt-8 top-3 right-0 w-52 h-96 border border-darkBlue-dark bg-darkBlue text-white rounded-xl shadow-lg overflow-auto trasnform translate-x-1/2 flex flex-col">
+    <div className="absolute mt-8 top-6 right-4 w-52 h-96 border border-darkBlue-dark bg-darkBlue text-white rounded-xl shadow-lg overflow-auto trasnform translate-x-1/2 flex flex-col">
       <p className="border-b py-2 font-semibold">Amis ({friends.length})</p>
 
       <div className="flex flex-col border-b">

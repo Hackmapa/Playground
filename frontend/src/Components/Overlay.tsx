@@ -26,7 +26,7 @@ export const Overlay = (props: OverlayProps) => {
 
   const { children } = props;
   return (
-    <div>
+    <div className="font-oswald">
       <ChatBox />
       <ToastContainer />
       <div className="bg-darkBlue-dark min-h-screen text-white">

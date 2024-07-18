@@ -1,6 +1,6 @@
 import { Message } from "postcss";
 import { Character } from "./HarryPotter/Character";
-import { Log } from "./HarryPotter/Log";
+import { Log } from "./Log";
 import { User } from "./User";
 import { HarryPotterGame } from "./HarryPotter/HarryPotterGame";
 
@@ -58,6 +58,7 @@ export interface DefaultRoom {
   moves: any[];
   turn: number;
   currentPlayer: Player;
+  logs?: Log[];
 }
 
 interface Player {

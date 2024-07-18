@@ -130,10 +130,10 @@ export const Navbar = () => {
             <img
               src={user.profile_picture}
               alt="profile"
-              className="w-10 h-10 rounded-full hover:cursor-pointer"
+              className="w-14 h-14 rounded-full hover:cursor-pointer object-cover hover:brightness-50 transition duration-200"
               onClick={() => navigate(`/profile/${user.id}`)}
             />
-            <div className="w-10 h-10 bg-darkBlue flex items-center justify-center rounded-full p-2 hover:text-darkBlue hover:bg-white hover:border-white transition duration-200">
+            <div className="w-14 h-14 bg-darkBlue flex items-center justify-center rounded-full p-2 hover:text-darkBlue hover:bg-white hover:border-white transition duration-200">
               <IoLogOutOutline
                 size={28}
                 className="cursor-pointer"

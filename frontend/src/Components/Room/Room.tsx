@@ -20,7 +20,7 @@ import { GameStartingButton } from "./GameStartingButton";
 import { RoomInformations } from "./RoomInformations";
 import { toast } from "react-toastify";
 import { RPS } from "../../Games/RPS/RPS";
-import { updateRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
+import { removeRpsRoom, updateRpsRoom } from "../../Redux/rooms/rpsRoomSlice";
 import { HowToPlay } from "./HowToPlay";
 import { ConnectFourBoard } from "../../Games/ConnectFour/Components/ConnectFourBoard";
 import {
@@ -361,7 +361,7 @@ export const GameRoom: React.FC = () => {
             userRef.current.id,
             token
           );
-          dispatch(removeConnectFourRoom());
+          dispatch(removeRpsRoom());
         };
 
       case "connect-four":

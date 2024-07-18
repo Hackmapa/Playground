@@ -20,6 +20,19 @@ const checkWin = (move) => {
   }
 };
 
+const translateMove = (move) => {
+  switch (move) {
+    case "rock":
+      return "Pierre";
+    case "paper":
+      return "Papier";
+    case "scissors":
+      return "Ciseaux";
+    default:
+      return "";
+  }
+};
+
 export default (io, games) => {
   io.on("connection", (socket) => {
     // create rock paper scissors game
@@ -46,6 +59,7 @@ export default (io, games) => {
           roundWinners: [null, null, null],
           dbGameId: 0,
           owner: user,
+          logs: [],
         };
 
         user.ready = false;
@@ -55,8 +69,14 @@ export default (io, games) => {
         socket.join(game.id);
         games.push(game);
 
+        game.logs.push({
+          id: game.logs.length + 1,
+          message: `${user.username} a créé la partie`,
+          type: "create",
+          createdAt: new Date(),
+        });
+
         console.log("Game RPS created: ", game.id);
-        console.log("Games: ", game);
 
         io.to(game.id).emit("rpsRoom", game);
         io.emit("rpsRooms", games);
@@ -73,7 +93,12 @@ export default (io, games) => {
       game.players.push(user);
       socket.join(game.id);
 
-      console.log("Player joined RPS game: ", game.id);
+      game.logs.push({
+        id: game.logs.length + 1,
+        message: `${user.username} a rejoint la partie`,
+        type: "join",
+        createdAt: new Date(),
+      });
 
       io.to(game.id).emit("rpsRoom", game);
       io.emit("rpsRooms", games);
@@ -94,8 +119,9 @@ export default (io, games) => {
     // leave rock paper scissors game
     socket.on("leaveRpsGame", async (gameId, userId, token) => {
       let game = games.find((room) => room.id === gameId);
+      const user = game.players.find((player) => player.id === userId);
 
-      if (!game) return;
+      if (!game || !user) return;
 
       game.players = game.players.filter((player) => player.id !== userId);
 
@@ -142,6 +168,7 @@ export default (io, games) => {
           roundWinners: [null, null, null],
           dbGameId: 0,
           owner: game.owner,
+          logs: game.logs,
         };
 
         games = games.map((r) => (r.id === gameId ? game : r));
@@ -150,6 +177,13 @@ export default (io, games) => {
       if (game.players.length === 0) {
         games = games.filter((r) => r.id !== gameId);
       }
+
+      game.logs.push({
+        id: game.logs.length + 1,
+        message: `${user.username} a quitté la partie`,
+        createdAt: new Date(),
+        type: "leave",
+      });
 
       // Otherwise, notify the remaining players
       io.to(game.id).emit("rpsRoom", game);
@@ -192,6 +226,13 @@ export default (io, games) => {
 
       game.dbGameId = id;
 
+      game.logs.push({
+        id: game.logs.length + 1,
+        message: `La partie a commencé`,
+        createdAt: new Date(),
+        type: "start",
+      });
+
       io.to(game.id).emit("rpsRoom", game, id);
       io.emit("rpsRooms", games);
     });
@@ -220,9 +261,45 @@ export default (io, games) => {
         game.moves[game.turn] &&
         game.moves[game.turn].length === game.players.length
       ) {
+        game.logs.push({
+          id: game.logs.length + 1,
+          message: `Tous les joueurs ont fait leur choix`,
+          createdAt: new Date(),
+          type: "info",
+        });
+
         const winner = checkWin(game.moves[game.turn]);
         game.roundWinners[game.turn] = winner;
         game.moves[game.turn].push({ winner: winner });
+
+        game.moves[game.turn].map((move) => {
+          if (move.user) {
+            game.logs.push({
+              id: game.logs.length + 1,
+              message: `${move.user.username} a joué ${translateMove(
+                move.move
+              )}`,
+              createdAt: new Date(),
+              type: "move",
+            });
+          }
+        });
+
+        if (winner === "draw") {
+          game.logs.push({
+            id: game.logs.length + 1,
+            message: `Egalité`,
+            createdAt: new Date(),
+            type: "info",
+          });
+        } else {
+          game.logs.push({
+            id: game.logs.length + 1,
+            message: `${winner.username} a gagné la manche`,
+            createdAt: new Date(),
+            type: "info",
+          });
+        }
 
         const url = `turns/${parseInt(dbGameId)}`;
         const body = JSON.stringify(game);
@@ -249,6 +326,17 @@ export default (io, games) => {
             game.draw = true;
           }
 
+          game.logs.push({
+            id: game.logs.length + 1,
+            message: `La partie est terminée, ${
+              game.winner.user
+                ? game.winner.user.username + " a gagné"
+                : "Il y a égalite"
+            }`,
+            createdAt: new Date(),
+            type: "end",
+          });
+
           const body = {
             finished: true,
             draw: game.draw,
@@ -273,6 +361,7 @@ export default (io, games) => {
       game.moves = [];
       game.winner = null;
       game.draw = false;
+      game.logs = [];
       game.players.map((player) => (player.ready = false));
 
       io.to(game.id).emit("rpsRoom", game);

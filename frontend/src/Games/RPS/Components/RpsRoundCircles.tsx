@@ -15,15 +15,20 @@ export const RpsRoundCircles = (props: RpsRoundCirclesProps) => {
           room.roundWinners.map((winner: any, index) => (
             <div key={index}>
               {winner && winner.id && (
-                <div className="flex items-center gap-3 w-24 h-24 bg-darkBlue rounded-full">
-                  <div className="flex justify-center items-center w-full">
-                    <img
-                      className="w-20 h-20 rounded-full"
-                      src={winner.profile_picture}
-                      alt=""
-                    />
+                <>
+                  <div className="flex flex-col items-center gap-3 w-24 h-24 bg-darkBlue rounded-full">
+                    <div className="flex flex-col justify-center items-center w-full h-full">
+                      <img
+                        className="w-20 h-20 rounded-full"
+                        src={winner.profile_picture}
+                        alt=""
+                      />
+                    </div>
                   </div>
-                </div>
+                  <p className="text-center mt-2 text-white">
+                    {winner.username}
+                  </p>
+                </>
               )}
 
               {!winner && (

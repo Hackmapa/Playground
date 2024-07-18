@@ -37,7 +37,7 @@ export const FriendDropdown = (props: FriendDropdownProps) => {
   return (
     <div className="relative" ref={containerRef}>
       <div
-        className="w-10 h-10 bg-darkBlue flex items-center justify-center rounded-full p-2 hover:text-darkBlue hover:bg-white hover:border-white transition duration-200"
+        className="w-14 h-14 bg-darkBlue flex items-center justify-center rounded-full p-2 hover:text-darkBlue hover:bg-white hover:border-white transition duration-200"
         onClick={() => setOpenFriends(!openFriends)}
       >
         <GoPeople size={28} className="cursor-pointer" />

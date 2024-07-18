@@ -37,32 +37,6 @@ const checkDraw = (board) => {
   return board.every((row) => row.every((cell) => cell !== null));
 };
 
-const initialState = {
-  id: 0,
-  name: "",
-  players: [],
-  maxPlayers: 2,
-  messages: [],
-  started: false,
-  finished: false,
-  turn: 0,
-  moves: [],
-  currentBoard: Array(6)
-    .fill(null)
-    .map(() => Array(7).fill(null)),
-  currentPlayer: {
-    color: "",
-    user: null,
-  },
-  winner: null,
-  draw: false,
-  privateRoom: false,
-  password: "",
-  gameTag: "connect-four",
-  dbGameId: 0,
-  owner: null,
-};
-
 export default (io, games) => {
   io.on("connection", (socket) => {
     // create tic tac toe game
@@ -93,6 +67,7 @@ export default (io, games) => {
           gameTag: "connect-four",
           dbGameId: 0,
           owner: user,
+          logs: [],
         };
 
         user.ready = false;
@@ -101,6 +76,13 @@ export default (io, games) => {
         game.players.push(user);
         socket.join(game.id);
         games.push(game);
+
+        game.logs.push({
+          id: game.logs.length + 1,
+          message: `${user.username} a créé la partie`,
+          type: "create",
+          createdAt: new Date(),
+        });
 
         console.log("Game created: ", game.id);
 
@@ -118,6 +100,13 @@ export default (io, games) => {
 
       game.players.push(user);
       socket.join(game.id);
+
+      game.logs.push({
+        id: game.logs.length + 1,
+        message: `${user.username} a rejoint la partie`,
+        type: "join",
+        createdAt: new Date(),
+      });
 
       console.log("Player joined game: ", game.id);
 
@@ -140,8 +129,9 @@ export default (io, games) => {
     // leave tic tac toe game
     socket.on("leaveConnectFourGame", async (gameId, userId, token) => {
       let game = games.find((room) => room.id === gameId);
+      const user = game.players.find((player) => player.id === userId);
 
-      if (!game) return;
+      if (!game || !user) return;
 
       game.players = game.players.filter((player) => player.id !== userId);
 
@@ -192,6 +182,7 @@ export default (io, games) => {
           draw: false,
           gameTag: "connect-four",
           dbGameId: 0,
+          logs: game.logs,
         };
 
         games = games.map((r) => (r.id === gameId ? game : r));
@@ -200,6 +191,13 @@ export default (io, games) => {
       if (game.players.length === 0) {
         games = games.filter((r) => r.id !== gameId);
       }
+
+      game.logs.push({
+        id: game.logs.length + 1,
+        message: `${user.username} a quitté la partie`,
+        createdAt: new Date(),
+        type: "leave",
+      });
 
       // Otherwise, notify the remaining players
       io.to(game.id).emit("connectFourRoom", game);
@@ -233,8 +231,6 @@ export default (io, games) => {
       game.moves.push({ player: game.currentPlayer, board: game.currentBoard });
       game.turn = 0;
 
-      console.log("Game Connect 4 started: ", game.id);
-
       const body = {
         gameId: 3,
         players: game.players,
@@ -246,6 +242,13 @@ export default (io, games) => {
       const id = response.id;
 
       game.dbGameId = id;
+
+      game.logs.push({
+        id: game.logs.length + 1,
+        message: `La partie a commencé`,
+        createdAt: new Date(),
+        type: "start",
+      });
 
       io.to(game.id).emit("connectFourRoom", game, id);
       io.emit("connectFourRooms", games);
@@ -275,6 +278,13 @@ export default (io, games) => {
         game.moves.push({ player: player, board: game.currentBoard });
         game.turn++;
 
+        game.logs.push({
+          id: game.logs.length + 1,
+          message: `${player.user.username} a joué`,
+          createdAt: new Date(),
+          type: "move",
+        });
+
         const winner = checkVictory(game.currentBoard, player);
         const draw = checkDraw(game.currentBoard);
 
@@ -285,6 +295,13 @@ export default (io, games) => {
             user: null,
           };
           game.finished = true;
+
+          game.logs.push({
+            id: game.logs.length + 1,
+            message: `${player.user.username} a gagné`,
+            createdAt: new Date(),
+            type: "end",
+          });
 
           const body = {
             finished: true,
@@ -301,6 +318,13 @@ export default (io, games) => {
             user: null,
           };
           game.finished = true;
+
+          game.logs.push({
+            id: game.logs.length + 1,
+            message: `Match nul`,
+            createdAt: new Date(),
+            type: "end",
+          });
 
           const body = {
             finished: true,
@@ -340,6 +364,7 @@ export default (io, games) => {
       game.winner = null;
       game.draw = false;
       game.players.map((player) => (player.ready = false));
+      game.logs = [];
 
       io.to(game.id).emit("connectFourRoom", game);
     });

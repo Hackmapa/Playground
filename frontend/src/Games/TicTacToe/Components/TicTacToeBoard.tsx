@@ -74,7 +74,7 @@ const Cell = (props: CellProps) => {
     <div
       className={
         (canClick ? "cursor-pointer " : "cursor-not-allowed") +
-        " w-40 h-40 bg-[#1F3540] border-4 border-[#0F1B21] rounded-lg flex justify-center items-center"
+        " w-36 h-36 bg-[#1F3540] border-4 border-[#0F1B21] rounded-lg flex justify-center items-center"
       }
       onClick={canClick ? onClick : undefined}
     >

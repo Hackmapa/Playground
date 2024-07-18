@@ -87,6 +87,13 @@ export default (io, rooms) => {
       socket.join(room.id);
       rooms.push(room);
 
+      room.logs.push({
+        id: room.logs.length + 1,
+        message: `${user.username} a créé la partie`,
+        type: "create",
+        createdAt: new Date(),
+      });
+
       io.to(room.id).emit("harryPotterRoom", room);
       io.emit("harryPotterRooms", rooms);
     });
@@ -103,6 +110,13 @@ export default (io, rooms) => {
       room.characters.push(character);
       room.players.push(user);
       socket.join(room.id);
+
+      room.logs.push({
+        id: room.logs.length + 1,
+        message: `${user.username} a rejoint la partie`,
+        type: "create",
+        createdAt: new Date(),
+      });
 
       console.log("Player joined game: ", room.id);
 
@@ -139,7 +153,14 @@ export default (io, rooms) => {
       const response = await post("games", JSON.stringify(body), token);
       const id = response.id;
 
-      room.logs = game.logs;
+      room.dbGameId = id;
+
+      room.logs.push({
+        id: room.logs.length + 1,
+        message: `La partie a commencé`,
+        type: "start",
+        createdAt: new Date(),
+      });
 
       io.to(room.id).emit("harryPotterRoom", room, id);
       io.emit("harryPotterRooms", rooms);
@@ -190,6 +211,14 @@ export default (io, rooms) => {
             const socket = io.sockets.sockets.get(socketId);
 
             game.handleUserTurn(socket.character, socket.action);
+
+            updatedRoom.logs.push({
+              id: updatedRoom.logs.length + 1,
+              message: `${socket.character.username} a lancé ${thisSpell.name} sur ${targetCharacter.username}`,
+              type: "move",
+              createdAt: new Date(),
+            });
+
             socket.action = null;
           }
           if (!game.isGameOver()) {
@@ -208,6 +237,13 @@ export default (io, rooms) => {
             );
             updatedRoom.winner.user = winner;
 
+            updatedRoom.logs.push({
+              id: updatedRoom.logs.length + 1,
+              message: `${winner.username} a gagné`,
+              createdAt: new Date(),
+              type: "end",
+            });
+
             const body = {
               finished: true,
               draw: false,
@@ -225,7 +261,6 @@ export default (io, rooms) => {
 
         updatedRoom.characters = updatedGame.characters;
         updatedRoom.game = updatedGame;
-        updatedRoom.logs = updatedGame.logs;
 
         io.to(actualRoom.id).emit("harryPotterRoom", updatedRoom);
       }

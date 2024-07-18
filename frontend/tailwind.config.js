@@ -10,6 +10,7 @@ module.exports = {
         inter: ["Inter", "sans-serif"], // Ajoutez 'Inter' comme une police personnalisée
         roboto: ["Roboto", "sans-serif"],
         nunito: ["Nunito", "sans-serif"],
+        oswald: ["Oswald", "sans-serif"],
       },
       screens: {
         xs: "500px",

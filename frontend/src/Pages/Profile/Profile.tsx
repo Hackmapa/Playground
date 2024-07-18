@@ -34,6 +34,7 @@ export const Profile = () => {
   const [badges, setBadges] = useState<Badge[]>([]);
   const [user, setUser] = useState<User>();
   const [friends, setFriends] = useState<User[]>([]);
+  const [hover, setHover] = useState(false);
 
   const handleFileChange = (event: any) => {
     const selectedFile = event.target.files[0];
@@ -151,8 +152,10 @@ export const Profile = () => {
                 src={user.profile_picture}
                 alt="user_profile"
                 className={
-                  "w-52 h-52 rounded-full transition duration-200 ease-in-out transform " +
+                  "w-52 h-52 rounded-full transition duration-200 ease-in-out transform object-cover " +
+                  (hover ? "filter brightness-50 " : "") +
                   (isActualUser() ? "hover:cursor-pointer" : "")
+                  // i need to darken the image on hover
                 }
               />
               {isActualUser() && (
@@ -160,6 +163,8 @@ export const Profile = () => {
                   type="file"
                   className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
                   onChange={handleFileChange}
+                  onMouseEnter={() => setHover(true)}
+                  onMouseLeave={() => setHover(false)}
                 />
               )}
               <div className="text-left">
