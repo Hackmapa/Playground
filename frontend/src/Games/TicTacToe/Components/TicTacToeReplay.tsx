@@ -122,7 +122,7 @@ export const TicTacToeReplay = () => {
                       </div>
                       <div className="mx-2 text-right">
                         <img
-                          src={player.symbol === "X" ? CrossIcon : CircleIcon}
+                          src={player.symbol === "X" ? CircleIcon : CrossIcon}
                           className="w-8 h-8"
                           alt={`${player.symbol} icon`}
                         />

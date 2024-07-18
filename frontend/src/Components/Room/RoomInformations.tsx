@@ -3,13 +3,12 @@ import { Room, TttRoom } from "../../Interfaces/Rooms";
 import { User } from "../../Interfaces/User";
 
 interface RoomInformationsProps {
-  user: User;
   room: Room;
   readyPlayers: number;
 }
 
 export const RoomInformations = (props: RoomInformationsProps) => {
-  const { user, room, readyPlayers } = props;
+  const { room, readyPlayers } = props;
 
   const navigate = useNavigate();
 
@@ -23,10 +22,6 @@ export const RoomInformations = (props: RoomInformationsProps) => {
     }
 
     return "Partie non commencée";
-  };
-
-  const checkIfActualPlayer = (player: User) => {
-    return player.id === user.id;
   };
 
   return (

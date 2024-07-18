@@ -231,6 +231,7 @@ export default (io, games) => {
         .fill(null)
         .map(() => Array(COLUMNS).fill(null));
       game.moves.push({ player: game.currentPlayer, board: game.currentBoard });
+      game.turn = 0;
 
       console.log("Game Connect 4 started: ", game.id);
 
@@ -272,6 +273,7 @@ export default (io, games) => {
         }
 
         game.moves.push({ player: player, board: game.currentBoard });
+        game.turn++;
 
         const winner = checkVictory(game.currentBoard, player);
         const draw = checkDraw(game.currentBoard);

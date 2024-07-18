@@ -428,11 +428,7 @@ export const GameRoom: React.FC = () => {
             />
           </div>
 
-          <RoomInformations
-            user={user}
-            room={room}
-            readyPlayers={getReadyPlayers() ?? 0}
-          />
+          <RoomInformations room={room} readyPlayers={getReadyPlayers() ?? 0} />
         </div>
       )}
     </>
