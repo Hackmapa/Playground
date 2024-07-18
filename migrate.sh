@@ -29,10 +29,6 @@ docker exec $MIGRATION_SERVICE php bin/console doctrine:migrations:migrate --no-
 echo "Generating JWT keys..."
 docker exec --user root $MIGRATION_SERVICE php bin/console lexik:jwt:generate-keypair --skip-if-exists
 
-# Fixtures
-echo "Loading fixtures..."
-docker exec --user root $MIGRATION_SERVICE php bin/console doctrine:fixtures:load --no-interaction
-
 # Set permissions
 echo "Setting permissions..."
 docker exec --user root $MIGRATION_SERVICE chown -R www-data:www-data public/
