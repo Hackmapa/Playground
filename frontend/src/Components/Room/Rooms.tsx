@@ -153,7 +153,10 @@ export const Rooms: React.FC = () => {
   }, [name]);
 
   const getRoomsGame = () => {
-    return rooms.filter((room: Room) => room.gameTag === name);
+    return rooms.filter(
+      (room: Room) =>
+        room.gameTag === name && !room.started && room.players.length > 0
+    );
   };
 
   return (

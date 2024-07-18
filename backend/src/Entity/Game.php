@@ -46,10 +46,16 @@ class Game
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['game_detail', 'game_list'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['game_detail', 'game_list'])]
     private ?string $game_tag = null;
+
+    #[ORM\Column]
+    #[Groups(['game_detail', 'game_list'])]
+    private ?bool $canceled = null;
 
     public function __construct()
     {
@@ -196,6 +202,18 @@ class Game
     public function setGameTag(string $game_tag): static
     {
         $this->game_tag = $game_tag;
+
+        return $this;
+    }
+
+    public function isCanceled(): ?bool
+    {
+        return $this->canceled;
+    }
+
+    public function setCanceled(bool $canceled): static
+    {
+        $this->canceled = $canceled;
 
         return $this;
     }

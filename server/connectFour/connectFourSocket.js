@@ -37,6 +37,32 @@ const checkDraw = (board) => {
   return board.every((row) => row.every((cell) => cell !== null));
 };
 
+const initialState = {
+  id: 0,
+  name: "",
+  players: [],
+  maxPlayers: 2,
+  messages: [],
+  started: false,
+  finished: false,
+  turn: 0,
+  moves: [],
+  currentBoard: Array(6)
+    .fill(null)
+    .map(() => Array(7).fill(null)),
+  currentPlayer: {
+    color: "",
+    user: null,
+  },
+  winner: null,
+  draw: false,
+  privateRoom: false,
+  password: "",
+  gameTag: "connect-four",
+  dbGameId: 0,
+  owner: null,
+};
+
 export default (io, games) => {
   io.on("connection", (socket) => {
     // create tic tac toe game
@@ -45,7 +71,9 @@ export default (io, games) => {
       (name, user, privateRoom = false, password = "") => {
         const game = {
           id: games.length + 1,
-          name: name,
+          name,
+          privateRoom,
+          password,
           players: [],
           maxPlayers: 2,
           messages: [],
@@ -62,9 +90,9 @@ export default (io, games) => {
           },
           winner: null,
           draw: false,
-          privateRoom: privateRoom,
-          password: password,
           gameTag: "connect-four",
+          dbGameId: 0,
+          owner: user,
         };
 
         user.ready = false;
@@ -110,8 +138,8 @@ export default (io, games) => {
     });
 
     // leave tic tac toe game
-    socket.on("leaveConnectFourGame", (gameId, userId) => {
-      const game = games.find((room) => room.id === gameId);
+    socket.on("leaveConnectFourGame", async (gameId, userId, token) => {
+      let game = games.find((room) => room.id === gameId);
 
       if (!game) return;
 
@@ -119,8 +147,59 @@ export default (io, games) => {
 
       socket.leave(game.id);
 
-      // If no players left, delete the room
-      games = games.filter((r) => r.id !== gameId);
+      if (game.players.length !== 0 && game.players.length < game.maxPlayers) {
+        if (game.started) {
+          const body = {
+            finished: false,
+            canceled: true,
+            draw: false,
+            winner: null,
+          };
+
+          const url = `games/${game.dbGameId}`;
+          await put(url, JSON.stringify(body), token);
+        }
+
+        // check if the owner left, if so, assign a new owner
+        if (game.owner.id === userId) {
+          game.owner = game.players[0];
+          game.players[0].owner = true;
+          game.owner.ready = false;
+          game.players[0].ready = false;
+        }
+
+        game = {
+          id: game.id,
+          name: game.name,
+          privateRoom: game.privateRoom,
+          password: game.password,
+          started: false,
+          finished: false,
+          players: game.players,
+          owner: game.owner,
+          maxPlayers: 2,
+          messages: [],
+          turn: 0,
+          moves: [],
+          currentBoard: Array(6)
+            .fill(null)
+            .map(() => Array(7).fill(null)),
+          currentPlayer: {
+            color: "",
+            user: null,
+          },
+          winner: null,
+          draw: false,
+          gameTag: "connect-four",
+          dbGameId: 0,
+        };
+
+        games = games.map((r) => (r.id === gameId ? game : r));
+      }
+
+      if (game.players.length === 0) {
+        games = games.filter((r) => r.id !== gameId);
+      }
 
       // Otherwise, notify the remaining players
       io.to(game.id).emit("connectFourRoom", game);
@@ -164,6 +243,9 @@ export default (io, games) => {
 
       const response = await post("games", JSON.stringify(body), token);
       const id = response.id;
+
+      game.dbGameId = id;
+
       io.to(game.id).emit("connectFourRoom", game, id);
       io.emit("connectFourRooms", games);
     });

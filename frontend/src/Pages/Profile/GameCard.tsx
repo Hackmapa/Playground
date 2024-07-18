@@ -48,7 +48,7 @@ export const GameCard = (props: GameCardProps) => {
           </p>
         )}
 
-        {!game.winner && !game.draw && (
+        {game.canceled && (
           <p className="text-xl text-yellow-500 text-center font-bold uppercase">
             Partie non terminée
           </p>

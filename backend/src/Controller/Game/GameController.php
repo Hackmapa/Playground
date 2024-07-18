@@ -56,6 +56,8 @@ class GameController extends AbstractController
         $game->setName($data['name']);
         $game->setFinished(false);
         $game->setDraw(false);
+        $game->setCanceled(false);
+        
         foreach ($players as $player) {
             $user = $this->userRepository->find($player['id']);
             $game->addPlayer($user);
@@ -100,8 +102,9 @@ class GameController extends AbstractController
             $game->setWinner($winner);
         }
 
-        $game->setFinished($data['finished']);
-        $game->setDraw($data['draw']);
+        $game->setFinished($data['finished'] ?? false);
+        $game->setDraw($data['draw'] ?? false);
+        $game->setCanceled($data['canceled'] ?? false);
         
         $this->entityManager->persist($game);
         $this->entityManager->flush();

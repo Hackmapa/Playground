@@ -245,6 +245,8 @@ export const GameRoom: React.FC = () => {
       } else {
         setCanStart(false);
       }
+    } else {
+      setCanStart(false);
     }
 
     room.started ? setGameStarted(true) : setGameStarted(false);
@@ -337,7 +339,8 @@ export const GameRoom: React.FC = () => {
           socket.emit(
             "leaveTicTacToeGame",
             roomRef.current.id,
-            userRef.current.id
+            userRef.current.id,
+            token
           );
           dispatch(removeTttRoom());
         };
@@ -352,7 +355,12 @@ export const GameRoom: React.FC = () => {
         });
 
         return () => {
-          socket.emit("leaveRpsGame", roomRef.current.id, userRef.current.id);
+          socket.emit(
+            "leaveRpsGame",
+            roomRef.current.id,
+            userRef.current.id,
+            token
+          );
           dispatch(removeConnectFourRoom());
         };
 
@@ -369,7 +377,8 @@ export const GameRoom: React.FC = () => {
           socket.emit(
             "leaveConnectFourGame",
             roomRef.current.id,
-            userRef.current.id
+            userRef.current.id,
+            token
           );
           dispatch(removeConnectFourRoom());
         };
@@ -387,7 +396,8 @@ export const GameRoom: React.FC = () => {
           socket.emit(
             "leaveHarryPotterGame",
             roomRef.current.id,
-            userRef.current.id
+            userRef.current.id,
+            token
           );
           dispatch(removeHarryPotterRoom());
         };

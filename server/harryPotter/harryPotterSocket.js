@@ -52,10 +52,12 @@ export default (io, rooms) => {
     socket.on("createHarryPotterGame", (name, user, privateRoom, password) => {
       const room = {
         id: rooms.length + 1,
+        name,
+        privateRoom,
+        password,
         players: [],
         maxPlayers: 2,
         characters: [],
-        name: name,
         game: null,
         messages: [],
         logs: [],
@@ -69,9 +71,9 @@ export default (io, rooms) => {
           user: null,
         },
         draw: false,
-        privateRoom: privateRoom,
-        password: password,
         gameTag: "harry-potter",
+        dbGameId: 0,
+        owner: user,
       };
 
       user.ready = false;
@@ -258,8 +260,8 @@ export default (io, rooms) => {
     });
 
     // Leave room
-    socket.on("leaveHarryPotterGame", (roomId, userId) => {
-      const room = rooms.find((room) => room.id === roomId);
+    socket.on("leaveHarryPotterGame", async (roomId, userId, token) => {
+      let room = rooms.find((room) => room.id === roomId);
 
       if (!room) return;
 
@@ -269,8 +271,59 @@ export default (io, rooms) => {
       );
       socket.leave(room.id);
 
-      // If no players left, delete the room
-      rooms = rooms.filter((r) => r.id !== roomId);
+      if (room.players.length !== 0 && room.players.length < room.maxPlayers) {
+        if (room.started) {
+          const body = {
+            finished: false,
+            canceled: true,
+            draw: false,
+            winner: null,
+          };
+
+          const url = `games/${room.dbGameId}`;
+          await put(url, JSON.stringify(body), token);
+        }
+
+        // check if the owner left, if so, assign a new owner
+        if (room.owner.id === userId) {
+          room.owner = room.players[0];
+          room.players[0].owner = true;
+          room.owner.ready = false;
+          room.players[0].ready = false;
+        }
+
+        room = {
+          id: room.id,
+          name: room.name,
+          privateRoom: room.privateRoom,
+          password: room.password,
+          started: false,
+          finished: false,
+          players: room.players,
+          owner: room.owner,
+          maxPlayers: 2,
+          characters: room.characters,
+          game: null,
+          messages: [],
+          logs: [],
+          currentPlayer: {
+            symbol: "",
+            user: null,
+          },
+          winner: {
+            user: null,
+          },
+          draw: false,
+          gameTag: "harry-potter",
+          dbGameId: 0,
+        };
+
+        rooms = rooms.map((r) => (r.id === roomId ? room : r));
+      }
+
+      if (room.players.length === 0) {
+        rooms = rooms.filter((r) => r.id !== roomId);
+      }
 
       // Otherwise, notify the remaining players
       io.to(room.id).emit("harryPotterRoom", room);

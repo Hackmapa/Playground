@@ -28,7 +28,9 @@ export default (io, games) => {
       (name, user, privateRoom = false, password = "") => {
         const game = {
           id: games.length + 1,
-          name: name,
+          name,
+          privateRoom,
+          password,
           players: [],
           maxPlayers: 2,
           messages: [],
@@ -39,10 +41,11 @@ export default (io, games) => {
           winner: {
             user: null,
           },
-          privateRoom: privateRoom,
-          password: password,
+          draw: false,
           gameTag: "rock-paper-scissors",
           roundWinners: [null, null, null],
+          dbGameId: 0,
+          owner: user,
         };
 
         user.ready = false;
@@ -53,6 +56,7 @@ export default (io, games) => {
         games.push(game);
 
         console.log("Game RPS created: ", game.id);
+        console.log("Games: ", game);
 
         io.to(game.id).emit("rpsRoom", game);
         io.emit("rpsRooms", games);
@@ -88,8 +92,8 @@ export default (io, games) => {
     });
 
     // leave rock paper scissors game
-    socket.on("leaveRpsGame", (gameId, userId) => {
-      const game = games.find((room) => room.id === gameId);
+    socket.on("leaveRpsGame", async (gameId, userId, token) => {
+      let game = games.find((room) => room.id === gameId);
 
       if (!game) return;
 
@@ -97,8 +101,55 @@ export default (io, games) => {
 
       socket.leave(game.id);
 
-      // If no players left, delete the room
-      games = games.filter((r) => r.id !== gameId);
+      if (game.players.length !== 0 && game.players.length < game.maxPlayers) {
+        if (game.started) {
+          const body = {
+            finished: false,
+            canceled: true,
+            draw: false,
+            winner: null,
+          };
+
+          const url = `games/${game.dbGameId}`;
+          await put(url, JSON.stringify(body), token);
+        }
+
+        // check if the owner left, if so, assign a new owner
+        if (game.owner.id === userId) {
+          game.owner = game.players[0];
+          game.players[0].owner = true;
+          game.owner.ready = false;
+          game.players[0].ready = false;
+        }
+
+        game = {
+          id: game.id,
+          name: game.name,
+          privateRoom: game.privateRoom,
+          password: game.password,
+          started: false,
+          finished: false,
+          players: game.players,
+          maxPlayers: 2,
+          messages: [],
+          turn: 0,
+          moves: [],
+          winner: {
+            user: null,
+          },
+          draw: false,
+          gameTag: "rock-paper-scissors",
+          roundWinners: [null, null, null],
+          dbGameId: 0,
+          owner: game.owner,
+        };
+
+        games = games.map((r) => (r.id === gameId ? game : r));
+      }
+
+      if (game.players.length === 0) {
+        games = games.filter((r) => r.id !== gameId);
+      }
 
       // Otherwise, notify the remaining players
       io.to(game.id).emit("rpsRoom", game);
@@ -138,7 +189,9 @@ export default (io, games) => {
 
       const response = await post("games", JSON.stringify(body), token);
       const id = response.id;
-      console.log("Game created in DB: ", id);
+
+      game.dbGameId = id;
+
       io.to(game.id).emit("rpsRoom", game, id);
       io.emit("rpsRooms", games);
     });

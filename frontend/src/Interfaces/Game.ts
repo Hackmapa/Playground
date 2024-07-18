@@ -22,6 +22,7 @@ export interface Game {
   game_id: number;
   finished: boolean;
   draw: boolean;
+  canceled: boolean;
   turns: Turn[];
   rounds?: Round[];
   createdAt: Date;
